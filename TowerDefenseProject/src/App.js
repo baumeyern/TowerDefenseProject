@@ -2,14 +2,18 @@ import React from 'react';
 import HomePage from './components/pages/HomePage';
 import LoginPage from './components/pages/LoginPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Container from '@mui/material/Container';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
     return (
         <Router>
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<LoginPage />} />
-            </Routes>
+            <Container maxWidth="lg">
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                </Routes>
+            </Container>
         </Router>
     );
 }
