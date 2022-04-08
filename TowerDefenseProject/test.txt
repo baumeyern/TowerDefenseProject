@@ -23,3 +23,31 @@ export default function GameBoard(){
 }
 
 
+ ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for(var i=25; i< canvas.width; i+= 30){
+            //verticle lines
+            ctx.moveTo(i,25);
+            ctx.lineTo(i,1995);
+
+            //horizontal lines
+            ctx.moveTo(25,i);
+            ctx.lineTo(1995,i);
+
+            ctx.strokeStyle = "22ccff";
+            ctx.stroke();
+        }
+
+        //major units
+        ctx.beginPath();
+        for(var i=25; i<canvas.height; i+=150){
+            //verticle lines
+            ctx.moveTo(i,25);
+            ctx.lineTo(i,1995);
+
+            //horizontal lines
+            ctx.moveTo(25,i);
+            ctx.lineTo(1995,i);
+
+            ctx.strokeStyle = "c0c0c0";
+            ctx.stroke();
+        }

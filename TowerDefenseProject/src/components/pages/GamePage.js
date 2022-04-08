@@ -15,6 +15,11 @@ const GamePage = () => (
                 <Button variant="outline-light">Game Board</Button>
             </Link>
         </div>
+        <div className="container">
+            <Link to='/gameboard2' >
+                <Button variant="outline-light">Game Board 2</Button>
+            </Link>
+        </div>
     </div>
 );
 
