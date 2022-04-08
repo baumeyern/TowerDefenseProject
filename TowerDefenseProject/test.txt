@@ -1,0 +1,25 @@
+import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+
+
+let x =0;
+export default function GameBoard(){
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        const render = () =>{
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(x,75,50,0,2 * Math.PI);
+        ctx.stroke();
+        requestAnimationFrame(render);
+        };
+        render();
+    }, []);
+
+    return <canvas id="canvas"  ref={canvasRef} height="650px"  width="490px" />;
+}
+
+

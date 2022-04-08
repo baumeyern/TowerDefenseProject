@@ -77,3 +77,20 @@ h2 {
     border-color: #fffffff0 !important;
 }
 
+.testColor{
+    color: #f0f0f0f0
+}
+
+#canvas{
+    background-color:#394a49  ;
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    border-width: 100px 10px 100px 10px;
+    border-style: solid;
+}
