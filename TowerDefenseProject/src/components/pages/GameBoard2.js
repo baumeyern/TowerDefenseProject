@@ -1,15 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import { jsx } from '@emotion/react';
+import FootNav from '../FootNav'
 
 
 
 
 export default function GameBoard(){
     const canvasRef = useRef(null);
-
+   
     useEffect(() => {
         const render = () =>{
+            
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         canvas.width = 1400;
@@ -62,7 +65,9 @@ export default function GameBoard(){
         render();
     }, []);
 
-    return <canvas id="canvas2" width="1200" height="1200" ref={canvasRef}  />;
+    return  <canvas id="canvas2" width="1200" height="1200" ref={canvasRef}  /> ;
 }
+
+
 
 

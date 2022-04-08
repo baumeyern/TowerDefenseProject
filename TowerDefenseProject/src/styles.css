@@ -104,8 +104,30 @@ h2 {
     padding-left: 450px;
     padding-top: 10px;
     padding-right: 450px;
-
-
     border-width: 100px 10px 100px 10px;
     border-style: solid;
 }
+
+.main-footer {
+    color: white;
+    background-color: #1084c7;
+    padding-top: 3em;
+    position:fixed;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .container {
+  
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  
+  .box {
+    border: 3px solid #666;
+    background-color: #ddd;
+    border-radius: .5em;
+    padding: 10px;
+    cursor: move;
+  }
