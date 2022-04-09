@@ -1,17 +1,17 @@
 
 @font-face {
     font-family: arcade;
-    src: url('./components/fonts/ARCADECLASSIC.TTF') format('truetype');
+    src: url('./components/fonts/arcade.ttf') format('truetype');
 }
 
 @font-face {
     font-family: title;
-    src: url('./components/fonts/SpaceMonkeyBold.otf') format('opentype');
+    src: url('./components/fonts/space.otf') format('opentype');
 }
 
 @font-face{
-    font-family: label;
-    src: url('./components/fonts/PublicPixel-0W6DP.ttf') format('truetype');
+    font-family: pixel;
+    src: url('./components/fonts/pixel.ttf') format('truetype');
 }
 
 body {
@@ -56,12 +56,12 @@ h2 {
 }
 
 .MuiInputLabel-root {
-    font-family: label !important;
+    font-family: pixel !important;
     color: #f0f0f0f0 !important;
 }
 
 .MuiOutlinedInput-root {
-    font-family: label !important;
+    font-family: pixel !important;
     color: #f0f0f0f0 !important;
 }
 
@@ -76,4 +76,3 @@ h2 {
 .Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #fffffff0 !important;
 }
-
