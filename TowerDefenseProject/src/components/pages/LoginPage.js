@@ -4,10 +4,10 @@ import TextField from '@mui/material/TextField';
 import Button from 'react-bootstrap/Button';
 
 
-function LoginPage() {
+const LoginPage = () => {
     const navigate = useNavigate();
-    const [name, setValue] = useState("");
-    const handleChange = e => setValue(e.target.value);
+    const [name, setName] = useState("");
+    const handleChange = e => setName(e.target.value);
 
     const handleSubmit = e => {
         e.preventDefault();
