@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
 import Canvas from '../objects/Canvas';
-import { Enemy } from "../objects/enemy.js";
+import { Enemy } from "../objects/enemy";
 import { Block } from '../objects/block';
+import { Tower } from '../objects/tower';
+import { Projectile } from '../objects/projectile';
 import { collision } from '../utils/utils';
 
 import circleImg from "../objects/circle.png";
@@ -23,28 +25,46 @@ export const mouse = {
     height: .1,
 }
 
-window.addEventListener("click", function (e) {
+window.addEventListener("keypress", function (e) {
     console.log(mouse.x + ', ' + mouse.y);
 });
 
 function GamePage() {
-    const test = new Enemy(400, 10, 3);
+    let frameCount = 0;
+    //const test = new Enemy(400, 10, 3);
+    towers.push(new Tower(200, 200, 4));
     for (let y = 0; y < 600; y += 50) {
         for (let x = 0; x < 900; x += 50) {
             grid.push(new Block(x, y));
         }
     }
-    grid.forEach(block => {
-        console.log(block.x + ', ' + block.y);
-    });
 
     const draw = (ctx) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         grid.forEach(block => {
             block.draw(ctx);
         });
-        test.draw(ctx)
-        test.update();
+        //test.draw(ctx)
+        //test.update();
+        for (let t = 0; t < towers.length; t++) {
+            towers[t].draw(ctx);
+            if (frameCount % 120 === 0) {
+                towers[t].shoot(bullets);
+                //console.log(frameCount);
+                if (bullets.length > 0) {
+                    //console.log(bullets.length);
+                }
+            }
+        }
+        for (let b = 0; b < bullets.length; b++){
+            bullets[b].draw(ctx);
+            bullets[b].update();
+            if (bullets[b].x > ctx.canvas.width) {
+                bullets.splice(b, 1);
+                b--;
+            }
+        }
+        frameCount++;
     }
 
     return (
