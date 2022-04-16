@@ -4,11 +4,13 @@ import { mouse } from "../pages/GamePage";
 const Canvas = (props) => {
   const { draw, ...rest } = props;
   const canvasRef = useRef(null);
+  //const ctxRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    draw(ctx);
+    //ctxRef.current = ctx;
+
     let canvasPos = canvas.getBoundingClientRect();
     window.addEventListener("resize", function (e) {
       canvasPos = canvas.getBoundingClientRect();
@@ -25,6 +27,7 @@ const Canvas = (props) => {
       mouse.y = undefined;
     });
 
+    draw(ctx);
     //drawGrid(ctx);
     let animationFrameID;
 

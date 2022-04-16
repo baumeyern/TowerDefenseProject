@@ -19,7 +19,7 @@ export let bullets = [];
 export let enemies = [];
 export let grid = [];
 export let panel = [];
-
+export let panelSize = 302;
 export const mouse = {
   x: undefined,
   y: undefined,
@@ -35,11 +35,11 @@ function GamePage() {
   let frameCount = 0;
 
   panel.push(new Panel(900, 0));
-  for (let y = 0; y < 600; y += 150) {
-    for (let x = 900; x < 1200; x += 150) {
-      panel.push(new Block(x, y));
-    }
-  }
+  //   for (let y = 0; y < 600; y += 150) {
+  //     for (let x = 900; x < 1200; x += 150) {
+  //       panel.push(new Panel(x, y));
+  //     }
+  //   }
   //const test = new Enemy(400, 10, 3);
   //towers.push(new Tower(850, 200, 4));
   for (let y = 0; y < 600; y += 50) {
@@ -51,13 +51,12 @@ function GamePage() {
   const draw = (ctx) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     //panel.draw(ctx);
-    ctx.fillStyle = "rgba(0, 210, 255, 0.22)";
-    ctx.fillRect(900, 0, 250, 600);
-    ctx.font = `30px Verdana`;
-    //ctx.colorText = "white";
-    ctx.fillStyle = "rgb(255, 255, 255)";
 
-    ctx.fillText("Score: ", 910, 50, 690);
+    //Panel
+    panel.forEach((panel) => {
+      panel.draw(ctx);
+    });
+    //Panel.draw(ctx);
 
     grid.forEach((block) => {
       block.draw(ctx);
@@ -78,7 +77,8 @@ function GamePage() {
     for (let b = 0; b < bullets.length; b++) {
       bullets[b].draw(ctx);
       bullets[b].update();
-      if (bullets[b].x > ctx.canvas.width) {
+      // 302 is Panel size added to canvas
+      if (bullets[b].x > ctx.canvas.width - panelSize) {
         bullets.splice(b, 1);
         b--;
       }
