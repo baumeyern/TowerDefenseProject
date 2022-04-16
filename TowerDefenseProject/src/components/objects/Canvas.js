@@ -1,59 +1,57 @@
-import React, { useEffect, useRef } from 'react';
-import { mouse } from '../pages/GamePage';
+import React, { useEffect, useRef } from "react";
+import { mouse } from "../pages/GamePage";
 
-const Canvas = props => {
+const Canvas = (props) => {
+  const { draw, ...rest } = props;
+  const canvasRef = useRef(null);
 
-    const { draw, ...rest } = props;
-    const canvasRef = useRef(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    draw(ctx);
+    let canvasPos = canvas.getBoundingClientRect();
+    window.addEventListener("resize", function (e) {
+      canvasPos = canvas.getBoundingClientRect();
+    });
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
+    canvas.addEventListener("mousemove", function (e) {
+      mouse.x = e.x - canvasPos.left;
+      mouse.y = e.y - canvasPos.top;
+      //console.log((mouse.x) + ', ' + (mouse.y));
+    });
 
-        let canvasPos = canvas.getBoundingClientRect();
-        window.addEventListener('resize', function (e) {
-            canvasPos = canvas.getBoundingClientRect();
-        });
+    canvas.addEventListener("mouseleave", function (e) {
+      mouse.x = undefined;
+      mouse.y = undefined;
+    });
 
-        canvas.addEventListener('mousemove', function (e) {
-            mouse.x = e.x - canvasPos.left;
-            mouse.y = e.y - canvasPos.top;
-            //console.log((mouse.x) + ', ' + (mouse.y));
-        });
+    //drawGrid(ctx);
+    let animationFrameID;
 
-        canvas.addEventListener('mouseleave', function (e) {
-            mouse.x = undefined;
-            mouse.y = undefined;
-        });
+    const render = () => {
+      draw(ctx);
+      animationFrameID = window.requestAnimationFrame(render);
+    };
+    render();
 
-        draw(ctx);
-        //drawGrid(ctx);
-        let animationFrameID;
+    return () => {
+      window.cancelAnimationFrame(animationFrameID);
+      window.removeEventListener("resize", function (e) {
+        canvasPos = canvas.getBoundingClientRect();
+      });
+      canvas.removeEventListener("mousemove", function (e) {
+        mouse.x = e.x - canvasPos.x;
+        mouse.y = e.y - canvasPos.y;
+        //console.log((mouse.x) + ', ' + (mouse.y));
+      });
+      canvas.removeEventListener("mouseleave", function (e) {
+        mouse.x = undefined;
+        mouse.y = undefined;
+      });
+    };
+  }, [draw]);
 
-        const render = () => {
-            draw(ctx);
-            animationFrameID = window.requestAnimationFrame(render);
-        }
-        render();
-
-        return () => {
-            window.cancelAnimationFrame(animationFrameID);
-            window.removeEventListener('resize', function (e) {
-                canvasPos = canvas.getBoundingClientRect();
-            });
-            canvas.removeEventListener('mousemove', function (e) {
-                mouse.x = e.x - canvasPos.x;
-                mouse.y = e.y - canvasPos.y;
-                //console.log((mouse.x) + ', ' + (mouse.y));
-            });
-            canvas.removeEventListener('mouseleave', function (e) {
-                mouse.x = undefined;
-                mouse.y = undefined;
-            });
-        }
-    }, [draw]);
-
-    return <canvas ref={canvasRef} {...rest} />;
-}
+  return <canvas ref={canvasRef} {...rest} />;
+};
 
 export default Canvas;

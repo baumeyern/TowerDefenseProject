@@ -1,6 +1,6 @@
 {
-  "name": "towerdefenseproject",
-  "version": "0.1.0",
+  "name": "yes",
+  "version": "yes",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.7.1",
@@ -57,5 +57,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "yes",
+  "main": "yes",
+  "author": "y",
+  "license": "y",
+  "repository": "y"
 }
