@@ -3,13 +3,13 @@ import { mouse } from '../pages/GamePage';
 
 const Canvas = props => {
 
-    const { draw, ...rest } = props;
+    const { draw, events, ...rest } = props;
     const canvasRef = useRef(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
-
+        /*
         let canvasPos = canvas.getBoundingClientRect();
         window.addEventListener('resize', function (e) {
             canvasPos = canvas.getBoundingClientRect();
@@ -24,10 +24,9 @@ const Canvas = props => {
         canvas.addEventListener('mouseleave', function (e) {
             mouse.x = undefined;
             mouse.y = undefined;
-        });
+        });*/
 
-        draw(ctx);
-        //drawGrid(ctx);
+        events(canvas);
         let animationFrameID;
 
         const render = () => {
@@ -38,6 +37,7 @@ const Canvas = props => {
 
         return () => {
             window.cancelAnimationFrame(animationFrameID);
+            /*
             window.removeEventListener('resize', function (e) {
                 canvasPos = canvas.getBoundingClientRect();
             });
@@ -49,9 +49,9 @@ const Canvas = props => {
             canvas.removeEventListener('mouseleave', function (e) {
                 mouse.x = undefined;
                 mouse.y = undefined;
-            });
+            });*/
         }
-    }, [draw]);
+    }, [draw, events]);
 
     return <canvas ref={canvasRef} {...rest} />;
 }

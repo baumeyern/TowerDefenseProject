@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
@@ -7,7 +7,7 @@ import { Enemy } from "../objects/enemy";
 import { Block } from '../objects/block';
 import { Tower } from '../objects/tower';
 import { Projectile } from '../objects/projectile';
-import { collision } from '../utils/utils';
+import { collision, inRange } from '../utils/utils';
 
 import circleImg from "../objects/circle.png";
 const circle = new Image();
@@ -17,8 +17,9 @@ export let towers = [];
 export let bullets = [];
 export let enemies = [];
 export let grid = [];
-export let path = [];
 export let towerType = 1;
+export let selected = false;
+export let lives = 10;
 
 const map1 = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -46,19 +47,40 @@ const map1Waypoints = [
 ]
 
 export const mouse = {
-    x: undefined,
-    y: undefined,
+    x: -1,
+    y: -1,
     width: .1,
     height: .1,
 }
 
 window.addEventListener("keypress", function (e) {
     //console.log(mouse.x + ', ' + mouse.y);
-    if (bullets.length > 0) {
-        console.log(bullets[0].x + ', ' + bullets[0].y);
+    if (enemies.length > 0) {
+        console.log(enemies[0].mid.x + ', ' + enemies[0].mid.y);
+        console.log(enemies[0].health);
     }
 
 });
+
+const selectTower = () => {
+    for (let t = 0; t < towers.length; t++) {
+        if (mouse.x && mouse.y && collision(towers[t], mouse)) {
+            selected = towers[t];
+            break;
+        } else {
+            selected = false;
+        }
+    }
+}
+
+const placeTower = () => {
+    grid.forEach(block => {
+        if (block.hover && block.type != 1 && !block.hasTower) {
+            towers.push(new Tower(block.x, block.y, towerType));
+            block.hasTower = true;
+        }
+    })
+}
 
 function GamePage() {
     let prev = Date.now(), frameCount = 0;
@@ -68,25 +90,27 @@ function GamePage() {
             grid.push(new Block(x*50, y*50, map1[y][x]));
         }
     }
-    grid.forEach(block => {
-        if (block.type === 1) {
-            path.push(block);
-        }
-    });
-    console.log(path);
-    enemies.push(new Enemy(path[0].x-50, path[0].y, 3))
+    enemies.push(new Enemy(map1Waypoints[0].x-50, map1Waypoints[0].y, 3))
     const draw = (ctx) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         grid.forEach(block => {
             block.draw(ctx);
+            block.mouseIsOver(mouse);
         });
         for (let t = 0; t < towers.length; t++) {
             towers[t].draw(ctx);
-            towers[t].shoot(bullets);
+            let enemiesInRange = enemies.filter(function (enemy) {
+                return towers[t].inRange(enemy);
+            });
+            //console.log(enemiesInRange);
+            towers[t].shoot(bullets, enemiesInRange);
+        }
+        if (selected) {
+            selected.drawRange(ctx);
         }
         for (let b = 0; b < bullets.length; b++){
             bullets[b].draw(ctx);
-            bullets[b].move(enemies[0]);
+            bullets[b].move();
             if (bullets[b].x > ctx.canvas.width || bullets[b].x < -10 || bullets[b].y < -10 || bullets[b].y > ctx.canvas.height || bullets[b].end) {
                 bullets.splice(b, 1);
                 b--;
@@ -95,7 +119,9 @@ function GamePage() {
         for (let e = 0; e < enemies.length; e++) {
             enemies[e].draw(ctx);
             enemies[e].move(map1Waypoints);
-            if (enemies[e].end) {
+            enemies[e].hit(bullets);
+            if (enemies[e].end || enemies[e].dead) {
+                lives -= enemies[e].atk;
                 enemies.splice(e, 1);
                 e--;
             }
@@ -109,12 +135,48 @@ function GamePage() {
             //console.info(fps);
         }
     }
+    const makeEvents = canvas => {
+        window.addEventListener('click', selectTower);
+        let canvasPos = canvas.getBoundingClientRect();
+        window.addEventListener('resize', function (e) {
+            canvasPos = canvas.getBoundingClientRect();
+        });
+
+        canvas.addEventListener('mousemove', function (e) {
+            mouse.x = e.x - canvasPos.left;
+            mouse.y = e.y - canvasPos.top;
+            //console.log((mouse.x) + ', ' + (mouse.y));
+        });
+
+        canvas.addEventListener('mouseleave', function (e) {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        canvas.addEventListener('click', placeTower);
+        return() => {
+            window.removeEventListener('click', selectTower);
+            window.removeEventListener('resize', function (e) {
+                canvasPos = canvas.getBoundingClientRect();
+            });
+            canvas.removeEventListener('mousemove', function (e) {
+                mouse.x = e.x - canvasPos.x;
+                mouse.y = e.y - canvasPos.y;
+                //console.log((mouse.x) + ', ' + (mouse.y));
+            });
+            canvas.removeEventListener('mouseleave', function (e) {
+                mouse.x = undefined;
+                mouse.y = undefined;
+            });
+            canvas.removeEventListener('click', placeTower);
+        }
+    }
 
     return (
         <div>
             <h1>Game Page</h1>
             <div className="container">
-                <Canvas draw={draw} width='900' height='600' />
+                <Canvas draw={draw} events={makeEvents} width='900' height='600' />
             </div>
             <div className="container">
                 <Link to='/scores' >
