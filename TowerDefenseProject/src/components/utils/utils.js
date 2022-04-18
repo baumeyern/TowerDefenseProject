@@ -10,3 +10,7 @@ export function collision(box1, box2) {
         return false;
     }
 }
+
+export function inRange(obj, target, range) {
+    return (obj.x - target.x) * (obj.x - target.x) + (obj.y - target.y) * (obj.y - target.y) < range * range;
+}
