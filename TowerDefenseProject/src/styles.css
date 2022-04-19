@@ -68,14 +68,19 @@ h2 {
   border-width: 2px !important;
 }
 
-.MuiOutlinedInput-notchedOutline {
+.MuiOutlinedInput-notchedOutline .panel {
   border-color: #f0f0f080 !important;
 }
 
-.Mui-focused .MuiOutlinedInput-notchedOutline {
+.Mui-focused .MuiOutlinedInput-notchedOutline .panel {
   border-color: #fffffff0 !important;
 }
 
 .panel {
+  font-family: arcade;
   border-color: royalblue !important;
+}
+
+.panel-tower {
+  border-color: chartreuse;
 }

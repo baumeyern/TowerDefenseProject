@@ -124,18 +124,6 @@ export function Panel(x, y) {
   this.y = y;
   this.width = 250;
   this.height = 600;
-
-  useEffect(() => {
-    const place = () => {
-      if (mouse.x && mouse.y && collision(this, mouse)) {
-        towers.push(new Tower(this.x, this.y, 4));
-      }
-    };
-    window.addEventListener("click", place);
-    return () => {
-      window.removeEventListener("click", place);
-    };
-  }, []);
 }
 
 Panel.prototype = {
@@ -143,16 +131,9 @@ Panel.prototype = {
     ctx.fillStyle = "rgba(0, 210, 255, 0.22)";
     ctx.strokeRect(this.x, this.y, this.width, this.height);
     ctx.fillRect(900, 0, 250, 600);
-    ctx.font = `30px Verdana`;
-    ctx.fillStyle = "rgb(255, 255, 255)";
-    ctx.fillText("Score: ", 910, 50, 690);
-    ctx.beginPath();
-    ctx.fillStyle = "rgb(255, 255, 255)";
 
-    for (let i = 100; i < 600; i += 100) {
-      ctx.strokeRect(1025, i, 125, 100);
-      ctx.strokeRect(900, i, 125, 100);
-    }
+    // ctx.beginPath();
+    //ctx.fillStyle = "rgb(255, 255, 255)";
 
     // let panelTower = [];
     // const towerIcons = [
@@ -166,10 +147,21 @@ Panel.prototype = {
     // });
   },
   Score: function (ctx) {
-    let scoreLabel = <h3>Score:</h3>;
+    ctx.font = `30px Verdana`;
+    ctx.fillStyle = "rgb(255, 255, 255)";
+    ctx.fillText("Score: ", 910, 50, 690);
   },
   Fps: function (ctx) {},
-  Tower: function (getContext) {},
+  DTower: function (ctx) {
+    return (
+      <div draggable>
+        {(ctx.font = `30px Verdana`)}
+        {(ctx.fillStyle = "rgb(255, 255, 255)")}
+        {ctx.fillText("Tower ", 910, 150, 690)}
+        {ctx.fillRect(940, 200, 50, 50)}
+      </div>
+    );
+  },
   Play: function (start) {},
   Stop: function (pause) {},
   Time: function (ctx) {},

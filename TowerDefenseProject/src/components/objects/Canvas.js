@@ -1,10 +1,20 @@
 import React, { useEffect, useRef } from "react";
 import { mouse } from "../pages/GamePage";
+import PropTypes from "prop-types";
 
 const Canvas = (props) => {
   const { draw, ...rest } = props;
+
   const canvasRef = useRef(null);
+  // const { height, width } = props;
   //const ctxRef = useRef(null);
+
+  //   const draws = (ctx, x, y, w, h) => {
+  //     ctx.font = `30px Verdana`;
+  //     ctx.fillStyle = "rgb(255, 255, 255)";
+  //     ctx.fillText("Tower ", 910, 150, 690);
+  //     ctx.fillRect(x, y, w, h);
+  //   };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -54,7 +64,16 @@ const Canvas = (props) => {
     };
   }, [draw]);
 
-  return <canvas ref={canvasRef} {...rest} />;
+  return (
+    <div>
+      <canvas ref={canvasRef} {...rest} />
+    </div>
+  );
+};
+Canvas.propTypes = {
+  draw: PropTypes.func.isRequired,
+  height: PropTypes.number.isRequired, // ADDED
+  width: PropTypes.number.isRequired, // ADDED
 };
 
 export default Canvas;

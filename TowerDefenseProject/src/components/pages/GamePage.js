@@ -7,6 +7,7 @@ import { Enemy } from "../objects/enemy";
 import { Block } from "../objects/block";
 import { Tower } from "../objects/tower";
 import { Panel } from "../objects/panel";
+import { TowerIcon } from "../objects/towerIcon";
 import { Projectile } from "../objects/projectile";
 import { collision } from "../utils/utils";
 
@@ -19,7 +20,9 @@ export let bullets = [];
 export let enemies = [];
 export let grid = [];
 export let panel = [];
+export let towerIcon = [];
 export let panelSize = 302;
+export let panelTower = [];
 export const mouse = {
   x: undefined,
   y: undefined,
@@ -33,6 +36,18 @@ window.addEventListener("keypress", function (e) {
 
 function GamePage() {
   let frameCount = 0;
+
+  //   for (let i = 100; i < 600; i += 100) {
+  //     ctx.strokeRect(1025, i, 125, 100);
+  //     ctx.strokeRect(900, i, 125, 100);
+  //     towerIcons.push(new towerIcons());
+  //   }
+  for (let y = 100; y <= 500; y += 125) {
+    for (let x = 900; x <= 1080; x += 125) {
+      towerIcon.push(new TowerIcon(x, y));
+    }
+  }
+  //towerIcon.push(new TowerIcon(900, 100));
 
   panel.push(new Panel(900, 0));
   //   for (let y = 0; y < 600; y += 150) {
@@ -52,9 +67,19 @@ function GamePage() {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     //panel.draw(ctx);
 
+    //panelTower.push(new panelTower(900, 100));
+
+    towerIcon.forEach((towerIcon) => {
+      towerIcon.draw(ctx);
+
+      ctx.drawImage(circle, 900, 100);
+    });
+
     //Panel
     panel.forEach((panel) => {
       panel.draw(ctx);
+      panel.Score(ctx);
+      panel.DTower(ctx);
     });
     //Panel.draw(ctx);
 
