@@ -1,4 +1,4 @@
-//import { path } from '../pages/GamePage';
+
 import { collision } from '../utils/utils';
 import circleImg from "./circle.png";
 const circle = new Image();
