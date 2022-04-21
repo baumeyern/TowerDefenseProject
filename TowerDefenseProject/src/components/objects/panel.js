@@ -3,7 +3,7 @@ import { mouse, towers } from "../pages/GamePage";
 import { collision } from "../utils/utils";
 import { Tower } from "../objects/tower";
 import Canvas from "../objects/Canvas";
-// add drag and drop logic
+
 export function Panel(x, y) {
   this.x = x;
   this.y = y;
