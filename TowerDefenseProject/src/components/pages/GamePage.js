@@ -10,6 +10,7 @@ import { Panel } from "../objects/panel";
 import { TowerIcon } from "../objects/towerIcon";
 import { Projectile } from "../objects/projectile";
 import { collision, inRange } from "../utils/utils";
+import useDraggable from "../objects/useDraggable";
 
 import circleImg from "../objects/circle.png";
 const circle = new Image();
@@ -67,6 +68,7 @@ window.addEventListener("keypress", function (e) {
   }
 });
 
+// logic for if a tower is already placed
 const selectTower = () => {
   for (let t = 0; t < towers.length; t++) {
     if (mouse.x && mouse.y && collision(towers[t], mouse)) {
@@ -85,6 +87,17 @@ const placeTower = () => {
       block.hasTower = true;
     }
   });
+};
+
+const DraggableTower = ({ children }) => {
+  const TowerRef = useRef(null);
+  useDraggable(TowerRef);
+
+  return (
+    <div className="DraggableTowers" ref={TowerRef}>
+      {children}
+    </div>
+  );
 };
 
 function GamePage() {
@@ -164,6 +177,7 @@ function GamePage() {
         b--;
       }
     }
+    // this send out the enemy
     for (let e = 0; e < enemies.length; e++) {
       enemies[e].draw(ctx);
       enemies[e].move(map1Waypoints);
@@ -183,6 +197,7 @@ function GamePage() {
       //console.info(fps);
     }
   };
+  // add a var for which type of tower we are going to add to the canvas
   const makeEvents = (canvas) => {
     window.addEventListener("click", selectTower);
     let canvasPos = canvas.getBoundingClientRect();
@@ -223,6 +238,7 @@ function GamePage() {
   return (
     <div>
       <h1>Game Page</h1>
+      <DraggableTower>Tower</DraggableTower>
       <div className="container">
         <Canvas draw={draw} events={makeEvents} width="1200" height="900" />
       </div>
