@@ -16,6 +16,8 @@ import useAudio from "../objects/Audio";
 import Audio1 from "../../assets/audioClips/songformydeath.mp3";
 
 import circleImg from "../objects/circle.png";
+import { Checkbox } from "@mui/material";
+import { color } from "@mui/system";
 //import Player from "../objects/Audio";
 //import Demo from "../objects/Audio";
 const circle = new Image();
@@ -33,13 +35,23 @@ export let towerType = 1;
 export let selected = false;
 export let lives = 10;
 
+//Game Audio is off by default
 function Radio() {
   const audio = useAudio(Audio1, { volume: 0.8, playbackRate: 1.2 });
+  const [isChecked, setIsChecked] = React.useState(false);
 
   return (
     <div>
-      <h1>Sound</h1>
-      <button onClick={() => audio.play()}>Play</button>
+      <p className="audio">
+        Toggle for audio{" "}
+        <Checkbox
+          onChange={() => setIsChecked(!isChecked)}
+          className="audio-bttn"
+          onClick={() => {
+            isChecked ? audio.play() : audio.stop();
+          }}
+        />
+      </p>
     </div>
   );
 }

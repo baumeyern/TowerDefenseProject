@@ -83,3 +83,11 @@ h2 {
   background: cornsilk;
   margin: 2px;
 }
+
+.audio {
+  color: aqua;
+}
+
+.audio-bbtn {
+  text-align: left;
+}
