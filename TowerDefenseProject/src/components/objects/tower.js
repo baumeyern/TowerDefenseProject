@@ -18,8 +18,13 @@ export function Tower(x, y, type) {
     this.fire = true;
     if (this.type === 1) {
         this.range = 150;
-        this.fireRate = 1;
+        this.fireRate = 1.5;
         this.projectile = 6;
+    }
+    else if (this.type === 2) {
+        this.range = 400;
+        this.fireRate = 2;
+        this.projectile = 1;
     }
 }
 
@@ -38,7 +43,12 @@ Tower.prototype = {
     },
     shoot: function (bullets, enemies) {
         if (this.fire && enemies.length > 0) {
-            bullets.push(new Projectile(this.x + this.width / 2, this.y + this.height / 2, 2, enemies[0] ));
+            let enemy = enemies[0];
+            if (this.type === 2) {
+                enemy = enemies.sort((a, b) => b.speed - a.speed)[0];
+            }
+            //console.log(enemies);
+            bullets.push(new Projectile(this.x + this.width / 2, this.y + this.height / 2, this.projectile, enemy ));
             //{ mid:{ x: enemies[0].mid.x, y: enemies[0].mid.y }}
             this.fire = false;
             this.timer = Date.now();

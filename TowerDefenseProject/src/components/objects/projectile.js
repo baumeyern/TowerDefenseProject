@@ -12,11 +12,13 @@ export function Projectile(x, y, type, target) {
     this.target = target;
     this.end = false;
     if (this.type === 1) {
-
+        this.slow = true;
+        this.speed = 5;
+        this.pwr = 1
     }
     else {
         this.speed = 5;
-        this.pwr = 1;
+        this.pwr = 2;
     }
 }
 
@@ -35,6 +37,7 @@ Projectile.prototype = {
             //console.log((distX < 0 ? -distX : distX) + (distY < 0 ? -distY : distY));
             //console.log(distY);
             if ((distX < 0 ? -distX : distX) + (distY < 0 ? -distY : distY) < this.speed) {
+                this.target.hit(this);
                 this.end = true;
             }
         }
