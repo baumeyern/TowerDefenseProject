@@ -16,7 +16,9 @@ export function Enemy(x, y, type) {
     this.end = false
     this.dead = false;
     if (this.type === 1) {
-
+        this.health = 2;
+        this.speed = 1;
+        this.atk = 2;
     }
     else {
         this.health = 3;
@@ -40,20 +42,34 @@ Enemy.prototype = {
             this.mid.x = this.x + this.width / 2;
             this.mid.y = this.y + this.height / 2;
         }
-        if (this.x === path[this.waypoint].x && this.y === path[this.waypoint].y) {
+        if (Math.round(this.x) === path[this.waypoint].x && Math.round(this.y) === path[this.waypoint].y) {
             this.waypoint++;
         }
         if (this.waypoint >= path.length) {
             this.end = true;
         }
     },
+    /*
     hit: function (bullets) {
         for (let i = 0; i < bullets.length; i++) {
             if (collision(this, bullets[i])) {
                 this.health -= bullets[i].pwr;
+                if (bullets[i].slow) {
+                    this.speed -= .25;
+                }
                 bullets.splice(i, 1);
                 i--;
             }
+        }
+        if (this.health <= 0) {
+            this.dead = true;
+        }
+       
+    }*/
+    hit: function (bullet) {
+        this.health -= bullet.pwr;
+        if (bullet.slow) {
+            this.speed *= 0.75;
         }
         if (this.health <= 0) {
             this.dead = true;
