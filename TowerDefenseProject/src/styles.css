@@ -41,6 +41,7 @@ h2 {
 .container {
     text-align: center;
     padding-bottom: 25px;
+    display: block;
 }
 
 .btn {
@@ -75,4 +76,24 @@ h2 {
 
 .Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #fffffff0 !important;
+}
+
+.panel {
+    margin:auto;
+}
+
+.panel-left {
+    float: left;
+}
+
+.panel-right {
+    float: right;
+}
+
+.towers>div {
+    float:left;
+}
+
+img:hover {
+    cursor: pointer;
 }
