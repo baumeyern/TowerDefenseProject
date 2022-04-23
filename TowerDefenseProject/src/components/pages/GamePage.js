@@ -11,8 +11,13 @@ import { TowerIcon } from "../objects/towerIcon";
 import { Projectile } from "../objects/projectile";
 import { collision, inRange } from "../utils/utils";
 import useDraggable from "../objects/useDraggable";
+import useSound from "use-sound";
+import useAudio from "../objects/Audio";
+import Audio1 from "../../assets/audioClips/songformydeath.mp3";
 
 import circleImg from "../objects/circle.png";
+//import Player from "../objects/Audio";
+//import Demo from "../objects/Audio";
 const circle = new Image();
 circle.src = circleImg;
 
@@ -27,6 +32,17 @@ export let panelTower = [];
 export let towerType = 1;
 export let selected = false;
 export let lives = 10;
+
+function Radio() {
+  const audio = useAudio(Audio1, { volume: 0.8, playbackRate: 1.2 });
+
+  return (
+    <div>
+      <h1>Sound</h1>
+      <button onClick={() => audio.play()}>Play</button>
+    </div>
+  );
+}
 
 const map1 = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -92,12 +108,20 @@ const placeTower = () => {
 const DraggableTower = ({ children }) => {
   const TowerRef = useRef(null);
   useDraggable(TowerRef);
+  const audio = useAudio(Audio1, { volume: 0.8, playbackRate: 1.5 });
 
   return (
-    <div className="DraggableTowers" ref={TowerRef}>
-      {children}
+    <div>
+      <div className="DraggableTowers" ref={TowerRef}>
+        {children}
+      </div>
     </div>
   );
+};
+
+const AudioFile = () => {
+  //Audio();
+  return <div>{Radio()}</div>;
 };
 
 function GamePage() {
@@ -237,6 +261,7 @@ function GamePage() {
 
   return (
     <div>
+      <AudioFile></AudioFile>
       <h1>Game Page</h1>
       <DraggableTower>Tower</DraggableTower>
       <div className="container">
