@@ -1,0 +1,150 @@
+@font-face {
+  font-family: arcade;
+  src: url("./components/fonts/arcade.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: title;
+  src: url("./components/fonts/space.otf") format("opentype");
+}
+
+@font-face {
+  font-family: pixel;
+  src: url("./components/fonts/pixel.ttf") format("truetype");
+}
+
+body {
+  background-color: #1c1c1c;
+}
+
+html {
+  color-scheme: dark;
+}
+
+h1 {
+  font-family: title;
+  text-align: center;
+  color: #f0f0f0f0;
+  font-size: 60pt;
+  padding-top: 40px;
+}
+
+h2 {
+  font-family: title;
+  text-align: center;
+  color: #f0f0f0f0;
+  font-size: 40pt;
+  padding-top: 60px;
+}
+
+.container {
+  text-align: center;
+  padding-bottom: 25px;
+  display: block;
+}
+
+.btn {
+  font-family: arcade;
+  font-size: 40px;
+  color: #f0f0f0f0;
+}
+
+.sbtn {
+  font-family: arcade;
+  font-size: 28px;
+  color: #f0f0f0f0;
+}
+
+.MuiInputLabel-root {
+  font-family: pixel !important;
+  color: #f0f0f0f0 !important;
+}
+
+.MuiOutlinedInput-root {
+  font-family: pixel !important;
+  color: #f0f0f0f0 !important;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-width: 2px !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: #f0f0f080 !important;
+}
+
+.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #fffffff0 !important;
+}
+
+.panel {
+  width: 210px;
+  height: 600px;
+  border-radius: 10px;
+  border: 5px solid aqua;
+  float: right;
+  background-color: dimgrey;
+  display: block;
+  margin: auto;
+}
+
+.waves-scores-wrapper {
+  display: flex;
+}
+
+.wave-label {
+  color: red;
+  display: inline-block;
+  padding: 40px;
+  width: 2000px;
+  height: 40px;
+  font-size: 32px;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+.score-label {
+  color: aqua;
+  padding: 40px;
+
+  width: 1300px;
+  height: 40px;
+  font-size: 32px;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+.panel-right {
+  float: right;
+}
+
+.towers {
+  float: left;
+  padding-top: 100px;
+}
+
+img:hover {
+  cursor: pointer;
+}
+
+.money,
+.lives {
+  padding-left: 5px;
+  float: left;
+  width: 210px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 30px;
+}
+
+.buttons {
+  width: 210px;
+
+  padding-top: 120px;
+  float: left;
+}
+
+.audio {
+  color: aqua;
+}
+
+.audio-bbtn {
+  text-align: left;
+}
