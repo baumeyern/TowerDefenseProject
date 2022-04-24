@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
 import Canvas from '../objects/Canvas';
+import Draggable from '../objects/Draggable';
 import Panel from '../objects/Panel';
 import { Enemy } from "../objects/enemy";
 import { Block } from '../objects/block';
@@ -21,10 +22,16 @@ export let towers = [];
 export let bullets = [];
 export let enemies = [];
 export let grid = [];
-export let towerType = 2;
 export let selected = false;
-export let lives = 10;
+export let livesCounter = 10;
+export let moneyCounter = 20;
+export let scoreCounter = 0;
+export let waveCounter = 0;
+export let enemyCounter = 0;
+//export let gameState = 'playing';
+//export let paused = true;
 let waveTimer = Date.now();
+let start = true;
 
 
 const map1 = [
@@ -57,11 +64,10 @@ export const mouse = {
     y: -1,
     width: .1,
     height: .1,
-    inCanvas: false,
 }
 
 window.addEventListener("keypress", function (e) {
-    console.log(mouse.x+', '+mouse.y)
+    
 });
 
 const selectTower = () => {
@@ -75,86 +81,173 @@ const selectTower = () => {
     }
 }
 
-const placeTower = (type) => {
-    grid.forEach(block => {
-        if (block.hover && block.type !== 1 && !block.hasTower) {
-            towers.push(new Tower(block.x, block.y, type));
-            block.hasTower = true;
-        }
-    })
+
+
+const sellTower = (selected) => {
+
 }
 
+const init = () => {
+    towers = [];
+    bullets = [];
+    enemies = [];
+    grid = [];
+    selected = false;
+    livesCounter = 10;
+    moneyCounter = 0;
+    scoreCounter = 0;
+    waveCounter = 0;
+    enemyCounter = 0;
+    waveTimer = Date.now();
+}
 
 function GamePage() {
     let prev = Date.now(), frameCount = 0;
-    
-    for (let y = 0; y < 12; y ++) {
-        for (let x = 0; x < 18; x ++) {
-            grid.push(new Block(x*50, y*50, map1[y][x]));
-        }
-    }
+    const [paused, setPaused] = useState(true);
+    const [show, setShow] = useState(true);
+    const [message, setMessage] = useState('');
+    //const [lives, setLives] = useState(livesCounter);
+    //const [score, setScore] = useState(scoreCounter);
+    //const [money, setMoney] = useState(moneyCounter);
+    //const [wave, setWave] = useState(waveCounter);
+    const [values, setValues] = useState({ score: scoreCounter, lives: livesCounter, money: moneyCounter, wave: waveCounter });
 
+    const messageRef = useRef();
+    let currentRef = messageRef.current;
+
+    if (start) {
+        init();
+        for (let y = 0; y < 12; y++) {
+            for (let x = 0; x < 18; x++) {
+                grid.push(new Block(x * 50, y * 50, map1[y][x]));
+            }
+        }
+        start = false;
+    }
     const draw = (ctx) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         grid.forEach(block => {
             block.draw(ctx);
             block.mouseIsOver(mouse);
         });
-        if (enemies.length === 0 && (Date.now() - waveTimer) / 1000 >= 10) {
-            for (let i = 0; i < 5; i++) {
-                enemies.push(new Enemy(map1Waypoints[0].x - (i * 60), map1Waypoints[0].y, 1));
+        if (!paused) {
+            if (enemies.length === 0 && (Date.now() - waveTimer) / 1000 >= 5) {
+                //console.log(values.wave);
+                //setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1 })
+                //enemyCounter = values.wave;
+                //FUCK THIS +1
+                let totalEnemies = values.wave + 1;
+                let bosses = 0
+                if ((values.wave + 1) % 5 === 0) {
+                    bosses = (values.wave + 1) / 5;
+                }
+                for (let i = 0; i < totalEnemies; i++) {
+                    let type;
+                    if (values.wave + 1 > 3) {
+                        type = Math.floor(Math.random() * 2) + 1;
+                    } else {
+                        type = 1;
+                    }
+                    if (bosses > 0 && i === totalEnemies-bosses) {
+                        type = 3;
+                        bosses--;
+                    }
+                    enemies.push(new Enemy(map1Waypoints[0].x - (i + 1) * (90 + Math.floor(Math.random()*70)), map1Waypoints[0].y, type));
+                }
+                setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1})
+                waveTimer = Date.now();
+                console.log(enemies);
             }
-            waveTimer = Date.now();
         }
         for (let t = 0; t < towers.length; t++) {
             towers[t].draw(ctx);
-            let enemiesInRange = enemies.filter(function (enemy) {
-                return towers[t].inRange(enemy);
-            });
-            //console.log(enemiesInRange);
-            towers[t].shoot(bullets, enemiesInRange);
+            if (!paused) {
+                let enemiesInRange = enemies.filter(function (enemy) {
+                    return towers[t].inRange(enemy);
+                });
+                //console.log(enemiesInRange);
+                towers[t].shoot(bullets, enemiesInRange);
+            }
         }
-        if (selected) {
+         if (selected) {
             selected.drawRange(ctx);
-        }
+         }
+        
         for (let b = 0; b < bullets.length; b++){
             bullets[b].draw(ctx);
-            bullets[b].move();
-            if (bullets[b].x > ctx.canvas.width || bullets[b].x < -10 || bullets[b].y < -10 || bullets[b].y > ctx.canvas.height || bullets[b].end) {
-                bullets.splice(b, 1);
-                b--;
+            if (!paused) {
+                bullets[b].move();
+                if (bullets[b].x > ctx.canvas.width || bullets[b].x < -10 || bullets[b].y < -10 || bullets[b].y > ctx.canvas.height || bullets[b].end) {
+                    bullets.splice(b, 1);
+                    b--;
+                }
             }
         }
         for (let e = 0; e < enemies.length; e++) {
             enemies[e].draw(ctx);
-            enemies[e].move(map1Waypoints);
-            //enemies[e].hit(bullets);
-            if (enemies[e].end || enemies[e].dead) {
-                lives -= enemies[e].atk;
-                enemies.splice(e, 1);
-                e--;
+            enemies[e].drawHealth(ctx);
+            if (!paused) {
+                enemies[e].move(map1Waypoints);
+                //enemies[e].hit(bullets);
+                if (enemies[e].end || enemies[e].dead) {
+                    if (enemies[e].end) {
+                        let updatedLives = values.lives - enemies[e].atk;
+                        setValues({ score: values.score, lives: updatedLives, money: values.money, wave: values.wave });
+                        //console.log(lives);
+                    }
+                    else if (enemies[e].dead) {
+                        let updatedScore = values.score + enemies[e].score;
+                        let updatedMoney = values.money + enemies[e].value;
+                        setValues({ score: updatedScore, lives: values.lives, money: updatedMoney, wave: values.wave})
+                    }
+
+                    enemies.splice(e, 1);
+                    e--;
+                }
             }
         }
-        const time = Date.now();
-        frameCount++;
-        if (time > prev + 1000) {
-            let fps = Math.round((frameCount * 1000) / (time - prev));
-            prev = time;
-            frameCount = 0;
-            //console.info(fps);
+        if (true) {
+            const time = Date.now();
+            frameCount++;
+            if (time > prev + 1000) {
+                let fps = Math.round((frameCount * 1000) / (time - prev));
+                prev = time;
+                frameCount = 0;
+                //console.log(grid.length);
+            }
         }
+    }
+    const placeTower = (type) => {
+        grid.forEach(block => {
+            if (block.hover && block.type !== 1 && !block.hasTower) {
+                let tower = new Tower(block.x, block.y, type);
+                if (tower.price <= values.money) {
+                    towers.push(tower);
+                    block.hasTower = true;
+                    setValues({ score: values.score, lives: values.lives, money: values.money - towers[towers.length - 1].price, wave: values.wave });
+                }
+                else {
+                    //console.log('Not Enough Money');
+                    currentRef.style.display = 'Block';
+                }
+            }
+        });
     }
     const makeEvents = canvas => {
         window.addEventListener('click', selectTower);
+        window.addEventListener('mousedown', function (e) {
+            currentRef.style.display = 'None';
+        });
         let canvasPos = canvas.getBoundingClientRect();
         canvasLeft = canvasPos.left;
         canvasTop = canvasPos.top;
-        window.addEventListener('resize', function (e) {
+        const changeBoundRect = (e) => {
             canvasPos = canvas.getBoundingClientRect();
             canvasLeft = canvasPos.left;
             canvasTop = canvasPos.top;
-        });
-
+        }
+        window.addEventListener('resize', changeBoundRect);
+        window.addEventListener('scroll', changeBoundRect);
         document.addEventListener('mousemove', function (e) {
             mouse.x = e.x - canvasLeft;
             mouse.y = e.y - canvasTop;
@@ -163,9 +256,8 @@ function GamePage() {
         //canvas.addEventListener('click', placeTower);
         return() => {
             window.removeEventListener('click', selectTower);
-            window.removeEventListener('resize', function (e) {
-                canvasPos = canvas.getBoundingClientRect();
-            });
+            window.removeEventListener('resize', changeBoundRect);
+            window.removeEventListener('scroll', changeBoundRect);
             canvas.removeEventListener('mousemove', function (e) {
                 mouse.x = e.x - canvasPos.x;
                 mouse.y = e.y - canvasPos.y;
@@ -178,13 +270,46 @@ function GamePage() {
             //canvas.removeEventListener('click', placeTower);
         }
     }
-
+    //<Panel place={placeTower} paused={!paused}/>
     return (
         <div>
             <h1>Game Page</h1>
             <div className="container">
                 <Canvas draw={draw} events={makeEvents} width='900' height='600' />
-                <Panel place={placeTower}/>
+                <div className="panel">
+                    <div className='panel-left'>
+                        <div className='towers'>
+                            <Draggable place={placeTower} type={1} paused={paused} />
+                            <Draggable place={placeTower} type={2} paused={paused} />
+                            <Draggable place={placeTower} type={3} paused={paused} />
+                            <Draggable place={placeTower} type={4} paused={paused} />
+                        </div>
+                    </div>
+                    <div className='panel-right'>
+                        <div ref={messageRef} className='message'>
+                            MESSAGE
+                        </div>
+                        <div className='sell'>
+
+                        </div>
+                        <div className='numbers'>
+                            <div className='scores'>
+                                Score: {values.score}
+                            </div>
+                            <div className='money'>
+                                Money: {values.money}
+                            </div>
+                            <div className='lives_waves'>
+                                Lives: {values.lives} Wave: {values.wave}
+                            </div>
+                        </div>
+                        <div className='buttons'>
+                            {show ?
+                                (<button className='play' onClick={function (e) { setPaused(false); setShow(!show) }}>Play</button>):
+                                (<button className='pause' onClick={function (e) { setPaused(true); setShow(!show) }}>Pause</button>)}
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className="container">
                 <Link to='/scores' >

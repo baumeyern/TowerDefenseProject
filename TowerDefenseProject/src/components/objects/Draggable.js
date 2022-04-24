@@ -6,7 +6,7 @@ circle.src = circleImg;
 
 const Draggable = (props) => {
 
-    const { place, type, ...rest } = props;
+    const { place, type, paused, ...rest } = props;
     const [pressed, setPressed] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const ref = useRef();
@@ -28,7 +28,9 @@ const Draggable = (props) => {
             }
         }
         const handleMouseDown = (e) => {
-            setPressed(true);
+            if (!paused) {
+                setPressed(true);
+            }
         }
         const handleMouseUp = (e) => {
             if (pressed) {
@@ -46,7 +48,7 @@ const Draggable = (props) => {
             document.removeEventListener('mousemove', handleMouseMove);
             dragRef.removeEventListener('mousedown', handleMouseDown);
         }
-    }, [position, pressed, place, type]);
+    }, [position, pressed, place, type, paused]);
 
     useEffect(() => {
         if (ref.current) {

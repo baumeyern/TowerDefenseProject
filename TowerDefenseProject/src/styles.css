@@ -79,7 +79,11 @@ h2 {
 }
 
 .panel {
-    margin:auto;
+    width: 900px;
+    height: 100px;
+    background-color: dimgrey;
+    display: block;
+    margin: auto;
 }
 
 .panel-left {
@@ -96,4 +100,16 @@ h2 {
 
 img:hover {
     cursor: pointer;
+}
+
+.numbers {
+    float: left;
+    padding-right: 5px;
+}
+
+.buttons {
+    width: 70px;
+    padding-top: 20px;
+    padding-right: 10px;
+    float: left;
 }

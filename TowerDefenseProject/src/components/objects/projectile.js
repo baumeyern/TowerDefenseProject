@@ -12,13 +12,17 @@ export function Projectile(x, y, type, target) {
     this.target = target;
     this.end = false;
     if (this.type === 1) {
-        this.slow = true;
         this.speed = 5;
-        this.pwr = 1
+        this.pwr = 50
     }
-    else {
+    else if (this.type === 2) {
         this.speed = 5;
-        this.pwr = 2;
+        this.pwr = 10;
+        this.slow = true;
+    }
+    else if(this.type === 3) {
+        this.speed = 5;
+        this.pwr = 20;
     }
 }
 

@@ -13,23 +13,43 @@ export function Enemy(x, y, type) {
     this.mid = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
     this.type = type;
     this.waypoint = 0;
-    this.end = false
+    this.end = false;
     this.dead = false;
     if (this.type === 1) {
-        this.health = 2;
-        this.speed = 1;
-        this.atk = 2;
-    }
-    else {
-        this.health = 3;
+        this.maxHealth = 150;
+        this.health = 150;
         this.speed = .5;
-        this.atk = 2;
+        this.atk = 1;
+        this.value = 5;
+        this.score = 100;
+    }
+    else if (this.type === 2) {
+        this.maxHealth = 100;
+        this.health = 100;
+        this.speed = 2;
+        this.atk = 1;
+        this.value = 10;
+        this.score = 200;
+    }
+    else if (this.type === 3) {
+        this.maxHealth = 500;
+        this.health = 500;
+        this.speed = .75;
+        this.atk = 5;
+        this.value = 50;
+        this.score = 1000;
     }
 }
 
 Enemy.prototype = {
     draw: function (ctx) {
         ctx.drawImage(circle, this.x, this.y);
+    },
+    drawHealth: function (ctx) {
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect(this.x, this.y, this.width, this.height / 6);
+        ctx.fillStyle = 'red';
+        ctx.fillRect(this.x, this.y, this.width * (this.health / this.maxHealth), this.height / 6);
     },
     move: function (path) {
         if (!this.end) {
@@ -41,10 +61,11 @@ Enemy.prototype = {
             this.y += this.speed * Math.sin(angle);
             this.mid.x = this.x + this.width / 2;
             this.mid.y = this.y + this.height / 2;
+            if ((distX < 0 ? -distX : distX) + (distY < 0 ? -distY : distY) < this.speed) {
+                this.waypoint++;
+            }
         }
-        if (Math.round(this.x) === path[this.waypoint].x && Math.round(this.y) === path[this.waypoint].y) {
-            this.waypoint++;
-        }
+        //if (Math.round(this.x) === path[this.waypoint].x && Math.round(this.y) === path[this.waypoint].y) {
         if (this.waypoint >= path.length) {
             this.end = true;
         }
