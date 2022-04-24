@@ -1,0 +1,99 @@
+
+@font-face {
+    font-family: arcade;
+    src: url('./components/fonts/arcade.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: title;
+    src: url('./components/fonts/space.otf') format('opentype');
+}
+
+@font-face{
+    font-family: pixel;
+    src: url('./components/fonts/pixel.ttf') format('truetype');
+}
+
+body {
+    background-color: #1c1c1c;
+}
+
+html {
+    color-scheme: dark;
+}
+
+h1 {
+    font-family: title;
+    text-align: center;
+    color: #f0f0f0f0;
+    font-size: 60pt;
+    padding-top: 40px;
+}
+
+h2 {
+    font-family: title;
+    text-align: center;
+    color: #f0f0f0f0;
+    font-size: 40pt;
+    padding-top: 60px;
+}
+
+.container {
+    text-align: center;
+    padding-bottom: 25px;
+    display: block;
+}
+
+.btn {
+    font-family: arcade;
+    font-size: 40px;
+    color: #f0f0f0f0;
+}
+
+.sbtn {
+    font-family: arcade;
+    font-size: 28px;
+    color: #f0f0f0f0;
+}
+
+.MuiInputLabel-root {
+    font-family: pixel !important;
+    color: #f0f0f0f0 !important;
+}
+
+.MuiOutlinedInput-root {
+    font-family: pixel !important;
+    color: #f0f0f0f0 !important;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-width: 2px !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+    border-color: #f0f0f080 !important;
+}
+
+.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #fffffff0 !important;
+}
+
+.panel {
+    margin:auto;
+}
+
+.panel-left {
+    float: left;
+}
+
+.panel-right {
+    float: right;
+}
+
+.towers>div {
+    float:left;
+}
+
+img:hover {
+    cursor: pointer;
+}
