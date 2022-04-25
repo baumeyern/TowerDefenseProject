@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-
+//changed img path
 import circleImg from "../../assets/Images/circle.png";
 const circle = new Image();
 circle.src = circleImg;
