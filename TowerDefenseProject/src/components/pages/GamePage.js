@@ -106,10 +106,6 @@ function GamePage() {
     const [paused, setPaused] = useState(true);
     const [show, setShow] = useState(true);
     const [message, setMessage] = useState('');
-    //const [lives, setLives] = useState(livesCounter);
-    //const [score, setScore] = useState(scoreCounter);
-    //const [money, setMoney] = useState(moneyCounter);
-    //const [wave, setWave] = useState(waveCounter);
     const [values, setValues] = useState({ score: scoreCounter, lives: livesCounter, money: moneyCounter, wave: waveCounter });
 
     const messageRef = useRef();
@@ -132,31 +128,32 @@ function GamePage() {
         });
         if (!paused) {
             if (enemies.length === 0 && (Date.now() - waveTimer) / 1000 >= 5) {
-                //console.log(values.wave);
-                //setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1 })
-                //enemyCounter = values.wave;
-                //FUCK THIS +1
-                let totalEnemies = values.wave + 1;
+                
+                let updatedWave = values.wave + 1;
+                setValues({ score: values.score, lives: values.lives, money: values.money, wave: updatedWave })
                 let bosses = 0
-                if ((values.wave + 1) % 5 === 0) {
-                    bosses = (values.wave + 1) / 5;
+                if ((updatedWave) % 5 === 0) {
+                    bosses = (updatedWave) / 5;
+                    console.log(bosses);
                 }
-                for (let i = 0; i < totalEnemies; i++) {
+                for (let i = 0; i < updatedWave; i++) {
                     let type;
-                    if (values.wave + 1 > 3) {
+                    if (updatedWave > 3) {
                         type = Math.floor(Math.random() * 2) + 1;
                     } else {
                         type = 1;
                     }
-                    if (bosses > 0 && i === totalEnemies-bosses) {
+                    if (bosses > 0 && i === (updatedWave)-(bosses)) {
                         type = 3;
                         bosses--;
+                        console.log(type);
                     }
-                    enemies.push(new Enemy(map1Waypoints[0].x - (i + 1) * (90 + Math.floor(Math.random()*70)), map1Waypoints[0].y, type));
+                    enemies.push(new Enemy(map1Waypoints[0].x - (i + 1) * (100 + Math.floor(Math.random()*10)), map1Waypoints[0].y, type));
                 }
-                setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1})
+                //setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1})
                 waveTimer = Date.now();
                 console.log(enemies);
+                //console.log(values.wave);
             }
         }
         for (let t = 0; t < towers.length; t++) {
