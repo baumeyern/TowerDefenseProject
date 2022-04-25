@@ -15,7 +15,7 @@ import { Checkbox } from "@mui/material";
 import Audio1 from "../../assets/audioClips/songformydeath.mp3";
 import { collision, inRange, convertToRoman } from "../utils/utils";
 
-import circleImg from "../objects/circle.png";
+import circleImg from "../../assets/Images/circle.png";
 const circle = new Image();
 circle.src = circleImg;
 

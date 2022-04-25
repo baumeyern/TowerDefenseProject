@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Projectile } from "./projectile";
 import { mouse } from "../pages/GamePage";
 import { collision } from "../utils/utils";
-import circleImg from "./circle.png";
+import circleImg from "../../assets/Images/circle.png";
 const circle = new Image();
 circle.src = circleImg;
 
