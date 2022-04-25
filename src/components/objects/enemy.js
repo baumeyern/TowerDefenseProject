@@ -1,11 +1,11 @@
 import { type } from "@testing-library/user-event/dist/type";
 import { collision } from "../utils/utils";
-import circleImg from "./circle.png";
-import type2Img from "./Type2.png";
+import circleImg from "../../assets/Images/circle.png";
+import Type2Img from "../../assets/Images/Type2.png";
 const circle = new Image();
 circle.src = circleImg;
 const type2 = new Image();
-type2.src = type2Img;
+type2.src = Type2Img;
 
 export function Enemy(x, y, type) {
   this.x = x;
@@ -46,7 +46,7 @@ Enemy.prototype = {
     ctx.drawImage(circle, this.x, this.y);
     //this isnt working rn
     if (Enemy.type === 2) {
-      ctx.drawImage(type2, this.x, this.y);
+      ctx.drawImage(Type2Img, this.x, this.y);
       console.log("here is type 2");
     }
   },
