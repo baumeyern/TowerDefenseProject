@@ -10,6 +10,7 @@ type1.src = type1Image;
 const type2 = new Image();
 type2.src = type2Image;
 
+
 export function Enemy(x, y, type) {
     this.x = x;
     this.y = y;
@@ -61,10 +62,10 @@ Enemy.prototype = {
        
     },
     drawHealth: function (ctx) {
-        ctx.strokeStyle = 'red';
-        ctx.strokeRect(this.x, this.y, this.width, this.height / 6);
+        /*ctx.fillStyle = 'black';
+        ctx.fillRect(this.x, this.y, this.width, this.height / 8);*/
         ctx.fillStyle = 'red';
-        ctx.fillRect(this.x, this.y, this.width * (this.health / this.maxHealth), this.height / 6);
+        ctx.fillRect(this.x, this.y, this.width * (this.health / this.maxHealth), this.height / 8);
     },
     move: function (path) {
         if (!this.end) {
@@ -93,8 +94,8 @@ Enemy.prototype = {
             if (collision(this, bullets[i])) {
                 this.health -= bullets[i].pwr;
                 if (bullets[i].slow) {
-                    this.speed -= .25;
                 }
+                    this.speed -= .25;
                 bullets.splice(i, 1);
                 i--;
             }

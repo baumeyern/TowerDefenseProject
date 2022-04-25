@@ -42,6 +42,7 @@ h2 {
     text-align: center;
     padding-bottom: 25px;
     display: block;
+    margin: auto;
 }
 
 .btn {
@@ -79,11 +80,11 @@ h2 {
 }
 
 .panel {
-    width: 900px;
-    height: 100px;
+    width: 150px;
+    height: 600px;
     background-color: dimgrey;
-    display: block;
-    margin: auto;
+    display: grid;
+
 }
 
 .panel-left {
@@ -103,13 +104,27 @@ img:hover {
 }
 
 .numbers {
-    float: left;
     padding-right: 5px;
 }
 
 .buttons {
-    width: 70px;
-    padding-top: 20px;
-    padding-right: 10px;
-    float: left;
+}
+
+.towers {
+    display: grid;
+    grid: 75px 75px / auto auto;
+    padding-top: 5px;
+}
+
+.game {
+    width: 1050px;
+    text-align: center;
+    display: flex;
+    padding-bottom: 10em;
+    margin: auto;
+    align-items: center;
+}
+
+.sellButton {
+    display: none;
 }

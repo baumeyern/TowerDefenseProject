@@ -6,8 +6,6 @@ import circleImg from "./circle.png";
 const circle = new Image();
 circle.src = circleImg;
 
-
-
 export function Tower(x, y, type) {
     this.x = x;
     this.y = y;
@@ -17,6 +15,7 @@ export function Tower(x, y, type) {
     this.mid = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
     this.timer = Date.now();
     this.fire = true;
+    this.sold = false;
     if (this.type === 1) {
         this.range = 150;
         this.fireRate = 1;
@@ -45,7 +44,21 @@ export function Tower(x, y, type) {
 
 Tower.prototype = {
     draw: function (ctx) {
-        ctx.drawImage(circle, this.x, this.y, this.width, this.height);
+        if (this.type === 1) {
+            ctx.fillStyle = 'red';
+        }
+        else if (this.type === 2) {
+            ctx.fillStyle = 'blue';
+        }
+        else if (this.type === 3) {
+            ctx.fillStyle = 'yellow';
+        }
+        else {
+            ctx.fillStyle = 'green';
+        }
+        ctx.beginPath();
+        ctx.arc(this.mid.x, this.mid.y, this.height/2, 0, Math.PI * 2, true);
+        ctx.fill();
     },
     drawRange: function (ctx) {
         ctx.beginPath();
@@ -80,4 +93,8 @@ Tower.prototype = {
         }
         //console.log((Date.now() - this.timer) / 1000 );
     },
+    sell: function () {
+        this.sold = true;
+        return this.price / 2;
+    }
 }

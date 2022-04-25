@@ -101,9 +101,9 @@ window.addEventListener("keypress", function (e) {
 });
 
 const selectTower = () => {
-    for (let t = 0; t < towers.length; t++) {
-        if (mouse.x && mouse.y && collision(towers[t], mouse)) {
-            selected = towers[t];
+    for (let b = 0; b < grid.length; b++) {
+        if (mouse.x && mouse.y && collision(grid[b], mouse) && grid[b].tower) {
+            selected = grid[b].tower;
             break;
         } else {
             selected = false;
@@ -111,11 +111,6 @@ const selectTower = () => {
     }
 }
 
-
-
-const sellTower = (selected) => {
-
-}
 
 const init = () => {
     towers = [];
@@ -135,11 +130,14 @@ function GamePage() {
     let prev = Date.now(), frameCount = 0;
     const [paused, setPaused] = useState(true);
     const [show, setShow] = useState(true);
+    const [button, setButton] = useState(false);
     const [message, setMessage] = useState('');
-    const [values, setValues] = useState({ score: scoreCounter, lives: livesCounter, money: moneyCounter, wave: waveCounter });
+    const [values, setValues] = useState({ score: scoreCounter, money: moneyCounter});
+    const [waves, setWaves] = useState(0);
+    const [lives, setLives] = useState(10);
 
-    const messageRef = useRef();
-    let currentRef = messageRef.current;
+    const buttonRef = useRef();
+    let currentRef = buttonRef.current;
 
     if (start) {
         init();
@@ -155,12 +153,13 @@ function GamePage() {
         grid.forEach(block => {
             block.draw(ctx);
             block.mouseIsOver(mouse);
+            block.removeSoldTowers();
         });
         if (!paused) {
-            if (enemies.length === 0 && (Date.now() - waveTimer) / 1000 >= 5) {
+            if (enemies.length === 0) { // && (Date.now() - waveTimer) / 1000 >= 5
                 
-                let updatedWave = values.wave + 1;
-                setValues({ score: values.score, lives: values.lives, money: values.money, wave: updatedWave });
+                let updatedWave = waves + 1;
+                setWaves(updatedWave);
                 let bosses = 0
                 if ((updatedWave) % 5 === 0) {
                     bosses = (updatedWave) / 5;
@@ -178,7 +177,7 @@ function GamePage() {
                         bosses--;
                         console.log(type);
                     }
-                    enemies.push(new Enemy(map1Waypoints[0].x - (i + 1) * (100 + Math.floor(Math.random()*10)), map1Waypoints[0].y, type));
+                    enemies.push(new Enemy(map1Waypoints[0].x - (i + 1) * (100 + Math.floor(Math.random()*3)), map1Waypoints[0].y, type));
                 }
                 //setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1})
                 waveTimer = Date.now();
@@ -194,10 +193,21 @@ function GamePage() {
                 });
                 //console.log(enemiesInRange);
                 towers[t].shoot(bullets, enemiesInRange);
+                if (towers[t].sold) {
+                    towers.splice(t, 1);
+                    t--;
+                }
             }
         }
          if (selected) {
-            selected.drawRange(ctx);
+             selected.drawRange(ctx);
+             if (currentRef) {
+                 currentRef.style.display = 'Block';
+             }
+         } else if (!selected) {
+             if (currentRef) {
+                 currentRef.style.display = 'None';
+             }
          }
         
         for (let b = 0; b < bullets.length; b++){
@@ -218,14 +228,14 @@ function GamePage() {
                 //enemies[e].hit(bullets);
                 if (enemies[e].end || enemies[e].dead) {
                     if (enemies[e].end) {
-                        let updatedLives = values.lives - enemies[e].atk;
-                        setValues({ score: values.score, lives: updatedLives, money: values.money, wave: values.wave });
+                        let updatedLives = lives - enemies[e].atk;
+                        setLives(updatedLives);
                         //console.log(lives);
                     }
                     else if (enemies[e].dead) {
                         let updatedScore = values.score + enemies[e].score;
                         let updatedMoney = values.money + enemies[e].value;
-                        setValues({ score: updatedScore, lives: values.lives, money: updatedMoney, wave: values.wave})
+                        setValues({ score: updatedScore, money: updatedMoney });
                     }
 
                     enemies.splice(e, 1);
@@ -246,24 +256,32 @@ function GamePage() {
     }
     const placeTower = (type) => {
         grid.forEach(block => {
-            if (block.hover && block.type !== 1 && !block.hasTower) {
+            if (block.hover && block.type !== 1 && !block.tower) {
                 let tower = new Tower(block.x, block.y, type);
                 if (tower.price <= values.money) {
                     towers.push(tower);
-                    block.hasTower = true;
-                    setValues({ score: values.score, lives: values.lives, money: values.money - towers[towers.length - 1].price, wave: values.wave });
+                    //block.hasTower = true;
+                    block.tower = tower;
+                    setValues({ score: values.score, money: values.money - towers[towers.length - 1].price});
                 }
                 else {
                     //console.log('Not Enough Money');
-                    currentRef.style.display = 'Block';
+                    setMessage('Not enough money. U R PoOr LoL!');
                 }
             }
         });
     }
+    const sellTower = () => {
+        if (selected) {
+            let refund = selected.sell();
+            let updatedMoney = values.money + refund;
+            setValues({ score: values.score, money: updatedMoney });
+        }
+    }
     const makeEvents = canvas => {
         window.addEventListener('click', selectTower);
         window.addEventListener('mousedown', function (e) {
-            currentRef.style.display = 'None';
+            setMessage('');
         });
         let canvasPos = canvas.getBoundingClientRect();
         canvasLeft = canvasPos.left;
@@ -302,7 +320,7 @@ function GamePage() {
         <div>
             <AudioFile></AudioFile>
             <h1>Game Page</h1>
-            <div className="container">
+            <div className="game">
                 <Canvas draw={draw} events={makeEvents} width='900' height='600' />
                 <div className="panel">
                     <div className='panel-left'>
@@ -314,11 +332,11 @@ function GamePage() {
                         </div>
                     </div>
                     <div className='panel-right'>
-                        <div ref={messageRef} className='message'>
-                            MESSAGE
+                        <div ref={ buttonRef } className='sellButton'>
+                            <button className='sell' onClick={ sellTower }>Sell</button>
                         </div>
-                        <div className='sell'>
-
+                        <div className='message'>
+                            {message}
                         </div>
                         <div className='numbers'>
                             <div className='scores'>
@@ -328,7 +346,7 @@ function GamePage() {
                                 Money: {values.money}
                             </div>
                             <div className='lives_waves'>
-                                Lives: {values.lives} Wave: {values.wave}
+                                Lives: {lives} Wave: {waves}
                             </div>
                         </div>
                         <div className='buttons'>

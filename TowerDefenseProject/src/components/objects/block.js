@@ -11,7 +11,8 @@ export function Block(x, y, type) {
     this.type = type;
     this.width = 50;
     this.height = 50;
-    this.hasTower = false;
+    //this.hasTower = false;
+    this.tower = false;
     this.hover = false;
     /*useEffect(() => {
         const place = () => {
@@ -46,6 +47,11 @@ Block.prototype = {
             this.hover = true;
         } else {
             this.hover = false;
+        }
+    },
+    removeSoldTowers: function () {
+        if (this.tower && this.tower.sold) {
+            this.tower = false;
         }
     }
 }
