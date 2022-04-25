@@ -1,9 +1,14 @@
 
 import { collision } from '../utils/utils';
 import circleImg from "./circle.png";
+import type1Image from '../assets/images/Type1.png';
+import type2Image from '../assets/images/Type2.png';
 const circle = new Image();
 circle.src = circleImg;
-
+const type1 = new Image();
+type1.src = type1Image;
+const type2 = new Image();
+type2.src = type2Image;
 
 export function Enemy(x, y, type) {
     this.x = x;
@@ -13,6 +18,7 @@ export function Enemy(x, y, type) {
     this.mid = { x: this.x + this.width / 2, y: this.y + this.height / 2 };
     this.type = type;
     this.waypoint = 0;
+    this.distance = 0;
     this.end = false;
     this.dead = false;
     if (this.type === 1) {
@@ -43,7 +49,16 @@ export function Enemy(x, y, type) {
 
 Enemy.prototype = {
     draw: function (ctx) {
-        ctx.drawImage(circle, this.x, this.y);
+        if (this.type === 1) {
+            ctx.drawImage(type1, this.x, this.y);
+        }
+        else if (this.type === 2) {
+            ctx.drawImage(type2, this.x, this.y);
+        }
+        else {
+            ctx.drawImage(circle, this.x, this.y);
+        }
+       
     },
     drawHealth: function (ctx) {
         ctx.strokeStyle = 'red';
@@ -61,6 +76,8 @@ Enemy.prototype = {
             this.y += this.speed * Math.sin(angle);
             this.mid.x = this.x + this.width / 2;
             this.mid.y = this.y + this.height / 2;
+            this.distance += this.speed;
+
             if ((distX < 0 ? -distX : distX) + (distY < 0 ? -distY : distY) < this.speed) {
                 this.waypoint++;
             }

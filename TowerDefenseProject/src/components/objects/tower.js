@@ -63,9 +63,10 @@ Tower.prototype = {
                     bullets.push(new Projectile(this.mid.x, this.mid.y, this.projectile, enemies[i]));
                 }
             }
-            let enemy = enemies[0];
+            let sortDist = enemies.sort((a, b) => b.distance - a.distance);
+            let enemy = sortDist[0];
             if (this.type === 2) {
-                enemy = enemies.sort((a, b) => b.speed - a.speed)[0];
+                enemy = sortDist.sort((a, b) => b.speed - a.speed)[0];
             }
             //console.log(enemies);
             if (this.type !== 3) {

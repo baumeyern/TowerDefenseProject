@@ -30,6 +30,7 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
     "semantic-ui-react": "^2.1.1",
+    "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

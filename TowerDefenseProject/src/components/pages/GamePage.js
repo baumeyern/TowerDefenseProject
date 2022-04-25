@@ -10,6 +10,10 @@ import { Block } from '../objects/block';
 import { Tower } from '../objects/tower';
 import { Projectile } from '../objects/projectile';
 import { collision, inRange } from '../utils/utils';
+import useSound from "use-sound";
+import useAudio from "../objects/Audio";
+import { Checkbox } from "@mui/material";
+import Audio1 from "../assets/audioClips/songformydeath.mp3";
 
 import circleImg from "../objects/circle.png";
 const circle = new Image();
@@ -65,6 +69,32 @@ export const mouse = {
     width: .1,
     height: .1,
 }
+
+//Game Audio is off by default
+function Radio() {
+    const audio = useAudio(Audio1, { volume: 0.8, playbackRate: 1.2 });
+    const [isChecked, setIsChecked] = React.useState(false);
+
+    return (
+        <div>
+            <p className="audio">
+                Toggle for audio{" "}
+                <Checkbox
+                    onChange={() => setIsChecked(!isChecked)}
+                    className="audio-bttn"
+                    onClick={() => {
+                        isChecked ? audio.play() : audio.stop();
+                    }}
+                />
+            </p>
+        </div>
+    );
+}
+
+const AudioFile = () => {
+    //Audio();
+    return <div>{Radio()}</div>;
+};
 
 window.addEventListener("keypress", function (e) {
     
@@ -130,7 +160,7 @@ function GamePage() {
             if (enemies.length === 0 && (Date.now() - waveTimer) / 1000 >= 5) {
                 
                 let updatedWave = values.wave + 1;
-                setValues({ score: values.score, lives: values.lives, money: values.money, wave: updatedWave })
+                setValues({ score: values.score, lives: values.lives, money: values.money, wave: updatedWave });
                 let bosses = 0
                 if ((updatedWave) % 5 === 0) {
                     bosses = (updatedWave) / 5;
@@ -270,6 +300,7 @@ function GamePage() {
     //<Panel place={placeTower} paused={!paused}/>
     return (
         <div>
+            <AudioFile></AudioFile>
             <h1>Game Page</h1>
             <div className="container">
                 <Canvas draw={draw} events={makeEvents} width='900' height='600' />
