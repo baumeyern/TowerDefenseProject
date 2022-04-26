@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react';
 import { collision } from '../utils/utils';
 import circleImg from "./circle.png";
 import type1Image from '../assets/images/Type1.png';

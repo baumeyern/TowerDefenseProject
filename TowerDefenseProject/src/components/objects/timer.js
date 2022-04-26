@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
-const Timer = () => {
+const Timer = (props) => {
+
+    const { paused, ...rest } = props;
     const [seconds, setSeconds] = useState(0);
-    const [active, setActive] = useState(false);
 
-    const toggle = () => {
-        setActive(!active);
-    }
 
     useEffect(() => {
         let interval = null;
-        if (active) {
+        if (!paused) {
             interval = setInterval(() => {
                 setSeconds(seconds => seconds + 1);
+                //console.log(interval);
             }, 1000);
-        } else if (!active && seconds !== 0) {
+        } else if (paused && seconds !== 0) {
             clearInterval(interval);
         }
         return () => clearInterval(interval);
-    }, [active, seconds]);
+    }, [paused, seconds]);
 
     return (
-        <div className='timer'>
+        <div className='timer' {...rest}>
             {seconds}
         </div>
     );
 }
+
+const useTimer = () => useContext(Timer);
 
 export default Timer;

@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useRef } from 'react';
 
 export function collision(box1, box2) {
     if (box1.x < box2.x + box2.width &&
@@ -43,3 +44,21 @@ export const convertToRoman = (num) => {
 
     return newNumeral;
 };
+
+export function useInterval(callback, delay) {
+    const savedCallback = useRef();
+
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
+    useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+        if (delay !== null) {
+            let id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
+}
