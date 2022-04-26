@@ -80,23 +80,15 @@ h2 {
 }
 
 .panel {
-    width: 150px;
+    width: 200px;
     height: 600px;
     background-color: dimgrey;
-    display: grid;
-
+    display: flex;
+    flex-direction:column;
 }
 
-.panel-left {
-    float: left;
-}
-
-.panel-right {
-    float: right;
-}
-
-.towers>div {
-    float:left;
+.panel-top {
+    padding-top: 1em;
 }
 
 img:hover {
@@ -107,20 +99,17 @@ img:hover {
     padding-right: 5px;
 }
 
-.buttons {
-}
-
 .towers {
     display: grid;
-    grid: 75px 75px / auto auto;
+    grid: 75px 75px 75px / auto auto auto;
     padding-top: 5px;
 }
 
 .game {
-    width: 1050px;
+    width: 1100px;
     text-align: center;
     display: flex;
-    padding-bottom: 10em;
+    padding-bottom: 8em;
     margin: auto;
     align-items: center;
 }
@@ -128,3 +117,56 @@ img:hover {
 .sellButton {
     display: none;
 }
+
+.waves-scores-wrapper {
+    display: flex;
+    width: 1100px;
+    margin: auto;
+}
+
+.wave-label {
+    color: red;
+    display: inline-block;
+    padding: 40px;
+    width: 70%;
+    height: 40px;
+    font-size: 32px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+.score-label {
+    color: aqua;
+    padding: 40px;
+    width: 50%;
+    height: 40px;
+    font-size: 32px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+.panel-right {
+    float: right;
+}
+
+.towers {
+    float: left;
+    width: 100%;
+    padding-top: 2em;
+}
+
+.money,
+.lives {
+    float: left;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+}
+
+.panel-bottom {
+    display: grid;
+    grid: 100px / auto;
+}
+
+.play-pause {
+    margin-top: 100px;
+}
+

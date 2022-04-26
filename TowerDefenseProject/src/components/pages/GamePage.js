@@ -9,11 +9,12 @@ import { Enemy } from "../objects/enemy";
 import { Block } from '../objects/block';
 import { Tower } from '../objects/tower';
 import { Projectile } from '../objects/projectile';
-import { collision, inRange } from '../utils/utils';
+import { collision, inRange, convertToRoman } from '../utils/utils';
 import useSound from "use-sound";
 import useAudio from "../objects/Audio";
 import { Checkbox } from "@mui/material";
 import Audio1 from "../assets/audioClips/songformydeath.mp3";
+
 
 import circleImg from "../objects/circle.png";
 const circle = new Image();
@@ -320,10 +321,22 @@ function GamePage() {
         <div>
             <AudioFile></AudioFile>
             <h1>Game Page</h1>
+            <div className="waves-scores-wrapper">
+                <div className="wave-label">Wave: {convertToRoman(waves)} : [{waves}]</div>
+                <div className="score-label">Score: {values.score}</div>
+            </div>
             <div className="game">
                 <Canvas draw={draw} events={makeEvents} width='900' height='600' />
                 <div className="panel">
-                    <div className='panel-left'>
+                    <div className='panel-top'>
+                        <div className='money'>
+                            ${values.money}
+                        </div>
+                        <div className='lives'>
+                            Lives: {lives}
+                        </div>
+                    </div>
+                    <div className='panel-mid'>
                         <div className='towers'>
                             <Draggable place={placeTower} type={1} paused={paused} />
                             <Draggable place={placeTower} type={2} paused={paused} />
@@ -331,25 +344,14 @@ function GamePage() {
                             <Draggable place={placeTower} type={4} paused={paused} />
                         </div>
                     </div>
-                    <div className='panel-right'>
+                    <div className='panel-bottom'>
                         <div ref={ buttonRef } className='sellButton'>
                             <button className='sell' onClick={ sellTower }>Sell</button>
                         </div>
                         <div className='message'>
                             {message}
                         </div>
-                        <div className='numbers'>
-                            <div className='scores'>
-                                Score: {values.score}
-                            </div>
-                            <div className='money'>
-                                Money: {values.money}
-                            </div>
-                            <div className='lives_waves'>
-                                Lives: {lives} Wave: {waves}
-                            </div>
-                        </div>
-                        <div className='buttons'>
+                        <div className='play-pause'>
                             {show ?
                                 (<button className='play' onClick={function (e) { setPaused(false); setShow(!show) }}>Play</button>):
                                 (<button className='pause' onClick={function (e) { setPaused(true); setShow(!show) }}>Pause</button>)}
