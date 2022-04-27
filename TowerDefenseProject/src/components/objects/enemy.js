@@ -25,7 +25,7 @@ export function Enemy(x, y, type) {
     if (this.type === 1) {
         this.maxHealth = 150;
         this.health = 150;
-        this.speed = .5;
+        this.speed = .5 + Math.random()/5;
         this.atk = 1;
         this.value = 5;
         this.score = 100;
@@ -33,7 +33,7 @@ export function Enemy(x, y, type) {
     else if (this.type === 2) {
         this.maxHealth = 100;
         this.health = 100;
-        this.speed = 2;
+        this.speed = 2 + Math.random() / 5;
         this.atk = 1;
         this.value = 10;
         this.score = 200;
@@ -41,7 +41,7 @@ export function Enemy(x, y, type) {
     else if (this.type === 3) {
         this.maxHealth = 500;
         this.health = 500;
-        this.speed = .75;
+        this.speed = .75 + Math.random() / 5;
         this.atk = 5;
         this.value = 50;
         this.score = 1000;

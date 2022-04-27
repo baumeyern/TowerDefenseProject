@@ -128,7 +128,7 @@ img:hover {
     color: red;
     display: inline-block;
     padding: 40px;
-    width: 60%;
+    width: 50%;
     height: 40px;
     font-size: 32px;
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
@@ -136,7 +136,7 @@ img:hover {
 
 .score-label {
     color: aqua;
-    width:21.8%;
+    width:31.8%;
     padding: 40px;
     height: 40px;
     font-size: 32px;

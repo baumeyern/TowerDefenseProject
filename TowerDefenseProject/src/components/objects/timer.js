@@ -2,22 +2,22 @@ import React, { useState, useEffect, useContext } from 'react';
 
 const Timer = (props) => {
 
-    const { paused, ...rest } = props;
+    const { state, ...rest } = props;
     const [seconds, setSeconds] = useState(0);
 
 
     useEffect(() => {
         let interval = null;
-        if (!paused) {
+        if (state === 'playing') {
             interval = setInterval(() => {
                 setSeconds(seconds => seconds + 1);
                 //console.log(interval);
             }, 1000);
-        } else if (paused && seconds !== 0) {
+        } else if (state === 'paused' && seconds !== 0) {
             clearInterval(interval);
         }
         return () => clearInterval(interval);
-    }, [paused, seconds]);
+    }, [state, seconds]);
 
     return (
         <div className='timer' {...rest}>

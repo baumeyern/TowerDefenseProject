@@ -15,6 +15,7 @@ import useAudio from "../objects/Audio";
 import { Checkbox } from "@mui/material";
 import Audio1 from "../assets/audioClips/songformydeath.mp3";
 import Timer from '../objects/timer';
+import Popup from '../objects/Popup';
 
 
 import circleImg from "../objects/circle.png";
@@ -121,43 +122,49 @@ const init = () => {
     grid = [];
     selected = false;
     livesCounter = 10;
-    moneyCounter = 0;
+    moneyCounter = 20;
     scoreCounter = 0;
     waveCounter = 0;
     enemyCounter = 0;
     waveTimer = Date.now();
+    //start = true;
 }
 
 const GamePage = (props) => {
     let prev = Date.now(), frameCount = 0;
-    const [paused, setPaused] = useState(true);
+    const [gameState, setGameState] = useState('start');
     const [show, setShow] = useState(true);
     const [message, setMessage] = useState('');
     const [values, setValues] = useState({
-        score: scoreCounter,
-        money: moneyCounter,
+        score: 0,
+        money: 20,
         wave: 0,
         enemyTotal: 0,
         enemySpawned: 0,
         lives: 10
     });
+    //start = true;
     //const [waves, setWaves] = useState({wave: 0, enemyTotal: 0});
     //const [lives, setLives] = useState(10);
     //const [enemyTotal, setEnemyTotal] = useState(0);
     const buttonRef = useRef();
     let currentRef = buttonRef.current;
-    let enemyTimer = Date.now();
+    let enemySpawned = 0;
     //const timer = useTimer();
-    let enemyInterval;
-    let enemiesSpawned = 0;
-    if (start) {
+    //let enemyInterval;
+
+
+    if (gameState === 'start') {
         init();
         for (let y = 0; y < 12; y++) {
             for (let x = 0; x < 18; x++) {
                 grid.push(new Block(x * 50, y * 50, map1[y][x]));
             }
         }
-        start = false;
+        setGameState('paused');
+    }
+    if (gameState === 'end') {
+
     }
     /*
     useEffect(() => {
@@ -174,10 +181,14 @@ const GamePage = (props) => {
         }
     }, [enemies, paused]);*/
 
-    const pushEnemy = useCallback(() => {
-        enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, 1));
+    const pushEnemy = (amount) => {
+        setTimeout(() => {
+            enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, 1));
+            pushEnemy(amount - 1)
+        }, 2000)
+        
         console.log(enemies);
-    }, [enemies]);
+    }
 
     const draw = (ctx) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -186,34 +197,46 @@ const GamePage = (props) => {
             block.mouseIsOver(mouse);
             block.removeSoldTowers();
         });
-        if (!paused) {
+        if (gameState === 'playing') {
             if (values.enemyTotal === 0) {
                 let updatedWave = values.wave + 1;
                 setValues(previousState => { return { ...previousState, wave: updatedWave, enemyTotal: updatedWave, enemySpawned: 0 } });
-                let bosses = 0
-                if ((updatedWave) % 5 === 0) {
-                    bosses = (updatedWave) / 5;
+
+                let bosses = 0;
+                if ((values.wave) % 5 === 0) {
+                    bosses = (values.wave) / 5;
                     //console.log(bosses);
                 }
-                if (!enemyInterval) {
-                    setTimeout(() => {
-                        for (let i = 0; i < updatedWave; i++) {
-                            let type;
-                            if (values.wave > 3) {
-                                type = Math.floor(Math.random() * 2) + 1;
-                            } else {
-                                type = 1;
-                            }
-                            if (bosses > 0 && i === (updatedWave) - (bosses)) {
-                                type = 3;
-                                bosses--;
-                                //console.log(type);
-                            }
-                            enemies.push(new Enemy(map1Waypoints[0].x - 100 * (i + 1) + Math.floor(Math.random()*21), map1Waypoints[0].y, type));
+                console.log('ran');
+                /*
+                let enemiesSpawned = 0;
+                const interval = setInterval(() => {
+                    if (!paused) {
+                        enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, 1));
+                        enemiesSpawned++;
+                    }
+                    if (enemiesSpawned === updatedWave) {
+                        clearInterval(interval);
+                    }
+                    console.log(enemiesSpawned+ ' ,'+ updatedWave);
+                }, 2000);*/
+                setTimeout(() => {
+                    for (let i = 0; i < updatedWave; i++) {
+                        let type
+                        if (values.wave > 3) {
+                            type = Math.floor(Math.random() * 2) + 1;
+                        } else {
+                            type = 1;
                         }
-                    }, 2000);
-                    
-                }
+                        if (bosses > 0 && i === (updatedWave) - (bosses)) {
+                            type = 3;
+                            bosses--;
+                            //console.log(type);
+                        }
+                        enemies.push(new Enemy(map1Waypoints[0].x - 100 * (i + 1) + Math.floor(Math.random()*21), map1Waypoints[0].y, type));
+                    }
+                }, 2000);
+                
                 //setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1})
                 //waveTimer = Date.now();
                 //console.log(enemies);
@@ -223,7 +246,7 @@ const GamePage = (props) => {
         
         for (let t = 0; t < towers.length; t++) {
             towers[t].draw(ctx);
-            if (!paused) {
+            if (gameState === 'playing') {
                 let enemiesInRange = enemies.filter(function (enemy) {
                     return towers[t].inRange(enemy);
                 });
@@ -248,7 +271,7 @@ const GamePage = (props) => {
         
         for (let b = 0; b < bullets.length; b++){
             bullets[b].draw(ctx);
-            if (!paused) {
+            if (gameState === 'playing') {
                 bullets[b].move();
                 if (bullets[b].x > ctx.canvas.width || bullets[b].x < -10 || bullets[b].y < -10 || bullets[b].y > ctx.canvas.height || bullets[b].end) {
                     bullets.splice(b, 1);
@@ -259,7 +282,7 @@ const GamePage = (props) => {
         for (let e = 0; e < enemies.length; e++) {
             enemies[e].draw(ctx);
             enemies[e].drawHealth(ctx);
-            if (!paused) {
+            if (gameState === 'playing') {
                 enemies[e].move(map1Waypoints);
                 //enemies[e].hit(bullets);
                 if (enemies[e].end || enemies[e].dead) {
@@ -281,6 +304,9 @@ const GamePage = (props) => {
                     e--;
                 }
             }
+        }
+        if (values.lives <= 0) {
+            setGameState('end');
         }
         if (true) {
             const time = Date.now();
@@ -362,7 +388,7 @@ const GamePage = (props) => {
             <div className="waves-scores-wrapper">
                 <div className="wave-label">Wave: {convertToRoman(values.wave)} : [{values.wave}]</div>
                 <div className="score-label">Score: {values.score}</div>
-                <Timer paused={paused}/>
+                <Timer state={gameState}/>
             </div>
             <div className="game">
                 <Canvas draw={draw} events={makeEvents} width='900' height='600' />
@@ -377,10 +403,10 @@ const GamePage = (props) => {
                     </div>
                     <div className='panel-mid'>
                         <div className='towers'>
-                            <Draggable place={placeTower} type={1} paused={paused} />
-                            <Draggable place={placeTower} type={2} paused={paused} />
-                            <Draggable place={placeTower} type={3} paused={paused} />
-                            <Draggable place={placeTower} type={4} paused={paused} />
+                            <Draggable place={placeTower} type={1} state={gameState} />
+                            <Draggable place={placeTower} type={2} state={gameState} />
+                            <Draggable place={placeTower} type={3} state={gameState} />
+                            <Draggable place={placeTower} type={4} state={gameState} />
                         </div>
                     </div>
                     <div className='panel-bottom'>
@@ -392,17 +418,19 @@ const GamePage = (props) => {
                         </div>
                         <div className='play-pause'>
                             {show ?
-                                (<button className='play' onClick={function (e) { setPaused(false); setShow(!show) }}>Play</button>):
-                                (<button className='pause' onClick={function (e) { setPaused(true); setShow(!show) }}>Pause</button>)}
+                                (<button className='play' onClick={function (e) { setGameState('playing'); setShow(!show) }}>Play</button>):
+                                (<button className='pause' onClick={function (e) { setGameState('paused'); setShow(!show) }}>Pause</button>)}
                         </div>
                     </div>
                 </div>
             </div>
+            <Popup state={gameState} />
             <div className="container">
                 <Link to='/scores' >
                     <Button variant="outline-light">Leaderboard</Button>
                 </Link>
             </div>
+            <button onClick={function (e) { setValues(previousState => { return { ...previousState, lives: values.lives - 1 } }); }}>lives</button>
         </div>
     );
 }
