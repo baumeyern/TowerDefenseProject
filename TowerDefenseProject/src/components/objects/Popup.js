@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 const Popup = (props) => {
 
@@ -14,26 +15,30 @@ const Popup = (props) => {
 
 
     return (
-    <div className='popup-container'>
+        <>
         {
         show ?
-                    (<div className='popup'>
-                        <header className='popup-header'>
-                            <h1 className='popup-title'>Game Over</h1>
-                        </header>
-                        <main className='popup'>
-                            You Lose! Click the button to see your score.
-                        </main>
-                        <footer className='popup-footer'>
-                            <Link to='/scores' >
-                                <button className='popup-button'>Leaderboard</button>
-                            </Link>
-                        </footer>
+                    (<div className='popup-container'>
+                        <div className='popup'>
+                            <header className='popup-header'>
+                                <h1 className='popup-title'>Game Over</h1>
+                            </header>
+                            <main className='popup-content'>
+                                You ran out of lives!
+                                <br/>
+                                Click the button to see your score.
+                            </main>
+                            <footer className='popup-footer'>
+                                <Link to='/scores' >
+                                    <Button className='popup-button' variant='outline-light'>Leaderboard</Button>
+                                </Link>
+                            </footer>
+                        </div>
                     </div>
                     ) :
                     (null)
             }
-        </div>
+            </>
         )
 }
 

@@ -14,7 +14,7 @@ import useSound from "use-sound";
 import useAudio from "../objects/Audio";
 import { Checkbox } from "@mui/material";
 import Audio1 from "../assets/audioClips/songformydeath.mp3";
-import Timer from '../objects/timer';
+import Timer, { useTimer } from '../objects/timer';
 import Popup from '../objects/Popup';
 
 
@@ -149,10 +149,9 @@ const GamePage = (props) => {
     //const [enemyTotal, setEnemyTotal] = useState(0);
     const buttonRef = useRef();
     let currentRef = buttonRef.current;
-    let enemySpawned = 0;
+    var bosses = 0;
     //const timer = useTimer();
     //let enemyInterval;
-
 
     if (gameState === 'start') {
         init();
@@ -164,7 +163,7 @@ const GamePage = (props) => {
         setGameState('paused');
     }
     if (gameState === 'end') {
-
+        //Send score to database and time
     }
     /*
     useEffect(() => {
@@ -181,15 +180,6 @@ const GamePage = (props) => {
         }
     }, [enemies, paused]);*/
 
-    const pushEnemy = (amount) => {
-        setTimeout(() => {
-            enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, 1));
-            pushEnemy(amount - 1)
-        }, 2000)
-        
-        console.log(enemies);
-    }
-
     const draw = (ctx) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         grid.forEach(block => {
@@ -201,25 +191,13 @@ const GamePage = (props) => {
             if (values.enemyTotal === 0) {
                 let updatedWave = values.wave + 1;
                 setValues(previousState => { return { ...previousState, wave: updatedWave, enemyTotal: updatedWave, enemySpawned: 0 } });
-
-                let bosses = 0;
-                if ((values.wave) % 5 === 0) {
-                    bosses = (values.wave) / 5;
-                    //console.log(bosses);
-                }
-                console.log('ran');
+                waveTimer = Date.now();
                 /*
-                let enemiesSpawned = 0;
-                const interval = setInterval(() => {
-                    if (!paused) {
-                        enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, 1));
-                        enemiesSpawned++;
-                    }
-                    if (enemiesSpawned === updatedWave) {
-                        clearInterval(interval);
-                    }
-                    console.log(enemiesSpawned+ ' ,'+ updatedWave);
-                }, 2000);*/
+                if ((updatedWave) % 5 === 0) {
+                    bosses = (updatedWave) / 5;
+                    console.log(bosses);
+                }
+                /*
                 setTimeout(() => {
                     for (let i = 0; i < updatedWave; i++) {
                         let type
@@ -233,22 +211,54 @@ const GamePage = (props) => {
                             bosses--;
                             //console.log(type);
                         }
-                        enemies.push(new Enemy(map1Waypoints[0].x - 100 * (i + 1) + Math.floor(Math.random()*21), map1Waypoints[0].y, type));
+                        enemies.push(new Enemy(map1Waypoints[0].x - 100 * (i + 1) + Math.floor(Math.random() * 21), map1Waypoints[0].y, type));
                     }
-                }, 2000);
-                
+                }, 2000);*/
+
                 //setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1})
                 //waveTimer = Date.now();
                 //console.log(enemies);
                 //console.log(values.wave);
+            } else if (values.enemySpawned < values.wave) {
+                const time = Date.now();
+                let waitTime = 0;
+                if (values.enemySpawned === 0) {
+                    waitTime = 2000;
+                }
+                else {
+                    waitTime = 900;
+                }
+                if (time >= waveTimer + waitTime) {
+                    //console.log(bosses);
+                    let type;
+                    if (values.wave > 3) {
+                        type = Math.floor(Math.random() * 2) + 1;
+                    } else {
+                        type = 1;
+                    }
+                    if (values.wave % 5 === 0) {
+                        if (values.enemySpawned >= values.wave - (values.wave / 5)) {
+                            //console.log('ran');
+                            type = 3;
+                        }
+                        //console.log(type);
+                    }
+                    enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, type));
+                    let updatedSpawn = values.enemySpawned + 1;
+                    setValues(previousState => { return { ...previousState, enemySpawned: updatedSpawn } });
+                    console.log(enemies);
+                    //enemysSpawned++;
+                    waveTimer = time;
+                }
             }
         }
         
         for (let t = 0; t < towers.length; t++) {
             towers[t].draw(ctx);
             if (gameState === 'playing') {
+                let tower = towers[t];
                 let enemiesInRange = enemies.filter(function (enemy) {
-                    return towers[t].inRange(enemy);
+                    return tower.inRange(enemy);
                 });
                 //console.log(enemiesInRange);
                 towers[t].shoot(bullets, enemiesInRange);
@@ -273,7 +283,7 @@ const GamePage = (props) => {
             bullets[b].draw(ctx);
             if (gameState === 'playing') {
                 bullets[b].move();
-                if (bullets[b].x > ctx.canvas.width || bullets[b].x < -10 || bullets[b].y < -10 || bullets[b].y > ctx.canvas.height || bullets[b].end) {
+                if (bullets[b].end) {
                     bullets.splice(b, 1);
                     b--;
                 }
@@ -308,16 +318,21 @@ const GamePage = (props) => {
         if (values.lives <= 0) {
             setGameState('end');
         }
+
+        if (gameState === 'paused') {
+            waveTimer+=(1000/144);
+        }
+        /*
         if (true) {
             const time = Date.now();
             frameCount++;
             if (time > prev + 1000) {
                 let fps = Math.round((frameCount * 1000) / (time - prev));
-                prev = time;
+                //prev = time;
                 frameCount = 0;
                 //console.log(grid.length);
             }
-        }
+        }*/
     }
     const placeTower = (type) => {
         grid.forEach(block => {

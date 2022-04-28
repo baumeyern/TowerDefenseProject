@@ -175,4 +175,55 @@ img:hover {
     font-size: 30px;
     color: white;
     text-align: center;
+    font-family: pixel;
+    height: 40px;
+    font-size: 30px;
+    font-family: pixel;
+    padding: 40px;
+}
+
+.popup-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #19131ee1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+}
+
+.popup {
+    width: 40em;
+    height: auto;
+    background-color: #757575ba;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+}
+
+.popup-header {
+    position: relative;
+}
+
+.popup-title{
+    font-size: 35pt;
+    padding-top: .5rem;
+}
+
+.popup-content {
+    text-align: center;
+    font-family: pixel;
+    padding: 1rem;
+}
+
+.popup-footer {
+    text-align: center;
+    padding: 1rem;
+}
+
+.popup-button {
+    font-size: 20pt;
 }

@@ -11,6 +11,7 @@ const LoginPage = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
+        //Send name to database
         navigate('/game');
     }
 
