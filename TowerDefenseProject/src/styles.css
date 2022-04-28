@@ -1,17 +1,17 @@
 
 @font-face {
     font-family: arcade;
-    src: url('./components/fonts/arcade.ttf') format('truetype');
+    src: url('./components//assets/fonts/arcade.ttf') format('truetype');
 }
 
 @font-face {
     font-family: title;
-    src: url('./components/fonts/space.otf') format('opentype');
+    src: url('./components/assets/fonts/space.otf') format('opentype');
 }
 
 @font-face{
     font-family: pixel;
-    src: url('./components/fonts/pixel.ttf') format('truetype');
+    src: url('./components/assets/fonts/pixel.ttf') format('truetype');
 }
 
 body {
