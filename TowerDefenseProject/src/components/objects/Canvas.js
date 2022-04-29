@@ -12,7 +12,7 @@ const Canvas = props => {
 
         const event = events(canvas);
         let animationFrameID;
-        console.log(event);
+        console.log('update');
         const render = () => {
             draw(ctx);
             animationFrameID = window.requestAnimationFrame(render);
@@ -20,10 +20,11 @@ const Canvas = props => {
         render();
 
         return () => {
-            console.log('removed');
+            //console.log('removed');
             window.cancelAnimationFrame(animationFrameID);
+            event();
         }
-    }, [draw, events]);
+    }, [draw]);
 
     return <canvas ref={canvasRef} {...rest} />;
 }

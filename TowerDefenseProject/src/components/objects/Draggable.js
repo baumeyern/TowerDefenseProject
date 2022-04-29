@@ -52,11 +52,12 @@ const Draggable = (props) => {
         document.addEventListener('mousemove', handleMouseMove);
         dragRef.addEventListener('mousedown', handleMouseDown);
         return () => {
+            //console.log('remove');
             document.removeEventListener('mouseup', handleMouseUp);
             document.removeEventListener('mousemove', handleMouseMove);
             dragRef.removeEventListener('mousedown', handleMouseDown);
         }
-    }, [position, pressed, place, type, state]);
+    }, [position, pressed, state]);
 
     useEffect(() => {
         if (ref.current) {

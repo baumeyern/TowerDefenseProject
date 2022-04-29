@@ -76,32 +76,9 @@ window.addEventListener("keypress", function (e) {
     
 });
 
-const selectTower = () => {
-    for (let b = 0; b < grid.length; b++) {
-        if (mouse.x && mouse.y && collision(grid[b], mouse) && grid[b].tower) {
-            selected = grid[b].tower;
-            break;
-        } else {
-            selected = false;
-        }
-    }
-}
 
 
-const init = () => {
-    towers = [];
-    bullets = [];
-    enemies = [];
-    grid = [];
-    selected = false;
-    livesCounter = 10;
-    moneyCounter = 20;
-    scoreCounter = 0;
-    waveCounter = 0;
-    enemyCounter = 0;
-    waveTimer = Date.now();
-    //start = true;
-}
+
 
 const GamePage = (props) => {
     let prev = Date.now(), frameCount = 0;
@@ -126,6 +103,23 @@ const GamePage = (props) => {
     //let enemyInterval;
     //const mousePosition = useMousePosition();
 
+    const init = () => {
+        towers = [];
+        bullets = [];
+        enemies = [];
+        grid = [];
+        selected = false;
+        setValues({
+            score: 0,
+            money: 20,
+            wave: 0,
+            enemyTotal: 0,
+            enemySpawned: 0,
+            lives: 10
+        });
+    }
+
+
     if (gameState === 'start') {
         init();
         for (let y = 0; y < 12; y++) {
@@ -135,6 +129,7 @@ const GamePage = (props) => {
         }
         setGameState('paused');
     }
+    //console.log(gameState);
     if (gameState === 'end') {
         //Send score to database and time
     }
@@ -323,6 +318,16 @@ const GamePage = (props) => {
             }
         });
     }
+    const selectTower = () => {
+        for (let b = 0; b < grid.length; b++) {
+            if (mouse.x && mouse.y && collision(grid[b], mouse) && grid[b].tower) {
+                selected = grid[b].tower;
+                break;
+            } else {
+                selected = false;
+            }
+        }
+    }
     const sellTower = () => {
         if (selected) {
             let refund = selected.sell();
@@ -330,6 +335,7 @@ const GamePage = (props) => {
             setValues(previousState => { return { ...previousState, money: updatedMoney } });
         }
     }
+    //console.log('running');
     const makeEvents = canvas => {
         window.addEventListener('click', selectTower);
         window.addEventListener('mousedown', function (e) {
@@ -350,9 +356,8 @@ const GamePage = (props) => {
             mouse.y = e.y - canvasTop;
             //console.log((mouse.x) + ', ' + (mouse.y));
         });
-        //canvas.addEventListener('click', placeTower);
         return () => {
-            console.log('removed');
+            //console.log('removed');
             window.removeEventListener('click', selectTower);
             window.removeEventListener('resize', changeBoundRect);
             window.removeEventListener('scroll', changeBoundRect);
@@ -365,7 +370,6 @@ const GamePage = (props) => {
                 mouse.x = undefined;
                 mouse.y = undefined;
             });
-            //canvas.removeEventListener('click', placeTower);
         }
     }
     //<Panel place={placeTower} paused={!paused}/><div className='timer'>{timer}</div>
@@ -420,6 +424,7 @@ const GamePage = (props) => {
                 </Link>
             </div>
             <button onClick={function (e) { setValues(previousState => { return { ...previousState, lives: values.lives - 1 } }); }}>lives</button>
+            <button onClick={function (e) { setGameState('start'); setShow(true); }}>Restart</button>
         </div>
     )
 
