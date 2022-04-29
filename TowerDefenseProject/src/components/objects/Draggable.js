@@ -57,7 +57,7 @@ const Draggable = (props) => {
             document.removeEventListener('mousemove', handleMouseMove);
             dragRef.removeEventListener('mousedown', handleMouseDown);
         }
-    }, [position, pressed, state]);
+    }, [position, pressed, state, place, type]);
 
     useEffect(() => {
         if (ref.current) {

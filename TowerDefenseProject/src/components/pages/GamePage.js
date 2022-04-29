@@ -23,7 +23,7 @@ circle.src = circleImg;
 let canvasLeft = 0;
 let canvasTop = 0;
 
-export let towers = [];
+//export let towers = [];
 export let bullets = [];
 export let enemies = [];
 export let grid = [];
@@ -35,8 +35,8 @@ export let waveCounter = 0;
 export let enemyCounter = 0;
 //export let gameState = 'playing';
 //export let paused = true;
-let waveTimer = Date.now();
-let start = true;
+//let waveTimer = Date.now();
+//let start = true;
 
 
 const map1 = [
@@ -79,9 +79,8 @@ window.addEventListener("keypress", function (e) {
 
 
 
-
 const GamePage = (props) => {
-    let prev = Date.now(), frameCount = 0;
+    //let prev = Date.now(), frameCount = 0;
     const [gameState, setGameState] = useState('start');
     const [show, setShow] = useState(true);
     const [message, setMessage] = useState('');
@@ -93,18 +92,13 @@ const GamePage = (props) => {
         enemySpawned: 0,
         lives: 10
     });
-    //start = true;
-    //const [waves, setWaves] = useState({wave: 0, enemyTotal: 0});
-    //const [lives, setLives] = useState(10);
-    //const [enemyTotal, setEnemyTotal] = useState(0);
     const buttonRef = useRef();
     let currentRef = buttonRef.current;
-    //const timer = useTimer();
-    //let enemyInterval;
-    //const mousePosition = useMousePosition();
+    let waveTimer = Date.now();
+    //const mouseMosition = useMousePosition();
 
     const init = () => {
-        towers = [];
+        //towers = [];
         bullets = [];
         enemies = [];
         grid = [];
@@ -120,33 +114,90 @@ const GamePage = (props) => {
     }
 
 
-    if (gameState === 'start') {
-        init();
-        for (let y = 0; y < 12; y++) {
-            for (let x = 0; x < 18; x++) {
-                grid.push(new Block(x * 50, y * 50, map1[y][x]));
-            }
-        }
-        setGameState('paused');
-    }
-    //console.log(gameState);
-    if (gameState === 'end') {
-        //Send score to database and time
-    }
-    /*
+
     useEffect(() => {
-        const spawnEnemies = (ctx) => {
-            let interval;
-            if (!paused) {
-                interval = setInterval(() => {
-                    enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, 1));
-                }, 2000);
-            } else {
-                clearInterval(interval);
+        console.log(gameState);
+        if (gameState === 'start') {
+            init();
+            for (let y = 0; y < 12; y++) {
+                for (let x = 0; x < 18; x++) {
+                    grid.push(new Block(x * 50, y * 50, map1[y][x]));
+                }
             }
-            return () => clearInterval(interval);
+            setGameState('paused');
         }
-    }, [enemies, paused]);*/
+ 
+        if (gameState === 'end') {
+            //Send score to database and time
+            console.log('WOW');
+        }
+
+        //console.log('LOL');
+
+        if (values.lives <= 0) {
+            setGameState('end');
+            //console.log('lol');
+        }
+
+        if (gameState === 'playing') {
+            if (values.enemyTotal === 0) {
+                //let updatedWave = values.wave + 1;
+                setValues(previousState => { return { ...previousState, wave: previousState.wave + 1, enemyTotal: previousState.wave + 1, enemySpawned: 0 } });
+            }
+        }
+
+    }, [values, gameState]);
+
+    const newDraw = (ctx) => {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+        grid.forEach(block => {
+            block.draw(ctx);
+            block.mouseIsOver(mouse);
+            block.removeSoldTowers();
+            if (block.tower) {
+                block.tower.draw(ctx)
+                if (gameState === 'playing') {
+                    let enemiesInRange = enemies.filter(function (enemy) {
+                        return block.tower.inRange(enemy);
+                    });
+                    //console.log(enemiesInRange);
+                    block.tower.shoot(bullets, enemiesInRange);
+                }
+            }
+        });
+        if (selected) {
+            selected.drawRange(ctx);
+            if (currentRef) {
+                currentRef.style.display = 'Block';
+            }
+        } else {
+            if (currentRef) {
+                currentRef.style.display = 'None';
+            }
+        }
+        for (let e = 0; e < enemies.length; e++) {
+            let enemy = enemies[e];
+            enemy.draw(ctx);
+            enemy.drawHealth(ctx);
+            if (gameState === 'playing') {
+                enemy.move(map1Waypoints);
+            }
+        }
+        for (let b = 0; b < bullets.length; b++) {
+            bullets[b].draw(ctx);
+            if (gameState === 'playing') {
+                bullets[b].move();
+                if (bullets[b].end) {
+                    bullets.splice(b, 1);
+                    b--;
+                }
+            }
+        }
+
+    }
+
+
+
     //console.log(mousePosition.x)
     const draw = (ctx) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -154,12 +205,22 @@ const GamePage = (props) => {
             block.draw(ctx);
             block.mouseIsOver(mouse);
             block.removeSoldTowers();
+            if (block.tower) {
+                block.tower.draw(ctx)
+                if (gameState === 'playing') {
+                    let enemiesInRange = enemies.filter(function (enemy) {
+                        return block.tower.inRange(enemy);
+                    });
+                    //console.log(enemiesInRange);
+                    block.tower.shoot(bullets, enemiesInRange);
+                }
+            }
         });
         if (gameState === 'playing') {
             if (values.enemyTotal === 0) {
                 let updatedWave = values.wave + 1;
-                setValues(previousState => { return { ...previousState, wave: updatedWave, enemyTotal: updatedWave, enemySpawned: 0 } });
-                waveTimer = Date.now();
+                setValues(previousState => { return { ...previousState, wave: previousState.wave + 1, enemyTotal: previousState.wave + 1, enemySpawned: 0 } });
+                /*waveTimer = Date.now();
                 let bosses = 0;
                 if ((updatedWave) % 5 === 0) {
                     bosses = (updatedWave) / 5;
@@ -180,7 +241,7 @@ const GamePage = (props) => {
                         }
                         enemies.push(new Enemy(map1Waypoints[0].x - 100 * (i + 1) + Math.floor(Math.random() * 21), map1Waypoints[0].y, type));
                     }
-                }, 2000);
+                }, 2000);*/
 
                 //setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1})
                 //waveTimer = Date.now();
@@ -220,8 +281,8 @@ const GamePage = (props) => {
             }*/
         }
         
-        for (let t = 0; t < towers.length; t++) {
-            towers[t].draw(ctx);
+        /*for (let t = 0; t < towers.length; t++) {
+            //towers[t].draw(ctx);
             if (gameState === 'playing') {
                 let tower = towers[t];
                 let enemiesInRange = enemies.filter(function (enemy) {
@@ -234,7 +295,7 @@ const GamePage = (props) => {
                     t--;
                 }
             }
-        }
+        }*/
          if (selected) {
              selected.drawRange(ctx);
              if (currentRef) {
@@ -257,23 +318,19 @@ const GamePage = (props) => {
             }
         }
         for (let e = 0; e < enemies.length; e++) {
-            enemies[e].draw(ctx);
-            enemies[e].drawHealth(ctx);
+            let enemy = enemies[e];
+            enemy.draw(ctx);
+            enemy.drawHealth(ctx);
             if (gameState === 'playing') {
-                enemies[e].move(map1Waypoints);
+                enemy.move(map1Waypoints);
                 //enemies[e].hit(bullets);
-                if (enemies[e].end || enemies[e].dead) {
-                    if (enemies[e].end) {
-                        let updatedLives = values.lives - enemies[e].atk;
-                        let updatedEnemyTotal = values.enemyTotal - 1;
-                        setValues(previousState => { return { ...previousState, enemyTotal: updatedEnemyTotal, lives: updatedLives } });
+                if (enemy.end || enemy.dead) {
+                    if (enemy.end) {
+                        setValues(previousState => { return { ...previousState, enemyTotal: previousState.enemyTotal - 1, lives: previousState.lives - enemy.atk } });
                         //console.log(lives);
                     }
-                    else if (enemies[e].dead) {
-                        let updatedScore = values.score + enemies[e].score;
-                        let updatedMoney = values.money + enemies[e].value;
-                        let updatedEnemyTotal = values.enemyTotal - 1;
-                        setValues(previousState => { return { ...previousState, score: updatedScore, money: updatedMoney, enemyTotal: updatedEnemyTotal } });
+                    else if (enemy.dead) {
+                        setValues(previousState => { return { ...previousState, score: previousState.score + enemy.score, money: previousState.money + enemy.value, enemyTotal: previousState.enemyTotal - 1 } });
                     }
                     //let updatedEnemyTotal = waves.enemyTotal - 1;
                     //setWaves({wave: waves.wave, enemyTotal: updatedEnemyTotal});
@@ -281,14 +338,10 @@ const GamePage = (props) => {
                     e--;
                 }
             }
-        }
-        if (values.lives <= 0) {
-            setGameState('end');
+
+
         }
 
-        if (gameState === 'paused') {
-            waveTimer+=(1000/144);
-        }
         /*
         if (true) {
             const time = Date.now();
@@ -301,26 +354,85 @@ const GamePage = (props) => {
             }
         }*/
     }
+
+    const spawn = (fps) => {
+        if (gameState === 'playing') {
+            if (values.enemySpawned < values.wave) {
+                const time = Date.now();
+                let waitTime = 0;
+                if (values.enemySpawned === 0) {
+                    waitTime = 2000;
+                }
+                else {
+                    waitTime = 900;
+                }
+                //console.log(waitTime);
+                if (time >= waveTimer + waitTime) {
+                    //console.log(bosses);
+                    let type;
+                    if (values.wave > 3) {
+                        type = Math.floor(Math.random() * 2) + 1;
+                    } else {
+                        type = 1;
+                    }
+                    if (values.wave % 5 === 0) {
+                        if (values.enemySpawned >= values.wave - (values.wave / 5)) {
+                            //console.log('ran');
+                            type = 3;
+                        }
+                        //console.log(type);
+                    }
+                    enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, type));
+                    //let updatedSpawn = values.enemySpawned + 1;
+                    setValues(previousState => { return { ...previousState, enemySpawned: previousState.enemySpawned + 1 } });
+                    //console.log(enemies);
+                    waveTimer = time;
+                }
+            } else {
+                waveTimer = Date.now();
+            }
+        } else if (gameState === 'paused') {
+            if (fps) {
+                waveTimer += (1000 / fps);
+            }
+        }
+        for (let e = 0; e < enemies.length; e++) {
+            let enemy = enemies[e];
+            if (enemy.end || enemy.dead) {
+                if (enemy.end) {
+                    setValues(previousState => { return { ...previousState, enemyTotal: previousState.enemyTotal - 1, lives: previousState.lives - enemy.atk } });
+                }
+                else if (enemy.dead) {
+                    setValues(previousState => { return { ...previousState, score: previousState.score + enemy.score, money: previousState.money + enemy.value, enemyTotal: previousState.enemyTotal - 1 } });
+                }
+                enemies.splice(e, 1);
+                e--;
+            }
+        }
+    }
     const placeTower = (type) => {
-        grid.forEach(block => {
+        let towerPlaced = false;
+        for (let b = 0; b < grid.length; b++) {
+            let block = grid[b];
             if (block.hover && block.type !== 1 && !block.tower) {
                 let tower = new Tower(block.x, block.y, type);
                 if (tower.price <= values.money) {
-                    towers.push(tower);
-                    //block.hasTower = true;
+                    //towers.push(tower);
                     block.tower = tower;
-                    setValues(previousState => { return {...previousState, money: values.money - towers[towers.length - 1].price } });
-                }
-                else {
-                    //console.log('Not Enough Money');
-                    setMessage('Not enough money. U R PoOr LoL!');
+                    setValues(previousState => { return { ...previousState, money: previousState.money - tower.price } });
+                    towerPlaced = true;
+                    break;
                 }
             }
-        });
+        }
+        if (!towerPlaced) {
+            setMessage('Not enough money. U R pOoR lOl!');
+        }
+
     }
     const selectTower = () => {
         for (let b = 0; b < grid.length; b++) {
-            if (mouse.x && mouse.y && collision(grid[b], mouse) && grid[b].tower) {
+            if (grid[b].hover && grid[b].tower) {
                 selected = grid[b].tower;
                 break;
             } else {
@@ -331,15 +443,19 @@ const GamePage = (props) => {
     const sellTower = () => {
         if (selected) {
             let refund = selected.sell();
-            let updatedMoney = values.money + refund;
-            setValues(previousState => { return { ...previousState, money: updatedMoney } });
+            //let updatedMoney = values.money + refund;
+            setValues(previousState => { return { ...previousState, money: previousState.money + refund } });
         }
     }
-    //console.log('running');
+    //console.log('rendered');
     const makeEvents = canvas => {
+        //console.log('Ran');
         window.addEventListener('click', selectTower);
         window.addEventListener('mousedown', function (e) {
-            setMessage('');
+            if (message !== '') {
+                setMessage('');
+            }
+            
         });
         let canvasPos = canvas.getBoundingClientRect();
         canvasLeft = canvasPos.left;
@@ -349,27 +465,24 @@ const GamePage = (props) => {
             canvasLeft = canvasPos.left;
             canvasTop = canvasPos.top;
         }
-        window.addEventListener('resize', changeBoundRect);
-        window.addEventListener('scroll', changeBoundRect);
-        document.addEventListener('mousemove', function (e) {
+        const getCanvasMousePosition = (e) => {
             mouse.x = e.x - canvasLeft;
             mouse.y = e.y - canvasTop;
             //console.log((mouse.x) + ', ' + (mouse.y));
-        });
+        }
+        window.addEventListener('resize', changeBoundRect);
+        window.addEventListener('scroll', changeBoundRect);
+        document.addEventListener('mousemove', getCanvasMousePosition);
         return () => {
             //console.log('removed');
             window.removeEventListener('click', selectTower);
             window.removeEventListener('resize', changeBoundRect);
             window.removeEventListener('scroll', changeBoundRect);
-            canvas.removeEventListener('mousemove', function (e) {
-                mouse.x = e.x - canvasPos.x;
-                mouse.y = e.y - canvasPos.y;
-                //console.log((mouse.x) + ', ' + (mouse.y));
-            });
-            canvas.removeEventListener('mouseleave', function (e) {
+            document.removeEventListener('mousemove', getCanvasMousePosition);
+            /*canvas.removeEventListener('mouseleave', function (e) {
                 mouse.x = undefined;
                 mouse.y = undefined;
-            });
+            });*/
         }
     }
     //<Panel place={placeTower} paused={!paused}/><div className='timer'>{timer}</div>
@@ -384,7 +497,7 @@ const GamePage = (props) => {
                 <Timer state={gameState}/>
             </div>
             <div className="game">
-                <Canvas draw={draw} events={makeEvents} width='900' height='600' />
+                <Canvas draw={newDraw} spawn={spawn} events={makeEvents} width='900' height='600' />
                 <div className="panel">
                     <div className='panel-top'>
                         <div className='money'>
@@ -411,8 +524,8 @@ const GamePage = (props) => {
                         </div>
                         <div className='play-pause'>
                             {show ?
-                                (<button className='play' onClick={function (e) { setGameState('playing'); setShow(!show) }}>Play</button>):
-                                (<button className='pause' onClick={function (e) { setGameState('paused'); setShow(!show) }}>Pause</button>)}
+                                (<button className='play' onClick={function (e) { setGameState('playing'); setShow(show => !show) }}>Play</button>):
+                                (<button className='pause' onClick={function (e) { setGameState('paused'); setShow(show => !show) }}>Pause</button>)}
                         </div>
                     </div>
                 </div>
@@ -423,11 +536,10 @@ const GamePage = (props) => {
                     <Button variant="outline-light">Leaderboard</Button>
                 </Link>
             </div>
-            <button onClick={function (e) { setValues(previousState => { return { ...previousState, lives: values.lives - 1 } }); }}>lives</button>
-            <button onClick={function (e) { setGameState('start'); setShow(true); }}>Restart</button>
+            <button onClick={function (e) { setValues(previousState => { return { ...previousState, lives: previousState.lives - 1 } }); }}>lives</button>
         </div>
     )
-
+    //<button onClick={function (e) { setGameState('start'); setShow(true); }}>Restart</button>
 }
 
 export default GamePage;

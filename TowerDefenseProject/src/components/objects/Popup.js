@@ -11,7 +11,7 @@ const Popup = (props) => {
         if (state === 'end') {
             setShow(true);
         }
-    }, [state])
+    }, [state]);
 
 
     return (
