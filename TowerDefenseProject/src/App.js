@@ -3,14 +3,14 @@ import HomePage from './components/pages/HomePage';
 import LoginPage from './components/pages/LoginPage';
 import GamePage from './components/pages/GamePage';
 import ScoresPage from './components/pages/ScoresPage';
-import { browserHistory, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const App = () => {
     return (
-        <Router history={browserHistory}>
+        <Router>
             <Container maxWidth="lg">
                 <Routes>
                     <Route path="/" element={<HomePage />} />
