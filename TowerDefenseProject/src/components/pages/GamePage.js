@@ -10,12 +10,10 @@ import { Block } from '../objects/block';
 import { Tower } from '../objects/tower';
 import { Projectile } from '../objects/projectile';
 import { collision, inRange, convertToRoman, useInterval } from '../utils/utils';
-import useSound from "use-sound";
-import useAudio from "../objects/Audio";
-import { Checkbox } from "@mui/material";
-import Audio1 from "../assets/audioClips/songformydeath.mp3";
+import Radio from '../objects/Audio';
 import Timer, { useTimer } from '../objects/timer';
 import Popup from '../objects/Popup';
+import useMousePosition from '../objects/useMousePosition';
 
 
 import circleImg from "../objects/circle.png";
@@ -73,31 +71,6 @@ export const mouse = {
     height: .1,
 }
 
-//Game Audio is off by default
-function Radio() {
-    const audio = useAudio(Audio1, { volume: 0.8, playbackRate: 1.2 });
-    const [isChecked, setIsChecked] = React.useState(false);
-
-    return (
-        <div>
-            <p className="audio">
-                Toggle for audio{" "}
-                <Checkbox
-                    onChange={() => setIsChecked(!isChecked)}
-                    className="audio-bttn"
-                    onClick={() => {
-                        isChecked ? audio.play() : audio.stop();
-                    }}
-                />
-            </p>
-        </div>
-    );
-}
-
-const AudioFile = () => {
-    //Audio();
-    return <div>{Radio()}</div>;
-};
 
 window.addEventListener("keypress", function (e) {
     
@@ -149,9 +122,9 @@ const GamePage = (props) => {
     //const [enemyTotal, setEnemyTotal] = useState(0);
     const buttonRef = useRef();
     let currentRef = buttonRef.current;
-    var bosses = 0;
     //const timer = useTimer();
     //let enemyInterval;
+    //const mousePosition = useMousePosition();
 
     if (gameState === 'start') {
         init();
@@ -179,7 +152,7 @@ const GamePage = (props) => {
             return () => clearInterval(interval);
         }
     }, [enemies, paused]);*/
-
+    //console.log(mousePosition.x)
     const draw = (ctx) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         grid.forEach(block => {
@@ -192,12 +165,11 @@ const GamePage = (props) => {
                 let updatedWave = values.wave + 1;
                 setValues(previousState => { return { ...previousState, wave: updatedWave, enemyTotal: updatedWave, enemySpawned: 0 } });
                 waveTimer = Date.now();
-                /*
+                let bosses = 0;
                 if ((updatedWave) % 5 === 0) {
                     bosses = (updatedWave) / 5;
                     console.log(bosses);
                 }
-                /*
                 setTimeout(() => {
                     for (let i = 0; i < updatedWave; i++) {
                         let type
@@ -213,13 +185,13 @@ const GamePage = (props) => {
                         }
                         enemies.push(new Enemy(map1Waypoints[0].x - 100 * (i + 1) + Math.floor(Math.random() * 21), map1Waypoints[0].y, type));
                     }
-                }, 2000);*/
+                }, 2000);
 
                 //setValues({ score: values.score, lives: values.lives, money: values.money, wave: values.wave + 1})
                 //waveTimer = Date.now();
                 //console.log(enemies);
                 //console.log(values.wave);
-            } else if (values.enemySpawned < values.wave) {
+            } /*else if (values.enemySpawned < values.wave) {
                 const time = Date.now();
                 let waitTime = 0;
                 if (values.enemySpawned === 0) {
@@ -246,11 +218,11 @@ const GamePage = (props) => {
                     enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, type));
                     let updatedSpawn = values.enemySpawned + 1;
                     setValues(previousState => { return { ...previousState, enemySpawned: updatedSpawn } });
-                    console.log(enemies);
+                    //console.log(enemies);
                     //enemysSpawned++;
                     waveTimer = time;
                 }
-            }
+            }*/
         }
         
         for (let t = 0; t < towers.length; t++) {
@@ -379,7 +351,8 @@ const GamePage = (props) => {
             //console.log((mouse.x) + ', ' + (mouse.y));
         });
         //canvas.addEventListener('click', placeTower);
-        return() => {
+        return () => {
+            console.log('removed');
             window.removeEventListener('click', selectTower);
             window.removeEventListener('resize', changeBoundRect);
             window.removeEventListener('scroll', changeBoundRect);
@@ -398,10 +371,11 @@ const GamePage = (props) => {
     //<Panel place={placeTower} paused={!paused}/><div className='timer'>{timer}</div>
     return (
         <div>
-            <AudioFile></AudioFile>
+            <Radio />
             <h1>Game Page</h1>
             <div className="waves-scores-wrapper">
-                <div className="wave-label">Wave: {convertToRoman(values.wave)} : [{values.wave}]</div>
+                <div className="wave-label">Wave: {convertToRoman(values.wave)}</div>
+                <div className='enemy-count'>Enemies: {values.enemyTotal}</div>
                 <div className="score-label">Score: {values.score}</div>
                 <Timer state={gameState}/>
             </div>
@@ -447,7 +421,8 @@ const GamePage = (props) => {
             </div>
             <button onClick={function (e) { setValues(previousState => { return { ...previousState, lives: values.lives - 1 } }); }}>lives</button>
         </div>
-    );
+    )
+
 }
 
 export default GamePage;

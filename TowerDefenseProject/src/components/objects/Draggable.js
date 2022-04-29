@@ -1,8 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 import circleImg from "./circle.png";
+import fireImage from '../assets/images/FireTower.png';
+import waterImage from '../assets/images/WaterTurtleTower.png';
+
 const circle = new Image();
 circle.src = circleImg;
+const fire = new Image();
+fire.src = fireImage;
+const water = new Image();
+water.src = waterImage;
 
 const Draggable = (props) => {
 
@@ -10,6 +17,7 @@ const Draggable = (props) => {
     const [pressed, setPressed] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const ref = useRef();
+    let imgSrc;
 
     useEffect(() => {
         const dragRef = ref.current;
@@ -55,9 +63,20 @@ const Draggable = (props) => {
             ref.current.style.transform = `translate(${position.x}px, ${position.y}px)`
         }
     }, [position]);
+
+    if (type === 1) {
+        imgSrc = fire.src;
+    }
+    else if (type === 2) {
+        imgSrc = water.src;
+    }
+    else {
+        imgSrc = circle.src;
+    }
+
     return (
         <div ref={ref} {...rest}>
-            <img src={circle.src} alt='Tower' width='50' height='50' />
+            <img src={imgSrc} alt='Tower' width='50' height='50' />
         </div>
     )
 }

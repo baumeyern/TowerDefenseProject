@@ -3,6 +3,9 @@ import { mouse, towers, towerType } from '../pages/GamePage';
 import { collision } from '../utils/utils';
 import { Tower } from '../objects/tower';
 
+import pathImage from '../assets/images/EnemyPath.png';
+const path = new Image();
+path.src = pathImage;
 
 
 export function Block(x, y, type) {
@@ -34,8 +37,7 @@ Block.prototype = {
             ctx.strokeStyle = 'white';
             ctx.strokeRect(this.x, this.y, this.width, this.height);
         } else {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.drawImage(path, this.x, this.y);
         }
         if (this.hover && this.type != 1) {
             ctx.fillStyle = "rgba(255, 255, 255, .5)";

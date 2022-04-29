@@ -3,8 +3,15 @@ import { Projectile } from './projectile';
 import { mouse } from '../pages/GamePage';
 import { collision } from '../utils/utils';
 import circleImg from "./circle.png";
+import fireImage from '../assets/images/FireTower.png';
+import waterImage from '../assets/images/WaterTurtleTower.png';
+
 const circle = new Image();
 circle.src = circleImg;
+const fire = new Image();
+fire.src = fireImage;
+const water = new Image();
+water.src = waterImage;
 
 export function Tower(x, y, type) {
     this.x = x;
@@ -45,20 +52,14 @@ export function Tower(x, y, type) {
 Tower.prototype = {
     draw: function (ctx) {
         if (this.type === 1) {
-            ctx.fillStyle = 'red';
+            ctx.drawImage(fire, this.x, this.y);
         }
         else if (this.type === 2) {
-            ctx.fillStyle = 'blue';
-        }
-        else if (this.type === 3) {
-            ctx.fillStyle = 'yellow';
+            ctx.drawImage(water, this.x, this.y)
         }
         else {
-            ctx.fillStyle = 'green';
+            ctx.drawImage(circle, this.x, this.y);
         }
-        ctx.beginPath();
-        ctx.arc(this.mid.x, this.mid.y, this.height/2, 0, Math.PI * 2, true);
-        ctx.fill();
     },
     drawRange: function (ctx) {
         ctx.beginPath();

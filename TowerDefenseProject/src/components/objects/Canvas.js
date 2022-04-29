@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { mouse } from '../pages/GamePage';
+import useMousePosition from './useMousePosition';
 
 const Canvas = props => {
 
@@ -10,9 +10,9 @@ const Canvas = props => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
 
-        events(canvas);
+        const event = events(canvas);
         let animationFrameID;
-
+        console.log(event);
         const render = () => {
             draw(ctx);
             animationFrameID = window.requestAnimationFrame(render);
@@ -20,6 +20,7 @@ const Canvas = props => {
         render();
 
         return () => {
+            console.log('removed');
             window.cancelAnimationFrame(animationFrameID);
         }
     }, [draw, events]);

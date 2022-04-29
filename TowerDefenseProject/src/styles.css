@@ -127,20 +127,30 @@ img:hover {
 .wave-label {
     color: red;
     display: inline-block;
-    padding: 40px;
-    width: 50%;
+    padding-top: 40px;
+    padding-left:2px;
+    width: 25%;
     height: 40px;
-    font-size: 32px;
-    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: 15pt;
+    font-family: pixel;
+}
+
+.enemy-count {
+    color: blueviolet;
+    width: 25%;
+    padding-top: 40px;
+    height: 40px;
+    font-size: 15pt;
+    font-family: pixel;
 }
 
 .score-label {
     color: aqua;
-    width:31.8%;
-    padding: 40px;
+    width:32%;
+    padding-top: 40px;
     height: 40px;
-    font-size: 32px;
-    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: 15pt;
+    font-family: pixel;
 }
 
 .panel-right {
@@ -177,7 +187,7 @@ img:hover {
     text-align: center;
     font-family: pixel;
     height: 40px;
-    font-size: 30px;
+    font-size: 15pt;
     font-family: pixel;
     padding: 40px;
 }
