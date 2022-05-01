@@ -87,6 +87,7 @@ const GamePage = (props) => {
         lives: 10
     });
     const stateRef = useRef(gameState);
+    const valuesRef = useRef(values);
     const buttonRef = useRef();
     const currentRefB = buttonRef.current;
     const messageRef = useRef();
@@ -94,7 +95,7 @@ const GamePage = (props) => {
     
     //let waveTimer = Date.now();
     //const mouseMosition = useMousePosition();
-
+    //console.log(valuesRef.current);
     const init = () => {
         bullets = [];
         enemies = [];
@@ -106,7 +107,7 @@ const GamePage = (props) => {
         waveCounter = 0;
         enemyCounter = 0;
         spawnCounter = 0;
-        //state = 'start';
+        state = 'start';
         stateRef.current = 'start';
         setValues({
             score: 0,
@@ -117,7 +118,7 @@ const GamePage = (props) => {
             lives: 10
         });
     }
-
+    
     useEffect(() => {
         if (stateRef.current === 'start') {
             init();
@@ -126,6 +127,12 @@ const GamePage = (props) => {
                     grid.push(new Block(x * 50, y * 50, map1[y][x]));
                 }
             }
+            /*livesCounter = values.lives;
+            moneyCounter = values.money;
+            scoreCounter = values.score;
+            waveCounter = values.wave;
+            enemyCounter = values.enemyTotal;
+            spawnCounter = values.enemySpawned;*/
             setGameState('paused');
             stateRef.current = 'waiting';
         }
@@ -136,11 +143,11 @@ const GamePage = (props) => {
         else if (gameState === 'next') {
             setGameState('playing');
             setValues(previousState => { return { ...previousState, wave: previousState.wave + 1, enemyTotal: previousState.wave + 1, enemySpawned: 0 } });
-        }
-        */
+        }*/
+        
         if (gameState === 'playing') {
             if (values.enemyTotal <= 0) {
-                setValues(previousState => { return { ...previousState, wave: previousState.wave + 1, enemyTotal: previousState.wave + 1, enemySpawned: 0 } });
+                //setValues(previousState => { return { ...previousState, wave: previousState.wave + 1, enemyTotal: previousState.wave + 1, enemySpawned: 0 } });
             }
         }
 
@@ -148,10 +155,11 @@ const GamePage = (props) => {
             setGameState('end');
         }
         state = gameState;
+
         
-    }, [values.enemyTotal, values.lives, gameState]);
+    }, [values, gameState]);
     
-    useEffect(() => {
+    /*useEffect(() => {
         //console.log('spawned: '+values.enemySpawned);
         if (values.enemySpawned > 0) {
             let type;
@@ -168,7 +176,7 @@ const GamePage = (props) => {
             enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, type));
             //console.log(enemies);
         }
-    }, [values.enemySpawned, values.wave]);
+    }, [values.enemySpawned, values.wave]);*/
 
     /*useEffect(() => {
         console.log(enemies);
@@ -178,7 +186,7 @@ const GamePage = (props) => {
             }
         });
     }, [values.enemyTotal]);*/
-
+    /*
     useEffect(() => {
         //let waveTimer = Date.now();
         let previous;
@@ -190,7 +198,7 @@ const GamePage = (props) => {
             let fps = Math.round(1000 / interval);
             previous = timestamp;
             //console.log(_ticks);
-            if (gameState === 'playing') {
+            if (state === 'playing') {
                 if (values.enemySpawned < values.wave) {
                     //const time = Date.now();
                     _ticks++;
@@ -201,7 +209,7 @@ const GamePage = (props) => {
                     }
                     else {
                         waitTime = 900;
-                    }*/
+                    }
                     //console.log(waitTime);
                     if (fps) {
                         if (_ticks >= fps) {
@@ -215,7 +223,7 @@ const GamePage = (props) => {
                     //console.log('changing');
                 }
             }
-            else if (gameState === 'paused') {
+            else if (state === 'paused') {
                 //console.log(fps);
                 //_ticks--;
             }
@@ -254,7 +262,7 @@ const GamePage = (props) => {
                 }
                 i++;
             }
-            */
+            
             if (deadEnemies.length > 0) {
                 let enemy = deadEnemies[0]
                 if (enemy.dead) {
@@ -296,15 +304,116 @@ const GamePage = (props) => {
                 }
             });
             
-            spawnID = requestAnimationFrame(spawn);
+            spawnID = window.requestAnimationFrame(spawn);
         }
         spawn();
 
         return () => {
             //console.log('canceled');
-            cancelAnimationFrame(spawnID);
+            window.cancelAnimationFrame(spawnID);
         }
     }, [gameState, values.enemySpawned, values.wave, currentRefB]);
+    */
+    useEffect(() => {
+        let previous;
+        let animationID;
+
+        const handleEnemies = (timestamp) => {
+            let interval = timestamp - previous;
+            let fps = Math.round(1000 / interval);
+            previous = timestamp;
+            //console.log(_ticks);
+            if (state === 'playing') {
+                if (enemyCounter === 0) {
+                    waveCounter++;
+                    enemyCounter = waveCounter;
+                    spawnCounter = 0;
+                }
+                if (spawnCounter < waveCounter) {
+                    let wait;
+                    _ticks++;
+                    if (fps) {
+                        if (spawnCounter === 0) {
+                            wait = fps * 2;
+                        } else {
+                            wait = fps;
+                        }
+                        if (_ticks >= wait) {
+                            let type;
+                            if (waveCounter > 3) {
+                                type = Math.floor(Math.random() * 2) + 1;
+                            } else {
+                                type = 1;
+                            }
+                            if (waveCounter % 5 === 0) {
+                                if (spawnCounter >= waveCounter - (waveCounter / 5)) {
+                                    type = 3;
+                                }
+                            }
+                            enemies.push(new Enemy(map1Waypoints[0].x - 60, map1Waypoints[0].y, type));
+                            spawnCounter++;
+                            _ticks = 0;
+                        }
+                    }
+                }
+            }
+
+            enemies.forEach((enemy, i, a) => {
+                if (enemy.end || enemy.dead) {
+                    if (enemy.dead) {
+                        scoreCounter += enemy.score;
+                        moneyCounter += enemy.value;
+                    }
+                    else if (enemy.end) {
+                        livesCounter -= enemy.atk;
+                    }
+                    enemyCounter--;
+                    a.splice(i, 1);
+                }
+            });
+            //console.log('wave: '+ waveCounter+' enemies: '+ enemyCounter +' spawn: '+spawnCounter+' score: '+scoreCounter+' money: '+moneyCounter+' lives: '+livesCounter)
+            animationID = window.requestAnimationFrame(handleEnemies)
+        }
+        handleEnemies();
+
+        return () => {
+            window.cancelAnimationFrame(animationID);
+        }
+
+    }, []);
+
+    useEffect(() => {
+        let valuesID;
+        const updateValues = () => {
+            let currentVals = valuesRef.current;
+            if (currentVals.score !== scoreCounter ||
+                currentVals.money !== moneyCounter ||
+                currentVals.wave !== waveCounter ||
+                currentVals.enemyTotal !== enemyCounter ||
+                currentVals.enemySpawned !== spawnCounter ||
+                currentVals.lives !== livesCounter) {
+                setValues({ score: scoreCounter, money: moneyCounter, wave: waveCounter, enemyTotal: enemyCounter, enemySpawned: spawnCounter, lives: livesCounter });
+                valuesRef.current = values;
+            }
+
+            if (selected) {
+                if (currentRefB) {
+                    currentRefB.style.display = 'block';
+                }
+            } else {
+                if (currentRefB) {
+                    currentRefB.style.display = 'none';
+                }
+            }
+
+            valuesID = window.requestAnimationFrame(updateValues);
+        }
+        updateValues();
+
+        return () => {
+            window.cancelAnimationFrame(valuesID);
+        }
+    }, [values, currentRefB]);
 
     const draw = (ctx) => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -398,7 +507,7 @@ const GamePage = (props) => {
             setValues(previousState => { return { ...previousState, money: previousState.money + refund } });
         }
     }
-    console.log('rendered');
+    //console.log('rendered');
     useEffect(() => {
         const selectTower = () => {
             for (let b = 0; b < grid.length; b++) {
@@ -417,7 +526,7 @@ const GamePage = (props) => {
             }
         });
         return () => {
-            console.log('removed');
+            //console.log('removed');
             window.removeEventListener('click', selectTower);
             window.removeEventListener('mousedown', function (e) {
                 if (currentRefM) {
