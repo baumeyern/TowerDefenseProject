@@ -25,7 +25,7 @@ export function Enemy(x, y, type) {
     if (this.type === 1) {
         this.maxHealth = 150;
         this.health = 150;
-        this.speed = .5 + Math.random()/5;
+        this.speed = .5 + Math.random() / 5;
         this.atk = 1;
         this.value = 5;
         this.score = 100;
@@ -41,7 +41,7 @@ export function Enemy(x, y, type) {
     else if (this.type === 3) {
         this.maxHealth = 500;
         this.health = 500;
-        this.speed = .75 + Math.random() / 5;
+        this.speed = .7 + Math.random() / 5;
         this.atk = 5;
         this.value = 50;
         this.score = 1000;
@@ -108,7 +108,7 @@ Enemy.prototype = {
     hit: function (bullet) {
         this.health -= bullet.pwr;
         if (bullet.slow) {
-            this.speed *= 0.75;
+            this.speed *= 0.85;
         }
         if (this.health <= 0) {
             this.dead = true;

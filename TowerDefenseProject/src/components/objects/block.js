@@ -14,8 +14,7 @@ export function Block(x, y, type) {
     this.type = type;
     this.width = 50;
     this.height = 50;
-    //this.hasTower = false;
-    this.tower = false;
+    this.tower = null;
     this.hover = false;
     /*useEffect(() => {
         const place = () => {
@@ -39,7 +38,7 @@ Block.prototype = {
         } else {
             ctx.drawImage(path, this.x, this.y);
         }
-        if (this.hover && this.type != 1) {
+        if (this.hover && this.type !== 1) {
             ctx.fillStyle = "rgba(255, 255, 255, .5)";
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
@@ -53,7 +52,7 @@ Block.prototype = {
     },
     removeSoldTowers: function () {
         if (this.tower && this.tower.sold) {
-            this.tower = false;
+            this.tower = null;
         }
     }
 }

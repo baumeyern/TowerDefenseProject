@@ -36,7 +36,7 @@ const Draggable = (props) => {
             }
         }
         const handleMouseDown = (e) => {
-            if (state === 'playing') {
+            if (state === 'playing' || state === 'waiting') {
                 setPressed(true);
             }
         }

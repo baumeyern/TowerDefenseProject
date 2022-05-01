@@ -115,7 +115,14 @@ img:hover {
 }
 
 .sellButton {
-    display: none;
+    margin: auto;
+}
+
+.message {
+    opacity: 0;
+}
+
+.play-pause {
 }
 
 .waves-scores-wrapper {
@@ -153,10 +160,6 @@ img:hover {
     font-family: pixel;
 }
 
-.panel-right {
-    float: right;
-}
-
 .towers {
     float: left;
     width: 100%;
@@ -173,11 +176,7 @@ img:hover {
 
 .panel-bottom {
     display: grid;
-    grid: 100px / auto;
-}
-
-.play-pause {
-    margin-top: 100px;
+    grid: 100px 100px / auto;
 }
 
 .timer {

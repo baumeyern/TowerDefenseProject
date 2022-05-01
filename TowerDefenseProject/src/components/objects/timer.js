@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
 
 //could put in GamePage to access seconds
@@ -27,7 +27,5 @@ const Timer = (props) => {
         </div>
     );
 }
-
-export const useTimer = () => useContext(Timer);
 
 export default Timer;
