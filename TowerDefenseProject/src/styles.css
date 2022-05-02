@@ -88,7 +88,8 @@ h2 {
 }
 
 .panel-top {
-    padding-top: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
 }
 
 img:hover {
@@ -101,8 +102,8 @@ img:hover {
 
 .towers {
     display: grid;
-    grid: 75px 75px 75px / auto auto auto;
-    padding-top: 5px;
+    grid: 80px 80px / auto auto;
+    width: 100%;
 }
 
 .game {
@@ -158,12 +159,6 @@ img:hover {
     height: 40px;
     font-size: 15pt;
     font-family: pixel;
-}
-
-.towers {
-    float: left;
-    width: 100%;
-    padding-top: 2em;
 }
 
 .money,

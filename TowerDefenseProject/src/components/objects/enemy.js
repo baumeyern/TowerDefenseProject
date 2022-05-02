@@ -3,13 +3,19 @@ import { collision } from '../utils/utils';
 import circleImg from "./circle.png";
 import type1Image from '../assets/images/Type1.png';
 import type2Image from '../assets/images/Type2.png';
+import type3Image from '../assets/images/Type3.png';
+import type4Image from '../assets/images/NoFace.png';
+
 const circle = new Image();
 circle.src = circleImg;
 const type1 = new Image();
 type1.src = type1Image;
 const type2 = new Image();
 type2.src = type2Image;
-
+const type3 = new Image();
+type3.src = type3Image;
+const type4 = new Image();
+type4.src = type4Image;
 
 export function Enemy(x, y, type) {
     this.x = x;
@@ -20,6 +26,7 @@ export function Enemy(x, y, type) {
     this.type = type;
     this.waypoint = 0;
     this.distance = 0;
+    this.hasDot = 0;
     this.end = false;
     this.dead = false;
     if (this.type === 1) {
@@ -27,7 +34,7 @@ export function Enemy(x, y, type) {
         this.health = 150;
         this.speed = .5 + Math.random() / 5;
         this.atk = 1;
-        this.value = 5;
+        this.value = 2;
         this.score = 100;
     }
     else if (this.type === 2) {
@@ -35,31 +42,42 @@ export function Enemy(x, y, type) {
         this.health = 100;
         this.speed = 2 + Math.random() / 5;
         this.atk = 1;
-        this.value = 10;
+        this.value = 5;
         this.score = 200;
     }
     else if (this.type === 3) {
+        this.maxHealth = 200;
+        this.health = 200;
+        this.speed = .4 + Math.random() / 5;
+        this.atk = 2;
+        this.value = 7;
+        this.score = 400;
+    }
+    else if (this.type === 4) {
         this.maxHealth = 500;
         this.health = 500;
         this.speed = .7 + Math.random() / 5;
         this.atk = 5;
-        this.value = 50;
+        this.value = 20;
         this.score = 1000;
     }
+
 }
 
 Enemy.prototype = {
     draw: function (ctx) {
         if (this.type === 1) {
-            ctx.drawImage(type1, this.x, this.y);
+            ctx.drawImage(type1, this.x + 5, this.y + 5, 40, 40);
         }
         else if (this.type === 2) {
             ctx.drawImage(type2, this.x, this.y);
         }
-        else {
-            ctx.drawImage(circle, this.x, this.y);
+        else if (this.type === 3) {
+            ctx.drawImage(type3, this.x, this.y);
         }
-       
+        else if (this.type === 4) {
+            ctx.drawImage(type4, this.x, this.y);
+        }
     },
     drawHealth: function (ctx) {
         /*ctx.fillStyle = 'black';
@@ -110,8 +128,19 @@ Enemy.prototype = {
         if (bullet.slow) {
             this.speed *= 0.85;
         }
+        if (bullet.dot) {
+            this.hasDot += bullet.dot;
+        }
         if (this.health <= 0) {
             this.dead = true;
+        }
+    },
+    doDot: function () {
+        if (this.hasDot) {
+            this.health -= this.hasDot;
+            if (this.health <= 0) {
+                this.dead = true;
+            }
         }
     }
 }

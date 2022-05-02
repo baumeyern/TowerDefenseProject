@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, memo } from 'react';
 
-import { grid, enemies, bullets, map1Waypoints, state, mouse, selected } from '../pages/GamePage';
+import { grid, enemies, bullets, map1Waypoints, state, mouse, selected, moneyCounter } from '../pages/GamePage';
 
 const Canvas = props => {
 
-    const { events, ...rest } = props;
     const canvasRef = useRef();
 
     useEffect(() => {
@@ -86,7 +85,7 @@ const Canvas = props => {
         }
     }, []);
 
-    return <canvas ref={canvasRef} {...rest} />;
+    return <canvas ref={canvasRef} {...props} />;
 }
 
 export default (Canvas);

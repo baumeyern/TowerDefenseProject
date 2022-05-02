@@ -3,8 +3,12 @@ import { Projectile } from './projectile';
 import { mouse } from '../pages/GamePage';
 import { collision } from '../utils/utils';
 import circleImg from "./circle.png";
-import fireImage from '../assets/images/FireTower.png';
+import fireImage from '../assets/images/circle.png';
 import waterImage from '../assets/images/WaterTurtleTower.png';
+import nutImage from '../assets/images/Nut.png';
+import coinImage from '../assets/images/Bitcoin.png';
+import snakeImage from '../assets/images/Snake.png';
+import sniperImage from '../assets/images/Sniper.png';
 
 const circle = new Image();
 circle.src = circleImg;
@@ -12,6 +16,15 @@ const fire = new Image();
 fire.src = fireImage;
 const water = new Image();
 water.src = waterImage;
+const nut = new Image();
+nut.src = nutImage;
+const coin = new Image();
+coin.src = coinImage;
+const snake = new Image();
+snake.src = snakeImage;
+const sniper = new Image();
+sniper.src = sniperImage;
+
 
 export function Tower(x, y, type) {
     this.x = x;
@@ -27,25 +40,37 @@ export function Tower(x, y, type) {
         this.range = 150;
         this.fireRate = 1;
         this.projectile = 1;
-        this.price = 10;
+        this.price = 0;
     }
     else if (this.type === 2) {
         this.range = 110;
-        this.fireRate = 1;
+        this.fireRate = 1.5;
         this.projectile = 2;
-        this.price = 20;
+        this.price = 0;
     }
     else if (this.type === 3) {
-        this.range = 120;
+        this.range = 130;
         this.fireRate = 1;
         this.projectile = 3;
-        this.price = 30;
+        this.price = 0;
     }
     else if (this.type === 4) {
-        this.range = 110;
-        this.fireRate = 1;
-        this.projectile = 2;
-        this.price = 40;
+        this.range = 400;
+        this.fireRate = 3;
+        this.projectile = 4;
+        this.price = 0;
+    }
+    else if (this.type === 5) {
+        this.range = 120;
+        this.fireRate = 2;
+        this.projectile = 5;
+        this.price = 0;
+    }
+    else if (this.type === 6) {
+        this.range = 0;
+        //this.fireRate = 4;
+        //this.projectile = 6;
+        this.price = 0;
     }
 }
 
@@ -55,7 +80,19 @@ Tower.prototype = {
             ctx.drawImage(fire, this.x, this.y);
         }
         else if (this.type === 2) {
-            ctx.drawImage(water, this.x, this.y)
+            ctx.drawImage(nut, this.x, this.y)
+        }
+        else if (this.type === 3) {
+            ctx.drawImage(water, this.x, this.y);
+        }
+        else if (this.type === 4) {
+            ctx.drawImage(sniper, this.x, this.y);
+        }
+        else if (this.type === 5) {
+            ctx.drawImage(snake, this.x, this.y);
+        }
+        else if (this.type === 6) {
+            ctx.drawImage(coin, this.x, this.y);
         }
         else {
             ctx.drawImage(circle, this.x, this.y);
@@ -81,6 +118,8 @@ Tower.prototype = {
             let enemy = sortDist[0];
             if (this.type === 2) {
                 enemy = sortDist.sort((a, b) => b.speed - a.speed)[0];
+            } else if (this.type === 4) {
+                enemy = sortDist.sort((a, b) => b.health - a.health)[0];
             }
             //console.log(enemies);
             if (this.type !== 3) {

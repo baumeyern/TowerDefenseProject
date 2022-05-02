@@ -1,8 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 import circleImg from "./circle.png";
-import fireImage from '../assets/images/FireTower.png';
+import fireImage from '../assets/images/circle.png';
 import waterImage from '../assets/images/WaterTurtleTower.png';
+import nutImage from '../assets/images/Nut.png';
+import coinImage from '../assets/images/Bitcoin.png';
+import snakeImage from '../assets/images/Snake.png';
+import sniperImage from '../assets/images/Sniper.png';
 
 const circle = new Image();
 circle.src = circleImg;
@@ -10,6 +14,14 @@ const fire = new Image();
 fire.src = fireImage;
 const water = new Image();
 water.src = waterImage;
+const nut = new Image();
+nut.src = nutImage;
+const coin = new Image();
+coin.src = coinImage;
+const snake = new Image();
+snake.src = snakeImage;
+const sniper = new Image();
+sniper.src = sniperImage;
 
 const Draggable = (props) => {
 
@@ -17,7 +29,7 @@ const Draggable = (props) => {
     const [pressed, setPressed] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const ref = useRef();
-    let imgSrc;
+    let imgSrc, message;
 
     useEffect(() => {
         const dragRef = ref.current;
@@ -67,17 +79,33 @@ const Draggable = (props) => {
 
     if (type === 1) {
         imgSrc = fire.src;
+        message = 'Basic ($10)';
     }
     else if (type === 2) {
-        imgSrc = water.src;
+        imgSrc = nut.src;
+        message = 'Slow ($20)';
     }
-    else {
-        imgSrc = circle.src;
+    else if (type === 3) {
+        imgSrc = water.src;
+        message = 'AOE ($30)';
+    }
+    else if (type === 4) {
+        imgSrc = sniper.src;
+        message = 'Sniper ($40)';
+    }
+    else if (type === 5) {
+        imgSrc = snake.src;
+        message = 'Poison ($30)';
+    }
+    else if (type === 6) {
+        imgSrc = coin.src;
+        message = 'Bank ($40)';
     }
 
     return (
-        <div ref={ref} {...rest}>
-            <img src={imgSrc} alt='Tower' width='50' height='50' />
+        <div {...rest}>
+            <img ref={ref} src={imgSrc} alt='Tower' width='50' height='50' />
+            <p>{message}</p>
         </div>
     )
 }

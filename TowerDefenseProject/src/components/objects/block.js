@@ -3,10 +3,16 @@ import { mouse, towers, towerType } from '../pages/GamePage';
 import { collision } from '../utils/utils';
 import { Tower } from '../objects/tower';
 
-import pathImage from '../assets/images/EnemyPath.png';
+import pathImage from '../assets/images/EnemyPath1.png';
+import testImage from '../assets/images/EnemyPath.png';
+import tileImage from '../assets/images/TileSet.png';
+
 const path = new Image();
 path.src = pathImage;
-
+const tile = new Image();
+tile.src = tileImage;
+const test = new Image();
+test.src = testImage;
 
 export function Block(x, y, type) {
     this.x = x;
@@ -33,7 +39,8 @@ export function Block(x, y, type) {
 Block.prototype = {
     draw: function (ctx) {
         if (this.type === 0) {
-            ctx.strokeStyle = 'white';
+            ctx.drawImage(test, this.x, this.y);
+            ctx.strokeStyle = 'grey';
             ctx.strokeRect(this.x, this.y, this.width, this.height);
         } else {
             ctx.drawImage(path, this.x, this.y);
