@@ -16,6 +16,7 @@ const type3 = new Image();
 type3.src = type3Image;
 const type4 = new Image();
 type4.src = type4Image;
+
 /*
  * 
  * 
