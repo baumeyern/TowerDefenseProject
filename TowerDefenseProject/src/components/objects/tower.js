@@ -25,7 +25,10 @@ snake.src = snakeImage;
 const sniper = new Image();
 sniper.src = sniperImage;
 
-
+/*
+ * 
+ * 
+ */
 export function Tower(x, y, type) {
     this.x = x;
     this.y = y;
