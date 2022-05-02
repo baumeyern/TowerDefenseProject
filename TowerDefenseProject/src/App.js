@@ -3,23 +3,23 @@ import HomePage from './components/pages/HomePage';
 import LoginPage from './components/pages/LoginPage';
 import GamePage from './components/pages/GamePage';
 import ScoresPage from './components/pages/ScoresPage';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, HashRouter } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const App = () => {
     return (
-        <Router>
+        <HashRouter>
             <Container maxWidth="lg">
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/game" element={<GamePage />} />
-                    <Route path="/scores" element={<ScoresPage />} />
+                    <Route exact path="/" element={<HomePage />} />
+                    <Route exact path="/login" element={<LoginPage />} />
+                    <Route exact path="/game" element={<GamePage />} />
+                    <Route exact path="/scores" element={<ScoresPage />} />
                 </Routes>
             </Container>
-        </Router>
+        </HashRouter>
     );
 }
 
