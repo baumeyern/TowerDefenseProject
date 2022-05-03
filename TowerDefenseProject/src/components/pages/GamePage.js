@@ -16,6 +16,7 @@ import Popup from '../objects/Popup';
 
 
 import circleImg from "../objects/circle.png";
+import { postScore } from '../services/HighScoreService';
 const circle = new Image();
 circle.src = circleImg;
 
@@ -128,7 +129,7 @@ const GamePage = (props) => {
             stateRef.current = 'paused';
         }
         else if (gameState === 'end') {
-            //Send score to database and time
+            postScore('nick', values.score.toString());
         }
         /*
         else if (gameState === 'next') {

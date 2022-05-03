@@ -1,3 +1,7 @@
+using BackendAPI;
+using BackendAPI.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,7 +11,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IHighScoreRepository, HighScoreRepository>();
+
+builder.Services.AddDbContext<HighScoreDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("HighScoreDbConnectionString")));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowCors",
+        policy =>
+        {
+            policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+        });
+});
+
 var app = builder.Build();
+
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

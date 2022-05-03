@@ -51,6 +51,12 @@ h2 {
     color: #f0f0f0f0;
 }
 
+.th,.tr,.tbody,.td {
+    font-family: arcade;
+    font-size: 40px;
+    color: #f0f0f0f0;
+}
+
 .sbtn {
     font-family: arcade;
     font-size: 28px;
