@@ -245,3 +245,12 @@ img:hover {
 .audio-bttn {
     color: #853d3dd2 !important;
 }
+
+table {
+    color: white;
+    margin: auto;
+    padding-bottom: 20px;
+    border-collapse: separate;
+    font-family: pixel;
+    border-spacing: 1em;
+}

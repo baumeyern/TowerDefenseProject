@@ -3,7 +3,7 @@ import HomePage from './components/pages/HomePage';
 import LoginPage from './components/pages/LoginPage';
 import GamePage from './components/pages/GamePage';
 import ScoresPage from './components/pages/ScoresPage';
-import { BrowserRouter, Routes, Route, HashRouter } from 'react-router-dom';
+import { Routes, Route, HashRouter } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

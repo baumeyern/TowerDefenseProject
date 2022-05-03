@@ -19,6 +19,10 @@ sniper.src = sniperImage;
 const poison = new Image();
 poison.src = poisonImage;
 
+/*
+ * 
+ * (Reqirement 5.0.0)
+ */
 export function Projectile(x, y, type, target) {
     this.x = x;
     this.y = y;
@@ -84,6 +88,9 @@ Projectile.prototype = {
             //console.log((distX < 0 ? -distX : distX) + (distY < 0 ? -distY : distY));
             //console.log(distY);
             if ((distX < 0 ? -distX : distX) + (distY < 0 ? -distY : distY) < this.speed) {
+                /*
+                 * Projectiles disappear after colliding (Requirement 5.0.2)
+                 */
                 this.target.hit(this);
                 this.end = true;
             }

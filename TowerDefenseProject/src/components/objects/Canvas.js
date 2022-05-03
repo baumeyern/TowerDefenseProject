@@ -14,6 +14,9 @@ const Canvas = props => {
         const render = () => {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
             grid.forEach(block => {
+                /*
+                 * 
+                 */
                 block.draw(ctx);
                 block.mouseIsOver(mouse);
                 block.removeSoldTowers();

@@ -1,7 +1,9 @@
 import React, { useState, createContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
-import Button from 'react-bootstrap/Button';
+/*
+ * Login Page (Requirement 1.0.0)
+ */
 
 let username = createContext();
 

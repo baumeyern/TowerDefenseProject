@@ -14,6 +14,10 @@ tile.src = tileImage;
 const test = new Image();
 test.src = testImage;
 
+
+/*
+ * Nodes (Requirement 2.0.1)
+ */
 export function Block(x, y, type) {
     this.x = x;
     this.y = y;
@@ -22,18 +26,6 @@ export function Block(x, y, type) {
     this.height = 50;
     this.tower = null;
     this.hover = false;
-    /*useEffect(() => {
-        const place = () => {
-            if (this.hover && this.type != 1 && !this.hasTower) {
-                towers.push(new Tower(this.x, this.y, towerType));
-                this.hasTower = true;
-            }
-        }
-        window.addEventListener('click', place);
-        return () => {
-            window.removeEventListener('click', place);
-        }
-    }, []);*/
 }
 
 Block.prototype = {

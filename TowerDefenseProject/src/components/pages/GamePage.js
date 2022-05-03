@@ -75,6 +75,9 @@ export const mouse = {
     height: .1,
 }
 
+/*
+ * Game Page (Requirement 1.1.0)
+ */
 const GamePage = (props) => {
     //let prev = Date.now(), frameCount = 0;
     const [gameState, setGameState] = useState('start');
@@ -133,11 +136,6 @@ const GamePage = (props) => {
                 username = 'Anonymous'
             postScore(username, values.score.toString());
         }
-        /*
-        else if (gameState === 'next') {
-            setGameState('playing');
-            setValues(previousState => { return { ...previousState, wave: previousState.wave + 1, enemyTotal: previousState.wave + 1, enemySpawned: 0 } });
-        }*/
         
         if (gameState === 'playing') {
             if (values.enemyTotal <= 0) {
@@ -164,6 +162,9 @@ const GamePage = (props) => {
             if (state === 'playing') {
                 if (enemyCounter === 0) {
                     waveCounter++;
+                    /*
+                    * Enemies Spawn rate increase (6.0.1)
+                    */
                     enemyCounter = waveCounter;
                     spawnCounter = 0;
                     grid.forEach(block => {
@@ -186,12 +187,21 @@ const GamePage = (props) => {
                             if (waveCounter >= 10) {
                                 type = Math.floor(Math.random() * 3) + 1;
                             }
+                            /*
+                             * Fast enemies have chance to spawn (Requirement 6.0.3)
+                             */
                             else if (waveCounter >= 5) {
                                 type = Math.floor(Math.random() * 2) + 1;
                             }
+                            /*
+                             * Normal Enemies spawn for 4 waves (Reqirement 6.0.2)
+                             */
                             else {
                                 type = 1;
                             }
+                            /*
+                             * Boss enemies spawn every 5 rounds (Requirement 6.0.4)
+                             */
                             if (waveCounter % 5 === 0) {
                                 if (spawnCounter >= waveCounter - (waveCounter / 5)) {
                                     type = 4;
@@ -207,6 +217,7 @@ const GamePage = (props) => {
 
             enemies.forEach((enemy, i, a) => {
                 enemy.doDot();
+                //Multuiply enemy health every 5 rounds (Reqirement 6.0.5)
                 if (enemy.end || enemy.dead) {
                     if (enemy.dead) {
                         scoreCounter += enemy.score;

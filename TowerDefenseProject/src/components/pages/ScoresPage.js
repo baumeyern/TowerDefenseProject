@@ -6,7 +6,9 @@ import { useEffect, useState } from 'react';
 
 var calledScores = false;
 
-//Display player score and list of high scores
+/*
+ * Screoes Page (Requirement 1.2.0)
+ */
 const ScoresPage = () => {
     const [scores, setScores] = useState([]);
 
@@ -17,14 +19,11 @@ const ScoresPage = () => {
         const response = await getTopScores();
         setScores(response);
     });
-
+    console.log('rendered');
     return (
         <div>
             <h1>Highscores</h1>
             <div className="container">
-                <Link to='/'>
-                    <Button variant="outline-light">Home</Button>
-                </Link>
                 <table>
                     <tbody>
                         <tr>
@@ -43,6 +42,9 @@ const ScoresPage = () => {
                         })}
                     </tbody>
                 </table>
+                <Link to='/'>
+                    <Button variant="outline-light">Home</Button>
+                </Link>
             </div>
         </div>
     )
