@@ -2,6 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
+
+/*
+ * Home Page (Requirement 1.3.0)
+ */
 const HomePage = () => (
     <div>
         <h1>Tower<br/>Defense</h1>

@@ -19,7 +19,10 @@ type4.src = type4Image;
 
 /*
  * 
+ * (Requirement 3.0.0)
  * 
+ * Fixed min speed random max speed
+ * (Requirement 3.0.1)
  */
 export function Enemy(x, y, type) {
     this.x = x;
@@ -33,6 +36,10 @@ export function Enemy(x, y, type) {
     this.hasDot = 0;
     this.end = false;
     this.dead = false;
+
+    /*
+     * Basic (Reqirement 3.1.0)
+     */
     if (this.type === 1) {
         this.maxHealth = 150;
         this.health = 150;
@@ -41,6 +48,9 @@ export function Enemy(x, y, type) {
         this.value = 2;
         this.score = 100;
     }
+    /*
+     * (Reqirement 3.2.0)
+     */
     else if (this.type === 2) {
         this.maxHealth = 100;
         this.health = 100;
@@ -49,6 +59,9 @@ export function Enemy(x, y, type) {
         this.value = 5;
         this.score = 200;
     }
+    /*
+     * (Reqirement 3.3.0)
+     */
     else if (this.type === 3) {
         this.maxHealth = 200;
         this.health = 200;
@@ -57,6 +70,9 @@ export function Enemy(x, y, type) {
         this.value = 7;
         this.score = 400;
     }
+    /*
+     * Boss (Reqirement 3.4.0)
+     */
     else if (this.type === 4) {
         this.maxHealth = 500;
         this.health = 500;

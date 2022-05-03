@@ -3,7 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from 'react-bootstrap/Button';
 
-
+/*
+ * Login Page (Requirement 1.0.0)
+ */
 const LoginPage = () => {
     const navigate = useNavigate();
     const [name, setName] = useState("");
