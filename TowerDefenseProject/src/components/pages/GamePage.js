@@ -13,7 +13,7 @@ import { collision, inRange, convertToRoman, useInterval } from '../utils/utils'
 import Radio from '../objects/Audio';
 import Timer from '../objects/timer';
 import Popup from '../objects/Popup';
-
+import { username } from "./LoginPage";
 
 import circleImg from "../objects/circle.png";
 import { postScore } from '../services/HighScoreService';
@@ -129,7 +129,9 @@ const GamePage = (props) => {
             stateRef.current = 'paused';
         }
         else if (gameState === 'end') {
-            postScore('nick', values.score.toString());
+            if (username == null || username.length == 0)
+                username = 'Anonymous'
+            postScore(username, values.score.toString());
         }
         /*
         else if (gameState === 'next') {
