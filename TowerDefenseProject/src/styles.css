@@ -237,3 +237,11 @@ img:hover {
 .popup-button {
     font-size: 20pt;
 }
+
+.audio {
+    color: white;
+}
+
+.audio-bttn {
+    color: #853d3dd2 !important;
+}
