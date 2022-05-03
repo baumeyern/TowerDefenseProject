@@ -5,7 +5,7 @@ const debugBaseUrl = 'https://localhost:5001/api/v1/';
 
 export async function getTopScores() {
     try {
-        var response = axios.get(debugBaseUrl + `HighScore/GetAll`, { mode: 'cors' });
+        var response = axios.get(baseUrl + `HighScore/GetAll`, { mode: 'cors' });
         return (await response).data;
     }
     catch (error)
@@ -16,7 +16,7 @@ export async function getTopScores() {
 
 export async function postScore(name, score) {
     try {
-        var response = axios.post(debugBaseUrl + `HighScore/Insert`, { Name: name, Score: score }, {
+        var response = axios.post(baseUrl + `HighScore/Insert`, { Name: name, Score: score }, {
             mode: 'cors',
             headers: { 'Content-Type': 'application/json; charset=utf-8', },
             credentials: "include",
