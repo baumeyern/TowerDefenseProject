@@ -49,7 +49,7 @@ export function Tower(x, y, type) {
         this.projectile = 1;
         this.price = 10;
     }
-     /*
+    /*
      * Slow Tower (Reqirement 4.2.0)
      */
     else if (this.type === 2) {
@@ -90,7 +90,7 @@ export function Tower(x, y, type) {
      */
     else if (this.type === 6) {
         this.range = 0;
-        this.price = 40;
+        this.price = 10;
     }
 }
 

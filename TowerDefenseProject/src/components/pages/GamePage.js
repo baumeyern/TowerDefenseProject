@@ -168,13 +168,13 @@ const GamePage = (props) => {
                     */
                     enemyCounter = waveCounter;
                     spawnCounter = 0;
-                    /*
+                    
                     grid.forEach(block => {
                         if (block.tower && block.tower.type === 6) {
                             moneyCounter += 5;
                         }
                     });
-                    */
+                    
                 }
                 if (spawnCounter < waveCounter) {
                     let wait;
@@ -242,9 +242,6 @@ const GamePage = (props) => {
                 block.mouseIsOver(mouse);
                 block.removeSoldTowers();
                 if (block.tower) {
-                    if (spawnCounter === 0 && block.tower && block.tower.type === 6) {
-                        moneyCounter += 5;
-                    }
                     let enemiesInRange = enemies.filter(function (enemy) {
                         return block.tower.inRange(enemy);
                     });
