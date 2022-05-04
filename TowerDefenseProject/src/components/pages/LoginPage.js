@@ -16,7 +16,7 @@ const LoginPage = () => {
         e.preventDefault();
         username = name;
         //Send name to database
-        navigate('/game');
+        navigate('/game'); 
     }
 
     return (
