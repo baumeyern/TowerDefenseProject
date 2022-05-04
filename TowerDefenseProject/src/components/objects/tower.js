@@ -83,7 +83,7 @@ export function Tower(x, y, type) {
         this.range = 120;
         this.fireRate = 2;
         this.projectile = 5;
-        this.price = 30;
+        this.price = 10;
     }
     /*
      * Bank Tower (Reqirement 4.6.0)
@@ -127,8 +127,8 @@ Tower.prototype = {
     inRange: function (enemy) {
         return (this.mid.x - enemy.mid.x) * (this.mid.x - enemy.mid.x) + (this.mid.y - enemy.mid.y) * (this.mid.y - enemy.mid.y) < this.range * this.range
     },
-    shoot: function (bullets, enemies) {
-        if (this.fire && enemies.length > 0) {
+    shoot: function (bullets, enemies, state, fps) {
+        if (state === 'playing' && this.fire && enemies.length > 0) {
             if (this.type === 3) {
                 for (let i = 0; i < enemies.length; i++) {
                     bullets.push(new Projectile(this.mid.x, this.mid.y, this.projectile, enemies[i]));
@@ -148,10 +148,17 @@ Tower.prototype = {
             //{ mid:{ x: enemies[0].mid.x, y: enemies[0].mid.y }}
             this.fire = false;
             this.timer = Date.now();
-        } else if ((Date.now() - this.timer) / 1000 >= this.fireRate) {
+        }
+        if (state === 'paused') {
+            if (fps) {
+                this.timer += Math.round(1000 / fps);
+            }
+        }
+        else if ((Date.now() - this.timer) / 1000 >= this.fireRate) {
             this.fire = true;
         }
-        //console.log((Date.now() - this.timer) / 1000 );
+
+        //console.log(time);
     },
     sell: function () {
         this.sold = true;

@@ -33,10 +33,12 @@ export function Enemy(x, y, type) {
     this.type = type;
     this.waypoint = 0;
     this.distance = 0;
-    this.hasDot = 0;
+    this.currentDot = 0;
+    this.dotTimer = null;
+    this.slowed = false;
     this.end = false;
     this.dead = false;
-
+    this.scaled = false;
     /*
      * Basic (Reqirement 3.1.0)
      */
@@ -46,7 +48,7 @@ export function Enemy(x, y, type) {
         this.speed = .5 + Math.random() / 5;
         this.atk = 1;
         this.value = 2;
-        this.score = 100;
+        this.score = 10;
     }
     /*
      * (Reqirement 3.2.0)
@@ -57,7 +59,7 @@ export function Enemy(x, y, type) {
         this.speed = 2 + Math.random() / 5;
         this.atk = 1;
         this.value = 5;
-        this.score = 200;
+        this.score = 20;
     }
     /*
      * (Reqirement 3.3.0)
@@ -68,7 +70,7 @@ export function Enemy(x, y, type) {
         this.speed = .4 + Math.random() / 5;
         this.atk = 2;
         this.value = 7;
-        this.score = 400;
+        this.score = 40;
     }
     /*
      * Boss (Reqirement 3.4.0)
@@ -79,9 +81,9 @@ export function Enemy(x, y, type) {
         this.speed = .7 + Math.random() / 5;
         this.atk = 5;
         this.value = 20;
-        this.score = 1000;
+        this.score = 100;
     }
-
+    this.slowSpeed = this.speed * .75;
 }
 
 Enemy.prototype = {
@@ -100,8 +102,6 @@ Enemy.prototype = {
         }
     },
     drawHealth: function (ctx) {
-        /*ctx.fillStyle = 'black';
-        ctx.fillRect(this.x, this.y, this.width, this.height / 8);*/
         ctx.fillStyle = 'red';
         ctx.fillRect(this.x, this.y, this.width * (this.health / this.maxHealth), this.height / 8);
     },
@@ -126,40 +126,47 @@ Enemy.prototype = {
             this.end = true;
         }
     },
-    /*
-    hit: function (bullets) {
-        for (let i = 0; i < bullets.length; i++) {
-            if (collision(this, bullets[i])) {
-                this.health -= bullets[i].pwr;
-                if (bullets[i].slow) {
-                }
-                    this.speed -= .25;
-                bullets.splice(i, 1);
-                i--;
-            }
-        }
-        if (this.health <= 0) {
-            this.dead = true;
-        }
-       
-    }*/
     hit: function (bullet) {
         this.health -= bullet.pwr;
         if (bullet.slow) {
-            this.speed *= 0.85;
+            if (!this.slowed) {
+                this.slowed = true;
+            }
         }
         if (bullet.dot) {
-            this.hasDot += bullet.dot;
+            this.currentDot += bullet.dot;
+            this.dotTimer = Date.now();
         }
         if (this.health <= 0) {
             this.dead = true;
         }
     },
-    doDot: function () {
-        if (this.hasDot) {
-            this.health -= this.hasDot;
+    doAffliction: function (state, fps) {
+        if (this.currentDot) {
+            if (state === 'playing') {
+                if (Date.now() - this.dotTimer > 1000) {
+                    this.health -= this.currentDot;
+                    this.dotTimer = Date.now();
+                }
+            } else if (state === 'paused') {
+                if (fps) {
+                    this.dotTimer += Math.round(1000 / fps);
+                }
+            }
             if (this.health <= 0) {
                 this.dead = true;
+            }
+        }
+        if (this.slowed) {
+            this.speed = this.slowSpeed;
+        }
+    },
+    scale: function (wave) {
+        if (wave > 5) {
+            if (!this.scaled) {
+                this.maxHealth *= 1.2 * (wave / 5);
+                this.health *= 1.2 * (wave / 5);
+                this.scaled = true;
             }
         }
     }

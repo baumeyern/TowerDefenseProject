@@ -132,15 +132,16 @@ const GamePage = (props) => {
             stateRef.current = 'paused';
         }
         else if (gameState === 'end') {
-            if (username == null || username.length == 0)
-                username = 'Anonymous'
+            if (username === null || username.length === 0) {
+                username = 'Anonymous';
+            }
             postScore(username, values.score.toString());
         }
         
         if (gameState === 'playing') {
-            if (values.enemyTotal <= 0) {
+            //if (values.enemyTotal <= 0) {
                 //setValues(previousState => { return { ...previousState, wave: previousState.wave + 1, enemyTotal: previousState.wave + 1, enemySpawned: 0 } });
-            }
+            //}
         }
 
         if (values.lives <= 0) {
@@ -148,13 +149,13 @@ const GamePage = (props) => {
         }
         state = gameState;
 
-    }, [values, gameState]);
+    }, [values.lives, values.score, gameState]);
     
     useEffect(() => {
         let previous;
         let animationID;
 
-        const handleEnemies = (timestamp) => {
+        const handleLogic = (timestamp) => {
             let interval = timestamp - previous;
             let fps = Math.round(1000 / interval);
             previous = timestamp;
@@ -167,11 +168,13 @@ const GamePage = (props) => {
                     */
                     enemyCounter = waveCounter;
                     spawnCounter = 0;
+                    /*
                     grid.forEach(block => {
                         if (block.tower && block.tower.type === 6) {
                             moneyCounter += 5;
                         }
                     });
+                    */
                 }
                 if (spawnCounter < waveCounter) {
                     let wait;
@@ -194,7 +197,7 @@ const GamePage = (props) => {
                                 type = Math.floor(Math.random() * 2) + 1;
                             }
                             /*
-                             * Normal Enemies spawn for 4 waves (Reqirement 6.0.2)
+                             * Only Basic enemies spawn for 4 waves (Reqirement 6.0.2)
                              */
                             else {
                                 type = 1;
@@ -216,8 +219,12 @@ const GamePage = (props) => {
             }
 
             enemies.forEach((enemy, i, a) => {
-                enemy.doDot();
                 //Multuiply enemy health every 5 rounds (Reqirement 6.0.5)
+                enemy.scale(waveCounter);
+                enemy.doAffliction(state, fps);
+                if (state === 'playing') {
+                    enemy.move(map1Waypoints);
+                }
                 if (enemy.end || enemy.dead) {
                     if (enemy.dead) {
                         scoreCounter += enemy.score;
@@ -230,17 +237,40 @@ const GamePage = (props) => {
                     a.splice(i, 1);
                 }
             });
+
+            grid.forEach(block => {
+                block.mouseIsOver(mouse);
+                block.removeSoldTowers();
+                if (block.tower) {
+                    if (spawnCounter === 0 && block.tower && block.tower.type === 6) {
+                        moneyCounter += 5;
+                    }
+                    let enemiesInRange = enemies.filter(function (enemy) {
+                        return block.tower.inRange(enemy);
+                    });
+                    block.tower.shoot(bullets, enemiesInRange, state, fps);
+                }
+            });
+
+            bullets.forEach((bullet, i, a) => {
+                if (state === 'playing') {
+                    bullet.move();
+                    if (bullet.end) {
+                        a.splice(i, 1);
+                    }
+                }
+            });
             //console.log('wave: '+ waveCounter+' enemies: '+ enemyCounter +' spawn: '+spawnCounter+' score: '+scoreCounter+' money: '+moneyCounter+' lives: '+livesCounter)
-            animationID = window.requestAnimationFrame(handleEnemies)
+            animationID = window.requestAnimationFrame(handleLogic)
         }
-        handleEnemies();
+        handleLogic();
 
         return () => {
             window.cancelAnimationFrame(animationID);
         }
 
     }, []);
-
+    
     useEffect(() => {
         let valuesID;
         const updateValues = () => {
@@ -252,7 +282,7 @@ const GamePage = (props) => {
                 currentVals.enemySpawned !== spawnCounter ||
                 currentVals.lives !== livesCounter) {
                 setValues({ score: scoreCounter, money: moneyCounter, wave: waveCounter, enemyTotal: enemyCounter, enemySpawned: spawnCounter, lives: livesCounter });
-                valuesRef.current = values;
+                valuesRef.current = { score: scoreCounter, money: moneyCounter, wave: waveCounter, enemyTotal: enemyCounter, enemySpawned: spawnCounter, lives: livesCounter };
             }
 
             if (selected) {

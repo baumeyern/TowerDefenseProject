@@ -51,7 +51,7 @@ export function Projectile(x, y, type, target) {
     else if (this.type === 5) {
         this.speed = 5;
         this.pwr = 30;
-        this.dot = .1;
+        this.dot = 5;
     }
     else if (this.type === 6) {
         this.speed = 5;
