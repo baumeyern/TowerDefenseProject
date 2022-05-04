@@ -23,6 +23,10 @@ snake.src = snakeImage;
 const sniper = new Image();
 sniper.src = sniperImage;
 
+/**
+ * 
+ * @param {any} props
+ */
 const Draggable = (props) => {
 
     const { place, type, state, ...rest } = props;

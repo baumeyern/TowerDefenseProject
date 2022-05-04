@@ -19,10 +19,17 @@ type4.src = type4Image;
 
 /*
  * 
- * (Requirement 3.0.0)
+ * 
  * 
  * Fixed min speed random max speed
  * (Requirement 3.0.1)
+ */
+
+/**
+ * (Requirement 3.0.0)
+ * @param {number} x The x coordinate of the top left corner
+ * @param {number} y The y coordinate of the top left corner
+ * @param {number} type The number indicating the type of enemy
  */
 export function Enemy(x, y, type) {
     this.x = x;
@@ -39,9 +46,8 @@ export function Enemy(x, y, type) {
     this.end = false;
     this.dead = false;
     this.scaled = false;
-    /*
-     * Basic (Reqirement 3.1.0)
-     */
+    
+    //Basic (Reqirement 3.1.0)
     if (this.type === 1) {
         this.maxHealth = 150;
         this.health = 150;
@@ -50,9 +56,8 @@ export function Enemy(x, y, type) {
         this.value = 2;
         this.score = 10;
     }
-    /*
-     * (Reqirement 3.2.0)
-     */
+
+    //(Reqirement 3.2.0)
     else if (this.type === 2) {
         this.maxHealth = 100;
         this.health = 100;
@@ -61,9 +66,8 @@ export function Enemy(x, y, type) {
         this.value = 5;
         this.score = 20;
     }
-    /*
-     * (Reqirement 3.3.0)
-     */
+    
+    //(Reqirement 3.3.0)
     else if (this.type === 3) {
         this.maxHealth = 200;
         this.health = 200;
@@ -72,9 +76,8 @@ export function Enemy(x, y, type) {
         this.value = 7;
         this.score = 40;
     }
-    /*
-     * Boss (Reqirement 3.4.0)
-     */
+
+    //Boss (Reqirement 3.4.0)
     else if (this.type === 4) {
         this.maxHealth = 500;
         this.health = 500;
@@ -87,6 +90,10 @@ export function Enemy(x, y, type) {
 }
 
 Enemy.prototype = {
+    /**
+     * Display image at current x, y coordinates depending on type
+     * @param {CanvasRenderingContext2D} ctx Context of <canvas> element
+     */
     draw: function (ctx) {
         if (this.type === 1) {
             ctx.drawImage(type1, this.x + 5, this.y + 5, 40, 40);
@@ -101,10 +108,18 @@ Enemy.prototype = {
             ctx.drawImage(type4, this.x, this.y);
         }
     },
+    /**
+     * Displays health bar above enemy
+     * @param {CanvasRenderingContext2D} ctx Context of <canvas> element
+     */
     drawHealth: function (ctx) {
         ctx.fillStyle = 'red';
         ctx.fillRect(this.x, this.y, this.width * (this.health / this.maxHealth), this.height / 8);
     },
+    /**
+     * Moves the Enemy along the designated path
+     * @param {Array} path Array of x, y coordinate waypoints of the map
+     */
     move: function (path) {
         if (!this.end) {
             let distX = path[this.waypoint].x - this.x;
@@ -121,11 +136,14 @@ Enemy.prototype = {
                 this.waypoint++;
             }
         }
-        //if (Math.round(this.x) === path[this.waypoint].x && Math.round(this.y) === path[this.waypoint].y) {
         if (this.waypoint >= path.length) {
             this.end = true;
         }
     },
+    /**
+     * Damages the Enemy by the power of the Projectile and sets afflictions
+     * @param {Projectile} bullet Projectile object hitting the Enemy
+     */
     hit: function (bullet) {
         this.health -= bullet.pwr;
         if (bullet.slow) {
@@ -141,6 +159,11 @@ Enemy.prototype = {
             this.dead = true;
         }
     },
+    /**
+     * Applies current afflictions 
+     * @param {string} state Current game state
+     * @param {number} fps Number indicating 
+     */
     doAffliction: function (state, fps) {
         if (this.currentDot) {
             if (state === 'playing') {
@@ -161,13 +184,22 @@ Enemy.prototype = {
             this.speed = this.slowSpeed;
         }
     },
+    /**
+     * Increases Enemy health based on the wave
+     * (Reqirement 6.0.5)
+     * @param {number} wave current wave
+     */
     scale: function (wave) {
+        /*
         if (wave > 5) {
             if (!this.scaled) {
                 this.maxHealth *= 1.2 * (wave / 5);
                 this.health *= 1.2 * (wave / 5);
                 this.scaled = true;
             }
+        }*/
+        if (wave > 1 && !this.scaled) {
+            this.maxHealth *= 1.05 * (wave - 1)
         }
     }
 }

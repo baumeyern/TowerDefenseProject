@@ -9,7 +9,7 @@ const Canvas = props => {
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
-
+        console.log(ctx);
         let animationFrameID;
         const render = () => {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)

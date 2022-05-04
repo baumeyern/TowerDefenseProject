@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 
 let username = createContext();
 
-/*
+/**
  * Login Page (Requirement 1.0.0)
  */
 const LoginPage = () => {

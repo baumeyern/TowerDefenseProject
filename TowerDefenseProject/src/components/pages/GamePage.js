@@ -20,10 +20,6 @@ import { postScore } from '../services/HighScoreService';
 const circle = new Image();
 circle.src = circleImg;
 
-export let canvasLeft = 0;
-export let canvasTop = 0;
-
-//export let towers = [];
 export let bullets = [];
 export let enemies = [];
 export let deadEnemies = [];
@@ -37,10 +33,6 @@ export let enemyCounter = 0;
 export let spawnCounter = 0;
 export let state = 'start';
 export let _ticks = 0;
-//export let found = false;
-//export let paused = true;
-//let waveTimer = Date.now();
-//let start = true;
 
 
 const map1 = [
@@ -79,7 +71,6 @@ export const mouse = {
  * Game Page (Requirement 1.1.0)
  */
 const GamePage = (props) => {
-    //let prev = Date.now(), frameCount = 0;
     const [gameState, setGameState] = useState('start');
     const [show, setShow] = useState(true);
     const [values, setValues] = useState({
@@ -137,12 +128,6 @@ const GamePage = (props) => {
             }
             postScore(username, values.score.toString());
         }
-        
-        if (gameState === 'playing') {
-            //if (values.enemyTotal <= 0) {
-                //setValues(previousState => { return { ...previousState, wave: previousState.wave + 1, enemyTotal: previousState.wave + 1, enemySpawned: 0 } });
-            //}
-        }
 
         if (values.lives <= 0) {
             setGameState('end');
@@ -155,26 +140,31 @@ const GamePage = (props) => {
         let previous;
         let animationID;
 
+        /**
+         * 
+         * 
+         * @param {number} timestamp DOMHighResTimeStamp indicating the point in time when requestAnimationFrame() starts to execute callback functions
+         * 
+         */
         const handleLogic = (timestamp) => {
             let interval = timestamp - previous;
             let fps = Math.round(1000 / interval);
             previous = timestamp;
             //console.log(_ticks);
             if (state === 'playing') {
+
                 if (enemyCounter === 0) {
                     waveCounter++;
                     /*
-                    * Enemies Spawn rate increase (6.0.1)
+                    * Number o (6.0.1)
                     */
                     enemyCounter = waveCounter;
                     spawnCounter = 0;
-                    
                     grid.forEach(block => {
                         if (block.tower && block.tower.type === 6) {
                             moneyCounter += 5;
                         }
-                    });
-                    
+                    }); 
                 }
                 if (spawnCounter < waveCounter) {
                     let wait;
@@ -217,7 +207,6 @@ const GamePage = (props) => {
                     }
                 }
             }
-
             enemies.forEach((enemy, i, a) => {
                 //Multuiply enemy health every 5 rounds (Reqirement 6.0.5)
                 enemy.scale(waveCounter);
@@ -257,7 +246,6 @@ const GamePage = (props) => {
                     }
                 }
             });
-            //console.log('wave: '+ waveCounter+' enemies: '+ enemyCounter +' spawn: '+spawnCounter+' score: '+scoreCounter+' money: '+moneyCounter+' lives: '+livesCounter)
             animationID = window.requestAnimationFrame(handleLogic)
         }
         handleLogic();
@@ -270,6 +258,10 @@ const GamePage = (props) => {
     
     useEffect(() => {
         let valuesID;
+
+        /**
+         * Updates the values for the DOM components with current values
+         */
         const updateValues = () => {
             let currentVals = valuesRef.current;
             if (currentVals.score !== scoreCounter ||
@@ -301,15 +293,17 @@ const GamePage = (props) => {
         }
     }, [values, currentRefB]);
 
+    /**
+     * Place Tower onto current Block if player has enough money
+     * @param {number} type Type of tower to place
+     */
     const placeTower = (type) => {
         for (let b = 0; b < grid.length; b++) {
             let block = grid[b];
             if (block.hover && block.type !== 1 && !block.tower) {
                 let tower = new Tower(block.x, block.y, type);
                 if (tower.price <= values.money) {
-                    //towers.push(tower);
                     block.tower = tower;
-                    //setValues(previousState => { return { ...previousState, money: previousState.money - tower.price } });
                     moneyCounter -= tower.price;
                     break;
                 }
@@ -349,7 +343,6 @@ const GamePage = (props) => {
             }
         });
         return () => {
-            //console.log('removed');
             window.removeEventListener('click', selectTower);
             window.removeEventListener('mousedown', function (e) {
                 if (currentRefM) {
@@ -416,11 +409,6 @@ const GamePage = (props) => {
             <button onClick={function (e) { setValues(previousState => { return { ...previousState, lives: previousState.lives - 1 } }); }}>lives</button>
         </div>
     );
-    //<button onClick={function (e) { setGameState('start'); setShow(true); }}>Restart</button>
-    /*{gameState === 'waiting' ?
-                                (<button className='next-wave' onClick={function (e) { setGameState('next'); }}>Next Wave</button>) :
-     * 
-     */
 }
 
 export default GamePage;
