@@ -176,16 +176,10 @@ Enemy.prototype = {
      * @param {number} wave current wave
      */
     scale: function (wave) {
-        /*
-        if (wave > 5) {
-            if (!this.scaled) {
-                this.maxHealth *= 1.2 * (wave / 5);
-                this.health *= 1.2 * (wave / 5);
-                this.scaled = true;
-            }
-        }*/
         if (wave > 1 && !this.scaled) {
-            this.maxHealth *= 1.05 * (wave - 1)
+            this.maxHealth *= 1.05 * (wave - 1);
+            this.health *= 1.05 * (wave - 1);
+            this.scaled = true;
         }
     }
 }
