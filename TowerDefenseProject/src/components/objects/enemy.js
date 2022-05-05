@@ -177,8 +177,8 @@ Enemy.prototype = {
      */
     scale: function (wave) {
         if (wave > 1 && !this.scaled) {
-            this.maxHealth *= 1.05 * (wave - 1);
-            this.health *= 1.05 * (wave - 1);
+            this.maxHealth *= 1 + (.05 * (wave - 1));
+            this.health *= 1 + (.05 * (wave - 1));
             this.scaled = true;
         }
     }

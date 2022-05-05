@@ -248,7 +248,7 @@ const GamePage = () => {
         }
 
     }, []);
-    
+
     useEffect(() => {
         let valuesID;
 
