@@ -1,13 +1,9 @@
-
-import circleImg from "./circle.png";
 import basicImage from '../assets/images/Basic_Amo.png';
 import slowImage from '../assets/images/slow_Amo.png';
 import aoeImage from '../assets/images/AOE_AMO.png';
 import sniperImage from '../assets/images/Sniper_Amo.png';
 import poisonImage from '../assets/images/Poison_Amo.png';
 
-const circle = new Image();
-circle.src = circleImg;
 const basic = new Image();
 basic.src = basicImage;
 const slow = new Image();
@@ -65,6 +61,7 @@ export function Projectile(x, y, type, target) {
 Projectile.prototype = {
     /**
      * Display image at current x, y coordinates depending on type
+     * (Requirement 5.0.1)
      * @param {CanvasRenderingContext2D} ctx Context of <canvas> element
      */
     draw: function (ctx) {

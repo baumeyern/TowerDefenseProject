@@ -1,8 +1,4 @@
-import { useEffect } from 'react';
 import { Projectile } from './projectile';
-import { mouse } from '../pages/GamePage';
-import { collision } from '../utils/utils';
-import circleImg from "./circle.png";
 import fireImage from '../assets/images/circle.png';
 import waterImage from '../assets/images/WaterTurtleTower.png';
 import nutImage from '../assets/images/Nut.png';
@@ -10,8 +6,6 @@ import coinImage from '../assets/images/Bitcoin.png';
 import snakeImage from '../assets/images/Snake.png';
 import sniperImage from '../assets/images/Sniper.png';
 
-const circle = new Image();
-circle.src = circleImg;
 const fire = new Image();
 fire.src = fireImage;
 const water = new Image();
@@ -114,9 +108,6 @@ Tower.prototype = {
         }
         else if (this.type === 6) {
             ctx.drawImage(coin, this.x, this.y);
-        }
-        else {
-            ctx.drawImage(circle, this.x, this.y);
         }
     },
 

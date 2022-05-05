@@ -1,7 +1,11 @@
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef} from 'react';
 
-import { grid, enemies, bullets, map1Waypoints, state, mouse, selected } from '../pages/GamePage';
+import { grid, enemies, bullets, mouse, selected } from '../pages/GamePage';
 
+/**
+ * Compoenent to render the HTML <canvas> component and display the images
+ * @param {Properties} props Properties passed to component
+ */
 const Canvas = props => {
 
     const canvasRef = useRef();
@@ -9,8 +13,10 @@ const Canvas = props => {
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
-        console.log(ctx);
         let animationFrameID;
+        /**
+         * Displays images on the <canvas>
+         */
         const render = () => {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
             grid.forEach(block => {
@@ -43,11 +49,13 @@ const Canvas = props => {
         let canvasPos = canvas.getBoundingClientRect();
         let canvasLeft = canvasPos.left;
         let canvasTop = canvasPos.top;
+        //Find new Bouding Rect of the <canvas> on window resize or scroll
         const changeBoundRect = (e) => {
             canvasPos = canvas.getBoundingClientRect();
             canvasLeft = canvasPos.left;
             canvasTop = canvasPos.top;
         }
+        //Get mouse position based on the <canvas>
         const getCanvasMousePosition = (e) => {
             mouse.x = e.x - canvasLeft;
             mouse.y = e.y - canvasTop;

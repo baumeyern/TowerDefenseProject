@@ -19,7 +19,6 @@ const ScoresPage = () => {
         const response = await getTopScores();
         setScores(response);
     });
-    console.log('rendered');
     return (
         <div>
             <h1>Highscores</h1>

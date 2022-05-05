@@ -1,13 +1,8 @@
-import { useEffect } from 'react';
-import { collision } from '../utils/utils';
-import circleImg from "./circle.png";
 import type1Image from '../assets/images/Type1.png';
 import type2Image from '../assets/images/Type2.png';
 import type3Image from '../assets/images/Type3.png';
 import type4Image from '../assets/images/NoFace.png';
 
-const circle = new Image();
-circle.src = circleImg;
 const type1 = new Image();
 type1.src = type1Image;
 const type2 = new Image();
@@ -17,16 +12,11 @@ type3.src = type3Image;
 const type4 = new Image();
 type4.src = type4Image;
 
-/*
- * 
- * 
- * 
- * Fixed min speed random max speed
- * (Requirement 3.0.1)
- */
-
 /**
+ * Defines Enemy object with different stats for different types
  * (Requirement 3.0.0)
+ * Each Enemy has a Fixed min speed and variable max speed
+ * (Requirement 3.0.1)
  * @param {number} x The x coordinate of the top left corner
  * @param {number} y The y coordinate of the top left corner
  * @param {number} type The number indicating the type of enemy
@@ -46,8 +36,7 @@ export function Enemy(x, y, type) {
     this.end = false;
     this.dead = false;
     this.scaled = false;
-    
-    //Basic (Reqirement 3.1.0)
+    //Basic Enemy (Reqirement 3.1.0)
     if (this.type === 1) {
         this.maxHealth = 150;
         this.health = 150;
@@ -56,8 +45,7 @@ export function Enemy(x, y, type) {
         this.value = 2;
         this.score = 10;
     }
-
-    //(Reqirement 3.2.0)
+    //Fast Enemy (Reqirement 3.2.0)
     else if (this.type === 2) {
         this.maxHealth = 100;
         this.health = 100;
@@ -66,8 +54,7 @@ export function Enemy(x, y, type) {
         this.value = 5;
         this.score = 20;
     }
-    
-    //(Reqirement 3.3.0)
+    //Tanky Enemy (Reqirement 3.3.0)
     else if (this.type === 3) {
         this.maxHealth = 200;
         this.health = 200;
@@ -76,8 +63,7 @@ export function Enemy(x, y, type) {
         this.value = 7;
         this.score = 40;
     }
-
-    //Boss (Reqirement 3.4.0)
+    //Boss Enemy (Reqirement 3.4.0)
     else if (this.type === 4) {
         this.maxHealth = 500;
         this.health = 500;
