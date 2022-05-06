@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
+/**
+ * Component for displaying the end game popup when the game ends
+ * @param {Properties} props Properties passed to component
+ */
 const Popup = (props) => {
-
+    /** @param {string} state Current game state */
     const { state, ...rest } = props;
     const [show, setShow] = useState(false);
 

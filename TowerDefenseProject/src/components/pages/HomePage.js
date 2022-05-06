@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
 
-/*
- * Home Page (Requirement 1.3.0)
+/**
+ * Home Page displays buttons linking to the Login Page and the Scores Page (Requirement 1.3.0)
  */
 const HomePage = () => (
     <div>

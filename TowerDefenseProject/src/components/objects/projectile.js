@@ -30,31 +30,32 @@ export function Projectile(x, y, type, target) {
     this.type = type;
     this.target = target;
     this.end = false;
+    //Basic
     if (this.type === 1) {
         this.speed = 6;
         this.pwr = 50
     }
+    //Slow
     else if (this.type === 2) {
         this.speed = 4;
         this.pwr = 10;
         this.slow = true;
     }
+    //AOE
     else if (this.type === 3) {
         this.speed = 5;
         this.pwr = 30;
     }
+    //Sniper
     else if (this.type === 4) {
         this.speed = 7;
         this.pwr = 100;
     }
+    //Poison
     else if (this.type === 5) {
         this.speed = 5;
         this.pwr = 30;
         this.dot = 5;
-    }
-    else if (this.type === 6) {
-        this.speed = 5;
-        this.pwr = 5;
     }
 }
 
@@ -82,7 +83,7 @@ Projectile.prototype = {
         }
     },
     /**
-     * Moves Projectile toward the target Enemy
+     * Moves Projectile toward the target Enemy until reaching target
      */
     move: function () {
         if (this.target && !this.end) {

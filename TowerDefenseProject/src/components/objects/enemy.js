@@ -51,7 +51,7 @@ export function Enemy(x, y, type) {
         this.health = 100;
         this.speed = 2 + Math.random() / 5;
         this.atk = 1;
-        this.value = 5;
+        this.value = 4;
         this.score = 20;
     }
     //Tanky Enemy (Reqirement 3.3.0)
@@ -60,7 +60,7 @@ export function Enemy(x, y, type) {
         this.health = 200;
         this.speed = .4 + Math.random() / 5;
         this.atk = 2;
-        this.value = 7;
+        this.value = 4;
         this.score = 40;
     }
     //Boss Enemy (Reqirement 3.4.0)
@@ -69,7 +69,7 @@ export function Enemy(x, y, type) {
         this.health = 500;
         this.speed = .7 + Math.random() / 5;
         this.atk = 5;
-        this.value = 20;
+        this.value = 10;
         this.score = 100;
     }
     this.slowSpeed = this.speed * .75;
@@ -176,9 +176,9 @@ Enemy.prototype = {
      * @param {number} wave current wave
      */
     scale: function (wave) {
-        if (wave > 1 && !this.scaled) {
-            this.maxHealth *= 1 + (.05 * (wave - 1));
-            this.health *= 1 + (.05 * (wave - 1));
+        if (!this.scaled) {
+            this.maxHealth *= (1 + (.1 * (wave - 1)));
+            this.health *= (1 + (.1 * (wave - 1)));
             this.scaled = true;
         }
     }

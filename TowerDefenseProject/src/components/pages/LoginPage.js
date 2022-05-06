@@ -12,8 +12,17 @@ let username = createContext();
 const LoginPage = () => {
     const navigate = useNavigate();
     const [name, setName] = useState("");
+
+    /**
+     * Set value on change
+     * @param {event} e on change event
+     */
     const handleChange = e => setName(e.target.value);
 
+    /**
+     * Save name and go to Game Page on submit
+     * @param {event} e submit event
+     */
     const handleSubmit = e => {
         e.preventDefault();
         username = name;
@@ -25,7 +34,7 @@ const LoginPage = () => {
             <h2>Enter Name</h2>
             <div className="container">
                 <form onSubmit={handleSubmit}>
-                    <TextField required id="outlined-basic" label="Enter Name" variant="outlined" value={name} onChange={handleChange} />
+                    <TextField id="outlined-basic" label="Enter Name" variant="outlined" value={name} onChange={handleChange} />
                     <Button className='sbtn' variant="outline-light" type="submit">Begin</Button>
                 </form>
             </div>

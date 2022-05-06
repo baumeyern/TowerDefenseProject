@@ -116,7 +116,6 @@ img:hover {
     width: 1100px;
     text-align: center;
     display: flex;
-    padding-bottom: 8em;
     margin: auto;
     align-items: center;
 }
@@ -141,29 +140,29 @@ img:hover {
 .wave-label {
     color: red;
     display: inline-block;
-    padding-top: 40px;
+    padding-top: 50px;
     padding-left:2px;
     width: 25%;
     height: 40px;
-    font-size: 15pt;
+    font-size: 13pt;
     font-family: pixel;
 }
 
 .enemy-count {
     color: blueviolet;
     width: 25%;
-    padding-top: 40px;
+    padding-top: 50px;
     height: 40px;
-    font-size: 15pt;
+    font-size: 13pt;
     font-family: pixel;
 }
 
 .score-label {
     color: aqua;
     width:32%;
-    padding-top: 40px;
+    padding-top: 50px;
     height: 40px;
-    font-size: 15pt;
+    font-size: 13pt;
     font-family: pixel;
 }
 

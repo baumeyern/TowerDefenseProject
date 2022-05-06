@@ -7,7 +7,9 @@ import { Routes, Route, HashRouter } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
+/**
+ * Creates HashRouter of the pages with given paths
+ */
 const App = () => {
     return (
         <HashRouter>

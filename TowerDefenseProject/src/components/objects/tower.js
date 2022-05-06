@@ -124,7 +124,7 @@ Tower.prototype = {
     /**
      * Calculates in Enemy is in range
      * @param {Enemy} enemy Enemy object to check
-     * @returns {boolean} true in enemy is in range of Tower, false otherwise
+     * @returns {boolean} true if enemy is in range of Tower, false otherwise
      */
     inRange: function (enemy) {
         return (this.mid.x - enemy.mid.x) * (this.mid.x - enemy.mid.x) + (this.mid.y - enemy.mid.y) * (this.mid.y - enemy.mid.y) < this.range * this.range
@@ -132,7 +132,7 @@ Tower.prototype = {
     /**
      * Fires Projectile(s) at Enemies depending on Tower type
      * @param {Array} bullets Array of Projectiles
-     * @param {Enemy} enemies Enemy object being fired at
+     * @param {Array} enemies Array of Enemy objects in range
      * @param {string} state Current state of the game
      * @param {number} fps Nember representing the frames per second of the game
      */
@@ -150,11 +150,9 @@ Tower.prototype = {
             } else if (this.type === 4) {
                 enemy = sortDist.sort((a, b) => b.health - a.health)[0];
             }
-            //console.log(enemies);
-            if (this.type !== 3) {
+            if (this.type !== 3 && this.type !== 6) {
                 bullets.push(new Projectile(this.mid.x, this.mid.y, this.projectile, enemy));
             }
-            //{ mid:{ x: enemies[0].mid.x, y: enemies[0].mid.y }}
             this.fire = false;
             this.timer = Date.now();
         }
@@ -170,7 +168,7 @@ Tower.prototype = {
 
     /**
      * Indicates Tower should be removed
-     * @returns {number} partial refund of price
+     * @returns {number} Partial refund of price
      */
     sell: function () {
         this.sold = true;

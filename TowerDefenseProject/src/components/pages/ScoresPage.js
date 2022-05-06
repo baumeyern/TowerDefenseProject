@@ -4,15 +4,21 @@ import Button from 'react-bootstrap/Button';
 import { getTopScores } from '../services/HighScoreService';
 import { useEffect, useState } from 'react';
 
+import { username } from './LoginPage';
+import { finalScore } from './GamePage';
+
 var calledScores = false;
 
-/*
- * Scores Page (Requirement 1.2.0)
+/**
+ * Scores Page displays final score and a list of high scores (Requirement 1.2.0)
  */
 const ScoresPage = () => {
     const [scores, setScores] = useState([]);
 
     useEffect(() => {
+        /**
+         * Fetch scores from database
+         */
         async function fetchData() {
             if (calledScores)
                 return;
@@ -26,6 +32,7 @@ const ScoresPage = () => {
         <div>
             <h1>Highscores</h1>
             <div className="container">
+                <h3> Your Score: {username} {finalScore}</h3>
                 <table>
                     <tbody>
                         <tr>

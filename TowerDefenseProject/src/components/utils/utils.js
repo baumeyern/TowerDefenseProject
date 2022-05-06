@@ -1,5 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
 
+/**
+ * Tests if two objects are colliding/overlapping. Used primarily to test if mouse is over a map tile.
+ * @param {object} box1 First object to test is there is collision
+ * @param {object} box2 Second object to test if there is collision
+ * @returns {boolean} true if the objects are colliding, false otherwise
+ */
 export function collision(box1, box2) {
     if (box1.x < box2.x + box2.width &&
         box1.x + box1.width > box2.x &&
@@ -10,10 +15,6 @@ export function collision(box1, box2) {
     else {
         return false;
     }
-}
-
-export function inRange(obj, target, range) {
-    return (obj.x - target.x) * (obj.x - target.x) + (obj.y - target.y) * (obj.y - target.y) < range * range;
 }
 
 export let numerals = {
@@ -32,6 +33,11 @@ export let numerals = {
     I: 1,
 };
 
+/**
+ * Converts number into Roman Numeral form
+ * @param {number} num Number to be converted
+ * @returns {string} Converted Roman Numeral
+ */
 export const convertToRoman = (num) => {
     let newNumeral = "";
 
@@ -44,21 +50,3 @@ export const convertToRoman = (num) => {
 
     return newNumeral;
 };
-
-export function useInterval(callback, delay) {
-    const savedCallback = useRef();
-
-    useEffect(() => {
-        savedCallback.current = callback;
-    }, [callback]);
-
-    useEffect(() => {
-        function tick() {
-            savedCallback.current();
-        }
-        if (delay !== null) {
-            let id = setInterval(tick, delay);
-            return () => clearInterval(id);
-        }
-    }, [delay]);
-}

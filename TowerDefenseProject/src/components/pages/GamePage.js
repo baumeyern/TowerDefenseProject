@@ -1,6 +1,4 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
 
 import Canvas from '../ui/Canvas';
 import Draggable from '../ui/Draggable';
@@ -26,6 +24,7 @@ export let waveCounter = 0;
 export let enemyCounter = 0;
 export let spawnCounter = 0;
 export let state = 'start';
+export let finalScore = 0;
 export let _ticks = 0;
 
 
@@ -61,8 +60,8 @@ export const mouse = {
     height: .1,
 }
 
-/*
- * Game Page (Requirement 1.1.0)
+/**
+ * Game Page displays the game board and runs the game logic (Requirement 1.1.0)
  */
 const GamePage = () => {
     const [gameState, setGameState] = useState('start');
@@ -83,7 +82,7 @@ const GamePage = () => {
     const currentRefM = messageRef.current;
 
     /**
-     * Initialize variables to original values
+     * Initialize variables to starting values
      */
     const init = () => {
         bullets = [];
@@ -120,11 +119,14 @@ const GamePage = () => {
             setGameState('paused');
             stateRef.current = 'paused';
         }
+        //Post score and name to database when game ends
         else if (gameState === 'end') {
             if (username === null || username.length === 0) {
                 username = 'Anonymous';
             }
             postScore(username, values.score.toString());
+
+            finalScore = values.score;
         }
 
         if (values.lives <= 0) {
@@ -172,10 +174,11 @@ const GamePage = () => {
                         }
                         if (_ticks >= wait) {
                             let type;
+                            //Tanky enemies have chance to spawn after wave 10
                             if (waveCounter >= 10) {
                                 type = Math.floor(Math.random() * 3) + 1;
                             }
-                            //Fast enemies have chance to spawn (Requirement 6.0.3)
+                            //Fast enemies have chance to spawn after wave 5 (Requirement 6.0.3)
                             else if (waveCounter >= 5) {
                                 type = Math.floor(Math.random() * 2) + 1;
                             }
@@ -353,7 +356,6 @@ const GamePage = () => {
     return (
         <div>
             <Radio />
-            <h1>Game Page</h1>
             <div className="waves-scores-wrapper">
                 <div className="wave-label">Wave: {convertToRoman(values.wave)}</div>
                 <div className='enemy-count'>Enemies: {values.enemyTotal}</div>
@@ -399,12 +401,6 @@ const GamePage = () => {
                 </div>
             </div>
             <Popup state={gameState} />
-            <div className="container">
-                <Link to='/scores' >
-                    <Button variant="outline-light">Leaderboard</Button>
-                </Link>
-            </div>
-            <button onClick={function (e) { setValues(previousState => { return { ...previousState, lives: previousState.lives - 1 } }); }}>lives</button>
         </div>
     );
 }

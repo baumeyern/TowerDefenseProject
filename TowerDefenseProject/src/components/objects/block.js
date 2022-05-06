@@ -1,14 +1,14 @@
 import { collision } from '../utils/utils';
 import pathImage from '../assets/images/EnemyPath1.png';
-import testImage from '../assets/images/EnemyPath.png';
-import tileImage from '../assets/images/TileSet.png';
+import tileImage from '../assets/images/EnemyPath.png';
+//import tileImage from '../assets/images/TileSet.png';
 
 const path = new Image();
 path.src = pathImage;
 const tile = new Image();
 tile.src = tileImage;
-const test = new Image();
-test.src = testImage;
+//const test = new Image();
+//test.src = testImage;
 
 /**
  * Defines Block object for use in the game board
@@ -35,7 +35,7 @@ Block.prototype = {
      */
     draw: function (ctx) {
         if (this.type === 0) {
-            ctx.drawImage(test, this.x, this.y);
+            ctx.drawImage(tile, this.x, this.y);
             ctx.strokeStyle = 'grey';
             ctx.strokeRect(this.x, this.y, this.width, this.height);
         } else {
