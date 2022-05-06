@@ -1,13 +1,8 @@
-import { useEffect } from 'react';
-import { collision } from '../utils/utils';
-import circleImg from "./circle.png";
 import type1Image from '../assets/images/Type1.png';
 import type2Image from '../assets/images/Type2.png';
 import type3Image from '../assets/images/Type3.png';
 import type4Image from '../assets/images/NoFace.png';
 
-const circle = new Image();
-circle.src = circleImg;
 const type1 = new Image();
 type1.src = type1Image;
 const type2 = new Image();
@@ -17,12 +12,14 @@ type3.src = type3Image;
 const type4 = new Image();
 type4.src = type4Image;
 
-/*
- * 
+/**
+ * Defines Enemy object with different stats for different types
  * (Requirement 3.0.0)
- * 
- * Fixed min speed random max speed
+ * Each Enemy has a Fixed min speed and variable max speed
  * (Requirement 3.0.1)
+ * @param {number} x The x coordinate of the top left corner
+ * @param {number} y The y coordinate of the top left corner
+ * @param {number} type The number indicating the type of enemy
  */
 export function Enemy(x, y, type) {
     this.x = x;
@@ -33,58 +30,56 @@ export function Enemy(x, y, type) {
     this.type = type;
     this.waypoint = 0;
     this.distance = 0;
-    this.hasDot = 0;
+    this.currentDot = 0;
+    this.dotTimer = null;
+    this.slowed = false;
     this.end = false;
     this.dead = false;
-
-    /*
-     * Basic (Reqirement 3.1.0)
-     */
+    this.scaled = false;
+    //Basic Enemy (Reqirement 3.1.0)
     if (this.type === 1) {
         this.maxHealth = 150;
         this.health = 150;
         this.speed = .5 + Math.random() / 5;
         this.atk = 1;
         this.value = 2;
-        this.score = 100;
+        this.score = 10;
     }
-    /*
-     * (Reqirement 3.2.0)
-     */
+    //Fast Enemy (Reqirement 3.2.0)
     else if (this.type === 2) {
         this.maxHealth = 100;
         this.health = 100;
         this.speed = 2 + Math.random() / 5;
         this.atk = 1;
         this.value = 5;
-        this.score = 200;
+        this.score = 20;
     }
-    /*
-     * (Reqirement 3.3.0)
-     */
+    //Tanky Enemy (Reqirement 3.3.0)
     else if (this.type === 3) {
         this.maxHealth = 200;
         this.health = 200;
         this.speed = .4 + Math.random() / 5;
         this.atk = 2;
         this.value = 7;
-        this.score = 400;
+        this.score = 40;
     }
-    /*
-     * Boss (Reqirement 3.4.0)
-     */
+    //Boss Enemy (Reqirement 3.4.0)
     else if (this.type === 4) {
         this.maxHealth = 500;
         this.health = 500;
         this.speed = .7 + Math.random() / 5;
         this.atk = 5;
         this.value = 20;
-        this.score = 1000;
+        this.score = 100;
     }
-
+    this.slowSpeed = this.speed * .75;
 }
 
 Enemy.prototype = {
+    /**
+     * Display image at current x, y coordinates depending on type
+     * @param {CanvasRenderingContext2D} ctx Context of <canvas> element
+     */
     draw: function (ctx) {
         if (this.type === 1) {
             ctx.drawImage(type1, this.x + 5, this.y + 5, 40, 40);
@@ -99,12 +94,18 @@ Enemy.prototype = {
             ctx.drawImage(type4, this.x, this.y);
         }
     },
+    /**
+     * Displays health bar above enemy
+     * @param {CanvasRenderingContext2D} ctx Context of <canvas> element
+     */
     drawHealth: function (ctx) {
-        /*ctx.fillStyle = 'black';
-        ctx.fillRect(this.x, this.y, this.width, this.height / 8);*/
         ctx.fillStyle = 'red';
         ctx.fillRect(this.x, this.y, this.width * (this.health / this.maxHealth), this.height / 8);
     },
+    /**
+     * Moves the Enemy along the designated path
+     * @param {Array} path Array of x, y coordinate waypoints of the map
+     */
     move: function (path) {
         if (!this.end) {
             let distX = path[this.waypoint].x - this.x;
@@ -121,46 +122,64 @@ Enemy.prototype = {
                 this.waypoint++;
             }
         }
-        //if (Math.round(this.x) === path[this.waypoint].x && Math.round(this.y) === path[this.waypoint].y) {
         if (this.waypoint >= path.length) {
             this.end = true;
         }
     },
-    /*
-    hit: function (bullets) {
-        for (let i = 0; i < bullets.length; i++) {
-            if (collision(this, bullets[i])) {
-                this.health -= bullets[i].pwr;
-                if (bullets[i].slow) {
-                }
-                    this.speed -= .25;
-                bullets.splice(i, 1);
-                i--;
-            }
-        }
-        if (this.health <= 0) {
-            this.dead = true;
-        }
-       
-    }*/
+    /**
+     * Damages the Enemy by the power of the Projectile and sets afflictions
+     * @param {Projectile} bullet Projectile object hitting the Enemy
+     */
     hit: function (bullet) {
         this.health -= bullet.pwr;
         if (bullet.slow) {
-            this.speed *= 0.85;
+            if (!this.slowed) {
+                this.slowed = true;
+            }
         }
         if (bullet.dot) {
-            this.hasDot += bullet.dot;
+            this.currentDot += bullet.dot;
+            this.dotTimer = Date.now();
         }
         if (this.health <= 0) {
             this.dead = true;
         }
     },
-    doDot: function () {
-        if (this.hasDot) {
-            this.health -= this.hasDot;
+    /**
+     * Applies current afflictions 
+     * @param {string} state Current game state
+     * @param {number} fps Number indicating 
+     */
+    doAffliction: function (state, fps) {
+        if (this.currentDot) {
+            if (state === 'playing') {
+                if (Date.now() - this.dotTimer > 1000) {
+                    this.health -= this.currentDot;
+                    this.dotTimer = Date.now();
+                }
+            } else if (state === 'paused') {
+                if (fps) {
+                    this.dotTimer += Math.round(1000 / fps);
+                }
+            }
             if (this.health <= 0) {
                 this.dead = true;
             }
+        }
+        if (this.slowed) {
+            this.speed = this.slowSpeed;
+        }
+    },
+    /**
+     * Increases Enemy health based on the wave
+     * (Reqirement 6.0.5)
+     * @param {number} wave current wave
+     */
+    scale: function (wave) {
+        if (wave > 1 && !this.scaled) {
+            this.maxHealth *= 1 + (.05 * (wave - 1));
+            this.health *= 1 + (.05 * (wave - 1));
+            this.scaled = true;
         }
     }
 }

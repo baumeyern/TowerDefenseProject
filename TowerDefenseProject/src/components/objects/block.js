@@ -1,8 +1,4 @@
-import { useEffect } from 'react';
-import { mouse, towers, towerType } from '../pages/GamePage';
 import { collision } from '../utils/utils';
-import { Tower } from '../objects/tower';
-
 import pathImage from '../assets/images/EnemyPath1.png';
 import testImage from '../assets/images/EnemyPath.png';
 import tileImage from '../assets/images/TileSet.png';
@@ -14,9 +10,12 @@ tile.src = tileImage;
 const test = new Image();
 test.src = testImage;
 
-
-/*
- * Nodes (Requirement 2.0.1)
+/**
+ * Defines Block object for use in the game board
+ * (Requirement 2.0.1)
+ * @param {number} x The x coordinate of the top left corner
+ * @param {number} y The y coordinate of the top left corner
+ * @param {number} type The number indicating the type of cell
  */
 export function Block(x, y, type) {
     this.x = x;
@@ -29,6 +28,11 @@ export function Block(x, y, type) {
 }
 
 Block.prototype = {
+    /**
+     * Display image at current x, y coordinates depending on type and highlights placable
+     * tiles when the mouse is over them
+     * @param {CanvasRenderingContext2D} ctx Context of <canvas> element
+     */
     draw: function (ctx) {
         if (this.type === 0) {
             ctx.drawImage(test, this.x, this.y);
@@ -42,6 +46,10 @@ Block.prototype = {
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
     },
+    /**
+     * Checks if mouse is currently over the cell
+     * @param {object} mouse Mouse location relative to the <canvas>
+     */
     mouseIsOver: function (mouse) {
         if (mouse.x && mouse.y && collision(this, mouse)) {
             this.hover = true;
@@ -49,6 +57,9 @@ Block.prototype = {
             this.hover = false;
         }
     },
+    /**
+     * Removes Tower if sold
+     */
     removeSoldTowers: function () {
         if (this.tower && this.tower.sold) {
             this.tower = null;

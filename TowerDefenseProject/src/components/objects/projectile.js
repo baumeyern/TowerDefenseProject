@@ -1,13 +1,9 @@
-
-import circleImg from "./circle.png";
 import basicImage from '../assets/images/Basic_Amo.png';
 import slowImage from '../assets/images/slow_Amo.png';
 import aoeImage from '../assets/images/AOE_AMO.png';
 import sniperImage from '../assets/images/Sniper_Amo.png';
 import poisonImage from '../assets/images/Poison_Amo.png';
 
-const circle = new Image();
-circle.src = circleImg;
 const basic = new Image();
 basic.src = basicImage;
 const slow = new Image();
@@ -19,9 +15,12 @@ sniper.src = sniperImage;
 const poison = new Image();
 poison.src = poisonImage;
 
-/*
- * 
+/**
  * (Reqirement 5.0.0)
+ * @param {number} x The x coordinate of the top left corner
+ * @param {number} y The y coordinate of the top left corner
+ * @param {number} type The number indicating the type of enemy
+ * @param {Enemy} target Enemy object being fired at
  */
 export function Projectile(x, y, type, target) {
     this.x = x;
@@ -42,7 +41,7 @@ export function Projectile(x, y, type, target) {
     }
     else if (this.type === 3) {
         this.speed = 5;
-        this.pwr = 20;
+        this.pwr = 30;
     }
     else if (this.type === 4) {
         this.speed = 7;
@@ -51,7 +50,7 @@ export function Projectile(x, y, type, target) {
     else if (this.type === 5) {
         this.speed = 5;
         this.pwr = 30;
-        this.dot = .1;
+        this.dot = 5;
     }
     else if (this.type === 6) {
         this.speed = 5;
@@ -60,6 +59,11 @@ export function Projectile(x, y, type, target) {
 }
 
 Projectile.prototype = {
+    /**
+     * Display image at current x, y coordinates depending on type
+     * (Requirement 5.0.1)
+     * @param {CanvasRenderingContext2D} ctx Context of <canvas> element
+     */
     draw: function (ctx) {
         if (this.type === 1) {
             ctx.drawImage(basic, this.x, this.y, this.width, this.height);
@@ -77,6 +81,9 @@ Projectile.prototype = {
             ctx.drawImage(poison, this.x, this.y, this.width, this.height);
         }
     },
+    /**
+     * Moves Projectile toward the target Enemy
+     */
     move: function () {
         if (this.target && !this.end) {
             let distX = this.target.mid.x - this.x;

@@ -7,19 +7,21 @@ import { useEffect, useState } from 'react';
 var calledScores = false;
 
 /*
- * Screoes Page (Requirement 1.2.0)
+ * Scores Page (Requirement 1.2.0)
  */
 const ScoresPage = () => {
     const [scores, setScores] = useState([]);
 
-    useEffect(async () => {
-        if (calledScores)
-            return;
-        calledScores = true;
-        const response = await getTopScores();
-        setScores(response);
-    });
-    console.log('rendered');
+    useEffect(() => {
+        async function fetchData() {
+            if (calledScores)
+                return;
+            calledScores = true;
+            const response = await getTopScores();
+            setScores(response);
+        }
+        fetchData();
+    }, []);
     return (
         <div>
             <h1>Highscores</h1>

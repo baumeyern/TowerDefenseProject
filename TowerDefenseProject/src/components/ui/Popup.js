@@ -18,7 +18,7 @@ const Popup = (props) => {
         <>
         {
         show ?
-                    (<div className='popup-container'>
+                    (<div className='popup-container' {...rest}>
                         <div className='popup'>
                             <header className='popup-header'>
                                 <h1 className='popup-title'>Game Over</h1>

@@ -1,29 +1,19 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
-import Canvas from '../objects/Canvas';
-import Draggable from '../objects/Draggable';
-import Panel from '../objects/Panel';
+import Canvas from '../ui/Canvas';
+import Draggable from '../ui/Draggable';
 import { Enemy } from "../objects/enemy";
 import { Block } from '../objects/block';
 import { Tower } from '../objects/tower';
-import { Projectile } from '../objects/projectile';
-import { collision, inRange, convertToRoman, useInterval } from '../utils/utils';
-import Radio from '../objects/Audio';
-import Timer from '../objects/timer';
-import Popup from '../objects/Popup';
+import { convertToRoman } from '../utils/utils';
+import Radio from '../ui/Audio';
+import Timer from '../ui/Timer';
+import Popup from '../ui/Popup';
 import { username } from "./LoginPage";
-
-import circleImg from "../objects/circle.png";
 import { postScore } from '../services/HighScoreService';
-const circle = new Image();
-circle.src = circleImg;
 
-export let canvasLeft = 0;
-export let canvasTop = 0;
-
-//export let towers = [];
 export let bullets = [];
 export let enemies = [];
 export let deadEnemies = [];
@@ -37,10 +27,6 @@ export let enemyCounter = 0;
 export let spawnCounter = 0;
 export let state = 'start';
 export let _ticks = 0;
-//export let found = false;
-//export let paused = true;
-//let waveTimer = Date.now();
-//let start = true;
 
 
 const map1 = [
@@ -66,7 +52,7 @@ export const map1Waypoints = [
     { x: 100, y: 400 },
     { x: 700, y: 400 },
     { x: 700, y: 600 },
-]
+];
 
 export const mouse = {
     x: -1,
@@ -78,8 +64,7 @@ export const mouse = {
 /*
  * Game Page (Requirement 1.1.0)
  */
-const GamePage = (props) => {
-    //let prev = Date.now(), frameCount = 0;
+const GamePage = () => {
     const [gameState, setGameState] = useState('start');
     const [show, setShow] = useState(true);
     const [values, setValues] = useState({
@@ -96,7 +81,10 @@ const GamePage = (props) => {
     const currentRefB = buttonRef.current;
     const messageRef = useRef();
     const currentRefM = messageRef.current;
-    
+
+    /**
+     * Initialize variables to original values
+     */
     const init = () => {
         bullets = [];
         enemies = [];
@@ -121,6 +109,7 @@ const GamePage = (props) => {
     }
     
     useEffect(() => {
+        //Initialize variables and create game board
         if (stateRef.current === 'start') {
             init();
             for (let y = 0; y < 12; y++) {
@@ -132,15 +121,10 @@ const GamePage = (props) => {
             stateRef.current = 'paused';
         }
         else if (gameState === 'end') {
-            if (username == null || username.length == 0)
-                username = 'Anonymous'
-            postScore(username, values.score.toString());
-        }
-        
-        if (gameState === 'playing') {
-            if (values.enemyTotal <= 0) {
-                //setValues(previousState => { return { ...previousState, wave: previousState.wave + 1, enemyTotal: previousState.wave + 1, enemySpawned: 0 } });
+            if (username === null || username.length === 0) {
+                username = 'Anonymous';
             }
+            postScore(username, values.score.toString());
         }
 
         if (values.lives <= 0) {
@@ -148,31 +132,35 @@ const GamePage = (props) => {
         }
         state = gameState;
 
-    }, [values, gameState]);
+    }, [values.lives, values.score, gameState]);
     
     useEffect(() => {
         let previous;
         let animationID;
 
-        const handleEnemies = (timestamp) => {
+        /**
+         * Runs the logic associated with the game such as Enemy spawning, moving, and dying, Towers firing,
+         * and Projectiles moving and despawning
+         * @param {number} timestamp DOMHighResTimeStamp indicating the point in time when requestAnimationFrame()
+         *                              starts to execute callback function. Used to calculate FPS.
+         */
+        const handleLogic = (timestamp) => {
             let interval = timestamp - previous;
             let fps = Math.round(1000 / interval);
             previous = timestamp;
-            //console.log(_ticks);
             if (state === 'playing') {
+                //Number of Enemies increases by one per wave (Reqirement 6.0.1)
                 if (enemyCounter === 0) {
                     waveCounter++;
-                    /*
-                    * Enemies Spawn rate increase (6.0.1)
-                    */
                     enemyCounter = waveCounter;
                     spawnCounter = 0;
                     grid.forEach(block => {
                         if (block.tower && block.tower.type === 6) {
                             moneyCounter += 5;
                         }
-                    });
+                    }); 
                 }
+                //Spawn logic
                 if (spawnCounter < waveCounter) {
                     let wait;
                     _ticks++;
@@ -187,21 +175,15 @@ const GamePage = (props) => {
                             if (waveCounter >= 10) {
                                 type = Math.floor(Math.random() * 3) + 1;
                             }
-                            /*
-                             * Fast enemies have chance to spawn (Requirement 6.0.3)
-                             */
+                            //Fast enemies have chance to spawn (Requirement 6.0.3)
                             else if (waveCounter >= 5) {
                                 type = Math.floor(Math.random() * 2) + 1;
                             }
-                            /*
-                             * Normal Enemies spawn for 4 waves (Reqirement 6.0.2)
-                             */
+                            //Only Basic enemies spawn for 4 waves (Reqirement 6.0.2)
                             else {
                                 type = 1;
                             }
-                            /*
-                             * Boss enemies spawn every 5 rounds (Requirement 6.0.4)
-                             */
+                            //Boss enemies spawn every 5 rounds (Requirement 6.0.4)
                             if (waveCounter % 5 === 0) {
                                 if (spawnCounter >= waveCounter - (waveCounter / 5)) {
                                     type = 4;
@@ -214,15 +196,20 @@ const GamePage = (props) => {
                     }
                 }
             }
-
+            //Enemy logic
             enemies.forEach((enemy, i, a) => {
-                enemy.doDot();
-                //Multuiply enemy health every 5 rounds (Reqirement 6.0.5)
+                enemy.scale(waveCounter);
+                enemy.doAffliction(state, fps);
+                if (state === 'playing') {
+                    enemy.move(map1Waypoints);
+                }
                 if (enemy.end || enemy.dead) {
+                    //Enemy gives money and score on defeat (Requirements 7.0.0 & 8.0.0)
                     if (enemy.dead) {
                         scoreCounter += enemy.score;
                         moneyCounter += enemy.value;
                     }
+                    //Enemy removes lives on reaching the end based on type (Requirement 3.0.2)
                     else if (enemy.end) {
                         livesCounter -= enemy.atk;
                     }
@@ -230,10 +217,31 @@ const GamePage = (props) => {
                     a.splice(i, 1);
                 }
             });
-            //console.log('wave: '+ waveCounter+' enemies: '+ enemyCounter +' spawn: '+spawnCounter+' score: '+scoreCounter+' money: '+moneyCounter+' lives: '+livesCounter)
-            animationID = window.requestAnimationFrame(handleEnemies)
+            //Game Board logic
+            grid.forEach(block => {
+                block.mouseIsOver(mouse);
+                block.removeSoldTowers();
+                //Tower logic
+                if (block.tower) {
+                    let enemiesInRange = enemies.filter(function (enemy) {
+                        return block.tower.inRange(enemy);
+                    });
+                    block.tower.shoot(bullets, enemiesInRange, state, fps);
+                }
+            });
+            //Projectile logic
+            bullets.forEach((bullet, i, a) => {
+                if (state === 'playing') {
+                    bullet.move();
+                    //Projectile despawns upon reaching target (Requirement 5.0.2)
+                    if (bullet.end) {
+                        a.splice(i, 1);
+                    }
+                }
+            });
+            animationID = window.requestAnimationFrame(handleLogic)
         }
-        handleEnemies();
+        handleLogic();
 
         return () => {
             window.cancelAnimationFrame(animationID);
@@ -243,6 +251,10 @@ const GamePage = (props) => {
 
     useEffect(() => {
         let valuesID;
+
+        /**
+         * Updates the values for the DOM components with current values
+         */
         const updateValues = () => {
             let currentVals = valuesRef.current;
             if (currentVals.score !== scoreCounter ||
@@ -252,9 +264,9 @@ const GamePage = (props) => {
                 currentVals.enemySpawned !== spawnCounter ||
                 currentVals.lives !== livesCounter) {
                 setValues({ score: scoreCounter, money: moneyCounter, wave: waveCounter, enemyTotal: enemyCounter, enemySpawned: spawnCounter, lives: livesCounter });
-                valuesRef.current = values;
+                valuesRef.current = { score: scoreCounter, money: moneyCounter, wave: waveCounter, enemyTotal: enemyCounter, enemySpawned: spawnCounter, lives: livesCounter };
             }
-
+            //Displays sell button if a tower is selected
             if (selected) {
                 if (currentRefB) {
                     currentRefB.style.display = 'block';
@@ -274,15 +286,17 @@ const GamePage = (props) => {
         }
     }, [values, currentRefB]);
 
+    /**
+     * Place Tower onto current Block if player has enough money for use in Draggable EventListener
+     * @param {number} type Type of tower to place
+     */
     const placeTower = (type) => {
         for (let b = 0; b < grid.length; b++) {
             let block = grid[b];
             if (block.hover && block.type !== 1 && !block.tower) {
                 let tower = new Tower(block.x, block.y, type);
                 if (tower.price <= values.money) {
-                    //towers.push(tower);
                     block.tower = tower;
-                    //setValues(previousState => { return { ...previousState, money: previousState.money - tower.price } });
                     moneyCounter -= tower.price;
                     break;
                 }
@@ -295,16 +309,17 @@ const GamePage = (props) => {
         }
     }
 
+
+    //Calls the sell tower function for use in the Sell button
     const sellTower = () => {
         if (selected) {
             let refund = selected.sell();
-            //let updatedMoney = values.money + refund;
-            //setValues(previousState => { return { ...previousState, money: previousState.money + refund } });
             moneyCounter += refund;
         }
     }
 
     useEffect(() => {
+        //Sets selected as the Tower the mouse is over for use in the EventListener
         const selectTower = () => {
             for (let b = 0; b < grid.length; b++) {
                 if (grid[b].hover && grid[b].tower) {
@@ -316,13 +331,16 @@ const GamePage = (props) => {
             }
         }
         window.addEventListener('click', selectTower);
+
+        //Removes not enough money message from view on mouse-down
         window.addEventListener('mousedown', function (e) {
             if (currentRefM) {
                 currentRefM.style.opacity = 0;
             }
         });
+
+        //Removes EventListeners after page re-render
         return () => {
-            //console.log('removed');
             window.removeEventListener('click', selectTower);
             window.removeEventListener('mousedown', function (e) {
                 if (currentRefM) {
@@ -389,11 +407,6 @@ const GamePage = (props) => {
             <button onClick={function (e) { setValues(previousState => { return { ...previousState, lives: previousState.lives - 1 } }); }}>lives</button>
         </div>
     );
-    //<button onClick={function (e) { setGameState('start'); setShow(true); }}>Restart</button>
-    /*{gameState === 'waiting' ?
-                                (<button className='next-wave' onClick={function (e) { setGameState('next'); }}>Next Wave</button>) :
-     * 
-     */
 }
 
 export default GamePage;

@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-
-//could put in GamePage to access seconds
+/**
+ * Timer component that displays time played in seconds
+ * (Requirement 11.0.0)
+ * @param {Properties} props Properties passed to component
+ */
 const Timer = (props) => {
 
+    /** @param {string} state current state of the game */
     const { state, ...rest } = props;
     const [seconds, setSeconds] = useState(0);
 
@@ -13,7 +17,6 @@ const Timer = (props) => {
         if (state === 'playing') {
             interval = setInterval(() => {
                 setSeconds(seconds => seconds + 1);
-                //console.log(interval);
             }, 1000);
         } else if (state === 'paused' && seconds !== 0) {
             clearInterval(interval);

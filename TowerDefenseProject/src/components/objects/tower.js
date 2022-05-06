@@ -1,8 +1,4 @@
-import { useEffect } from 'react';
 import { Projectile } from './projectile';
-import { mouse } from '../pages/GamePage';
-import { collision } from '../utils/utils';
-import circleImg from "./circle.png";
 import fireImage from '../assets/images/circle.png';
 import waterImage from '../assets/images/WaterTurtleTower.png';
 import nutImage from '../assets/images/Nut.png';
@@ -10,8 +6,6 @@ import coinImage from '../assets/images/Bitcoin.png';
 import snakeImage from '../assets/images/Snake.png';
 import sniperImage from '../assets/images/Sniper.png';
 
-const circle = new Image();
-circle.src = circleImg;
 const fire = new Image();
 fire.src = fireImage;
 const water = new Image();
@@ -25,9 +19,12 @@ snake.src = snakeImage;
 const sniper = new Image();
 sniper.src = sniperImage;
 
-/*
- * 
+
+/**
  * (Requrement 4.0.0)
+ * @param {number} x The x coordinate of the top left corner
+ * @param {number} y The y coordinate of the top left corner
+ * @param {number} type The number indicating the type of enemy
  */
 export function Tower(x, y, type) {
     this.x = x;
@@ -40,54 +37,48 @@ export function Tower(x, y, type) {
     this.fire = true;
     this.sold = false;
 
-    /*
-     * Basic Tower (Reqirement 4.1.0)
-     */
+    
+    //Basic Tower (Reqirement 4.1.0)
     if (this.type === 1) {
         this.range = 150;
         this.fireRate = 1;
         this.projectile = 1;
         this.price = 10;
     }
-     /*
-     * Slow Tower (Reqirement 4.2.0)
-     */
+
+    //Slow Tower (Reqirement 4.2.0)
     else if (this.type === 2) {
         this.range = 110;
         this.fireRate = 1.5;
         this.projectile = 2;
         this.price = 20;
     }
-    /*
-     * AOE Tower (Reqirement 4.3.0)
-     */
+    
+    //AOE Tower (Reqirement 4.3.0)
     else if (this.type === 3) {
         this.range = 130;
         this.fireRate = 1;
         this.projectile = 3;
         this.price = 30;
     }
-    /*
-     * Sniper Tower (Reqirement 4.4.0)
-     */
+
+    //Sniper Tower (Reqirement 4.4.0)
     else if (this.type === 4) {
         this.range = 400;
         this.fireRate = 3;
         this.projectile = 4;
         this.price = 40;
     }
-    /*
-     * Poison Tower (Reqirement 4.5.0)
-     */
+
+    //Poison Tower (Reqirement 4.5.0)
     else if (this.type === 5) {
         this.range = 120;
         this.fireRate = 2;
         this.projectile = 5;
         this.price = 30;
     }
-    /*
-     * Bank Tower (Reqirement 4.6.0)
-     */
+
+    //Bank Tower (Reqirement 4.6.0)
     else if (this.type === 6) {
         this.range = 0;
         this.price = 40;
@@ -95,6 +86,10 @@ export function Tower(x, y, type) {
 }
 
 Tower.prototype = {
+    /**
+     * Display image at current x, y coordinates depending on type
+     * @param {CanvasRenderingContext2D} ctx Context of <canvas> element
+     */
     draw: function (ctx) {
         if (this.type === 1) {
             ctx.drawImage(fire, this.x, this.y);
@@ -114,21 +109,35 @@ Tower.prototype = {
         else if (this.type === 6) {
             ctx.drawImage(coin, this.x, this.y);
         }
-        else {
-            ctx.drawImage(circle, this.x, this.y);
-        }
     },
+
+    /**
+     * Displays range circle
+     * @param {CanvasRenderingContext2D} ctx Context of <canvas> element
+     */
     drawRange: function (ctx) {
         ctx.beginPath();
         ctx.strokeStyle = 'white';
         ctx.arc(this.mid.x, this.mid.y, this.range, 0, Math.PI * 2, true);
         ctx.stroke();
     },
+    /**
+     * Calculates in Enemy is in range
+     * @param {Enemy} enemy Enemy object to check
+     * @returns {boolean} true in enemy is in range of Tower, false otherwise
+     */
     inRange: function (enemy) {
         return (this.mid.x - enemy.mid.x) * (this.mid.x - enemy.mid.x) + (this.mid.y - enemy.mid.y) * (this.mid.y - enemy.mid.y) < this.range * this.range
     },
-    shoot: function (bullets, enemies) {
-        if (this.fire && enemies.length > 0) {
+    /**
+     * Fires Projectile(s) at Enemies depending on Tower type
+     * @param {Array} bullets Array of Projectiles
+     * @param {Enemy} enemies Enemy object being fired at
+     * @param {string} state Current state of the game
+     * @param {number} fps Nember representing the frames per second of the game
+     */
+    shoot: function (bullets, enemies, state, fps) {
+        if (state === 'playing' && this.fire && enemies.length > 0) {
             if (this.type === 3) {
                 for (let i = 0; i < enemies.length; i++) {
                     bullets.push(new Projectile(this.mid.x, this.mid.y, this.projectile, enemies[i]));
@@ -148,11 +157,21 @@ Tower.prototype = {
             //{ mid:{ x: enemies[0].mid.x, y: enemies[0].mid.y }}
             this.fire = false;
             this.timer = Date.now();
-        } else if ((Date.now() - this.timer) / 1000 >= this.fireRate) {
+        }
+        if (state === 'paused') {
+            if (fps) {
+                this.timer += Math.round(1000 / fps);
+            }
+        }
+        else if ((Date.now() - this.timer) / 1000 >= this.fireRate) {
             this.fire = true;
         }
-        //console.log((Date.now() - this.timer) / 1000 );
     },
+
+    /**
+     * Indicates Tower should be removed
+     * @returns {number} partial refund of price
+     */
     sell: function () {
         this.sold = true;
         return this.price / 2;
