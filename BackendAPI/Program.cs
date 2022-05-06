@@ -11,10 +11,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Requirement 12.0.7
 builder.Services.AddScoped<IHighScoreRepository, HighScoreRepository>();
 
+//Requirement 12.0.8
 builder.Services.AddDbContext<HighScoreDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("HighScoreDbConnectionString")));
 
+//Requirement 12.0.9
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowCors",

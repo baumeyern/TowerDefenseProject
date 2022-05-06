@@ -1,5 +1,6 @@
 namespace BackendAPI
 {
+    //Requirement 12.0.5
     public class HighScore
     {
         public Guid Id { get; set; }

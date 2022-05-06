@@ -15,6 +15,7 @@ namespace BackendAPI.Controllers
             _highScoreRepository = highScoreRepository;
         }
 
+        //Requirement 12.0.0
         /// <summary>
         /// Returns top 10 scores for display
         /// </summary>
@@ -28,6 +29,7 @@ namespace BackendAPI.Controllers
             return list;
         }
 
+        //Requirement 12.0.1
         /// <summary>
         /// Inserts a new score
         /// </summary>
