@@ -259,3 +259,51 @@ table {
     font-family: pixel;
 
 }
+
+
+.top {
+    display: flex;
+    width: 1100px;
+    height: 50px;
+    margin: auto;
+}
+
+.top-btn {
+    margin-top: 10px;
+    float: right;
+}
+
+p {
+    margin: 0px;
+}
+
+.alert-container {
+    width: 50%;
+}
+
+.audio-container {
+    width: 50%;
+    float: left;
+}
+
+.popup-alert {
+    width: 150px;
+    background-color: #b9b9b9c4;
+    text-align: center;
+    position: relative;
+    float: right;
+    padding-bottom: 3px;
+    margin: 3px;
+    border-radius: 2px;
+    font-size: 15pt;
+}
+.yes {
+    float: left;
+    margin-left: 5px;
+    font-size: 11pt;
+}
+.no {
+    float: right;
+    margin-right: 5px;
+    font-size: 11pt;
+}

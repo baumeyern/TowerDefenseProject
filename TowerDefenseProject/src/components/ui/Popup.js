@@ -20,8 +20,8 @@ const Popup = (props) => {
 
     return (
         <>
-        {
-        show ?
+            {
+                show ?
                     (<div className='popup-container' {...rest}>
                         <div className='popup'>
                             <header className='popup-header'>
@@ -42,7 +42,7 @@ const Popup = (props) => {
                     ) :
                     (null)
             }
-            </>
+        </>
         )
 }
 

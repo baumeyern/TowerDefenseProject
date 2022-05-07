@@ -74,6 +74,7 @@ const GamePage = () => {
         enemySpawned: 0,
         lives: 10
     });
+    const [open, setOpen] = useState(false);
     const stateRef = useRef(gameState);
     const valuesRef = useRef(values);
     const buttonRef = useRef();
@@ -359,7 +360,25 @@ const GamePage = () => {
 
     return (
         <div>
-            <Radio />
+            <div className='top'>
+                <Radio />
+                <div className='alert-container'>
+                    <div className='top-btn'>
+                        <button className='end-btn' onClick={function (e) { setOpen(true); }}>End Game</button>
+                    </div>
+                        {open ?
+                            (<div className='popup-alert'>
+                                <main className='alert-content'>
+                                    Are you sure?
+                                </main>
+                                <footer className='alert-footer'>
+                                    <button className='yes' onClick={function (e) { setGameState('end') }}>Yes</button>
+                                    <button className='no' onClick={function (e) { setOpen(false) }}>No</button>
+                                </footer>
+                            </div>) :
+                            (null)}
+                </div>
+            </div>
             <div className="waves-scores-wrapper">
                 <div className="wave-label">Wave: {convertToRoman(values.wave)}</div>
                 <div className='enemy-count'>Enemies: {values.enemyTotal}</div>

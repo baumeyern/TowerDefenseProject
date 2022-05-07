@@ -21,7 +21,7 @@ function useRadio() {
     const [isChecked, setIsChecked] = useState(true);
 
     return (
-        <div>
+        <div className='audio-container'>
             <p className="audio">
                 Toggle for audio{" "}
                 <Checkbox
