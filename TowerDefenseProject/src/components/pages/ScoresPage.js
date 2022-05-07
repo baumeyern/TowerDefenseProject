@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import { getTopScores } from '../services/HighScoreService';
 import { useEffect, useState } from 'react';
 
-import { username } from './LoginPage';
 import { finalScore } from './GamePage';
 
 var calledScores = false;
@@ -32,7 +31,7 @@ const ScoresPage = () => {
         <div>
             <h1>Highscores</h1>
             <div className="container">
-                <h3> Your Score: {username} {finalScore}</h3>
+                <h3 className='your-score'> Your Score: {finalScore} </h3>
                 <table>
                     <tbody>
                         <tr>

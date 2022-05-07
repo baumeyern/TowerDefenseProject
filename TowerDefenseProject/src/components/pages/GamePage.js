@@ -169,7 +169,11 @@ const GamePage = () => {
                     if (fps) {
                         if (spawnCounter === 0) {
                             wait = fps * 2;
-                        } else {
+                        }
+                        else if (waveCounter >= 50) {
+                            wait = fps / 2;
+                        }
+                        else {
                             wait = fps;
                         }
                         if (_ticks >= wait) {
