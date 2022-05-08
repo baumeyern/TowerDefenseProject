@@ -4,34 +4,18 @@ import aoeImage from "../assets/images/AOE_AMO.png";
 import sniperImage from "../assets/images/Sniper_Amo.png";
 import poisonImage from "../assets/images/Poison_Amo.png";
 
-// const basic = new Image();
-// basic.src = basicImage;
-// const slow = new Image();
-// slow.src = slowImage;
-// const aoe = new Image();
-// aoe.src = aoeImage;
-// const sniper = new Image();
-// sniper.src = sniperImage;
-// const poison = new Image();
-// poison.src = poisonImage;
+const basic = new Image();
+basic.src = basicImage;
+const slow = new Image();
+slow.src = slowImage;
+const aoe = new Image();
+aoe.src = aoeImage;
+const sniper = new Image();
+sniper.src = sniperImage;
+const poison = new Image();
+poison.src = poisonImage;
 
-function ImageTest(myImage, callback) {
-  const basic = new Image(45, 45);
-  basic.src = myImage;
 
-  img.onload = () => {
-    callback(true);
-  };
-
-  img.onerror = (e) => {
-    callback(false);
-    console.log(e);
-  };
-
-  return img;
-}
-
-export { ImageTest };
 
 /**
  * (Reqirement 5.0.0)

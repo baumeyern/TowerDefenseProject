@@ -35,5 +35,5 @@ function useRadio() {
     </div>
   );
 }
-module.exports = useRadio;
+
 export default useRadio;

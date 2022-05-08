@@ -4,9 +4,9 @@ import tileImage from "../assets/images/EnemyPath.png";
 //import tileImage from '../assets/images/TileSet.png';
 
 const path = new Image();
-path.src = { pathImage };
+path.src =  pathImage ;
 const tile = new Image();
-tile.src = { tileImage };
+tile.src = tileImage;
 //const test = new Image();
 //test.src = testImage;
 
