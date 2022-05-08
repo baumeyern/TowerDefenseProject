@@ -3,7 +3,7 @@ import React, { useEffect, useRef} from 'react';
 import { grid, enemies, bullets, mouse, selected } from '../pages/GamePage';
 
 /**
- * Compoenent to render the HTML <canvas> component and display the images
+ * Compoenent to render the HTML <canvas> component and displays the game board and images
  * @param {Properties} props Properties passed to component
  */
 const Canvas = props => {

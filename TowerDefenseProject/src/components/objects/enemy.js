@@ -15,8 +15,6 @@ type4.src = type4Image;
 /**
  * Defines Enemy object with different stats for different types
  * (Requirement 3.0.0)
- * Each Enemy has a Fixed min speed and variable max speed
- * (Requirement 3.0.1)
  * @param {number} x The x coordinate of the top left corner
  * @param {number} y The y coordinate of the top left corner
  * @param {number} type The number indicating the type of enemy
@@ -32,15 +30,17 @@ export function Enemy(x, y, type) {
     this.distance = 0;
     this.currentDot = 0;
     this.dotTimer = null;
+    this.speedUp = false;
     this.slowed = false;
     this.end = false;
     this.dead = false;
     this.scaled = false;
+    this.slowSpeed = 0;
     //Basic Enemy (Reqirement 3.1.0)
     if (this.type === 1) {
         this.maxHealth = 150;
         this.health = 150;
-        this.speed = .5 + Math.random() / 5;
+        this.speed = .5;
         this.atk = 1;
         this.value = 2;
         this.score = 10;
@@ -49,7 +49,7 @@ export function Enemy(x, y, type) {
     else if (this.type === 2) {
         this.maxHealth = 100;
         this.health = 100;
-        this.speed = 2 + Math.random() / 5;
+        this.speed = 2;
         this.atk = 1;
         this.value = 4;
         this.score = 20;
@@ -58,8 +58,8 @@ export function Enemy(x, y, type) {
     else if (this.type === 3) {
         this.maxHealth = 200;
         this.health = 200;
-        this.speed = .4 + Math.random() / 5;
-        this.atk = 2;
+        this.speed = .4;
+        this.atk = 1;
         this.value = 4;
         this.score = 40;
     }
@@ -67,12 +67,13 @@ export function Enemy(x, y, type) {
     else if (this.type === 4) {
         this.maxHealth = 500;
         this.health = 500;
-        this.speed = .7 + Math.random() / 5;
+        this.speed = .7;
+        //Removes 5 lives (Requirement 3.4.1)
         this.atk = 5;
         this.value = 10;
         this.score = 100;
     }
-    this.slowSpeed = this.speed * .75;
+    //this.slowSpeed = this.speed * .75;
 }
 
 Enemy.prototype = {
@@ -103,7 +104,7 @@ Enemy.prototype = {
         ctx.fillRect(this.x, this.y, this.width * (this.health / this.maxHealth), this.height / 8);
     },
     /**
-     * Moves the Enemy along the designated path
+     * Moves the Enemy along the designated path (Requirement 3.0.1)
      * @param {Array} path Array of x, y coordinate waypoints of the map
      */
     move: function (path) {
@@ -180,6 +181,17 @@ Enemy.prototype = {
             this.maxHealth *= (1 + (.1 * (wave - 1)));
             this.health *= (1 + (.1 * (wave - 1)));
             this.scaled = true;
+        }
+    },
+    /**
+     * Add variable max speed to Enemy
+     * (Requirement 3.0.1)
+     */
+    randomSpeed: function () {
+        if (!this.speedUp) {
+            this.speed += Math.random() / 5;
+            this.slowSpeed = this.speed * .75;
+            this.speedUp = true;
         }
     }
 }

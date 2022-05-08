@@ -16,6 +16,7 @@ const poison = new Image();
 poison.src = poisonImage;
 
 /**
+ * Defines Projectile object to match with the Tower types
  * (Reqirement 5.0.0)
  * @param {number} x The x coordinate of the top left corner
  * @param {number} y The y coordinate of the top left corner

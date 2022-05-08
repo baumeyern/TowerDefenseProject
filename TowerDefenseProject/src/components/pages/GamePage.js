@@ -109,7 +109,7 @@ const GamePage = () => {
     }
     
     useEffect(() => {
-        //Initialize variables and create game board
+        //Initialize variables and create game board (Requirement 2.0.0)
         if (stateRef.current === 'start') {
             init();
             for (let y = 0; y < 12; y++) {
@@ -120,7 +120,7 @@ const GamePage = () => {
             setGameState('paused');
             stateRef.current = 'paused';
         }
-        //Post score and name to database when game ends
+        //Post score and name to database when game ends (Requirement 6.0.9)
         else if (gameState === 'end') {
             if (username === null || username.length === 0) {
                 username = 'Anonymous';
@@ -129,7 +129,7 @@ const GamePage = () => {
 
             finalScore = values.score;
         }
-
+        //Game ends when lives reach 0 (Requirement 6.0.6)
         if (values.lives <= 0) {
             setGameState('end');
         }
@@ -206,13 +206,14 @@ const GamePage = () => {
             }
             //Enemy logic
             enemies.forEach((enemy, i, a) => {
+                enemy.randomSpeed();
                 enemy.scale(waveCounter);
                 enemy.doAffliction(state, fps);
                 if (state === 'playing') {
                     enemy.move(map1Waypoints);
                 }
                 if (enemy.end || enemy.dead) {
-                    //Enemy gives money and score on defeat (Requirements 7.0.0 & 8.0.0)
+                    //Enemy gives money and score on defeat (Requirements 7.0.1 & 8.0.0)
                     if (enemy.dead) {
                         scoreCounter += enemy.score;
                         moneyCounter += enemy.value;
@@ -362,6 +363,7 @@ const GamePage = () => {
         <div>
             <div className='top'>
                 <Radio />
+                { /* End game button with confirmation pop-up (Requirement 6.0.7) */ }
                 <div className='alert-container'>
                     <div className='top-btn'>
                         <button className='end-btn' onClick={function (e) { setOpen(true); }}>End Game</button>
@@ -386,6 +388,7 @@ const GamePage = () => {
                 <Timer state={gameState} />
             </div>
             <div className="game">
+                { /* Display game board */ }
                 <Canvas width='900' height='600' />
                 <div className="panel">
                     <div className='panel-top'>

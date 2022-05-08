@@ -1,14 +1,11 @@
 import { collision } from '../utils/utils';
 import pathImage from '../assets/images/EnemyPath1.png';
 import tileImage from '../assets/images/EnemyPath.png';
-//import tileImage from '../assets/images/TileSet.png';
 
 const path = new Image();
 path.src = pathImage;
 const tile = new Image();
 tile.src = tileImage;
-//const test = new Image();
-//test.src = testImage;
 
 /**
  * Defines Block object for use in the game board
@@ -23,8 +20,9 @@ export function Block(x, y, type) {
     this.type = type;
     this.width = 50;
     this.height = 50;
-    this.tower = null;
     this.hover = false;
+    //Tower placed on block (Requirement 4.0.1)
+    this.tower = null;
 }
 
 Block.prototype = {

@@ -27,6 +27,9 @@
     "http-proxy-middleware": "^2.0.3",
     "jest": "^28.0.3",
     "jest-editor-support": "^30.0.2",
+    "jest-environment-jsdom": "^28.1.0",
+    "jest-environment-jsdom-global": "^3.1.1",
+    "jsdom": "^19.0.0",
     "prettier": "^2.5.1",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.2",
@@ -55,7 +58,6 @@
     "plugins": [
       "@babel/plugin-transform-modules-commonjs",
       "@babel/plugin-transform-react-jsx"
-
     ]
   },
   "eslintConfig": {
@@ -83,6 +85,7 @@
     "moduleNameMapper": {
       "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/mocks/fileMock.js",
       "\\.(css|less)$": "<rootDir>/mocks/fileMock.js"
-    }
+    },
+    "testEnvironment": "jest-environment-jsdom-global"
   }
 }
