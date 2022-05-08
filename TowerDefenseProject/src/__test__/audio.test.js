@@ -1,36 +1,53 @@
-import { shallow, configure, render } from "enzyme";
 import React from "react";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { useRadio } from "../components/ui/Audio";
+import "regenerator-runtime/runtime";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Router } from "react-router-dom";
+import { createMemoryHistory } from "history";
+import Audio from "../components/ui/Audio";
 
-const audio = require("../components/ui/Audio");
-
-jest.mock("../components/ui/Audio");
-
-//test
-test("Plays audio", () => {
-  const spy = jest.spyOn(audio, "useRadio");
-  const isPlaying = audio.useRadio();
-
-  expect(spy).toHaveBeenCalled();
-  expect(isPlaying).toBe(true);
+/**
+ * @jest-environment jsdom
+ */
+//This is so we dont get flags for undifined functions
+beforeEach(() => {
+  window.HTMLMediaElement.prototype.load = () => {
+    /* do nothing */
+  };
+  window.HTMLMediaElement.prototype.play = () => {
+    /* do nothing */
+  };
+  window.HTMLMediaElement.prototype.pause = () => {
+    /* do nothing */
+  };
+  window.HTMLMediaElement.prototype.addTextTrack = () => {
+    /* do nothing */
+  };
 });
 
-jest.mock("../components/ui/audio", () => () => {
-  const MockName = "audio-mock";
-  return <MockName />;
+//Test #32
+test("should render", () => {
+  const history = createMemoryHistory();
+  render(
+    <Router location={history.location} navigator={history}>
+      <Audio />
+    </Router>
+  );
 });
 
-const audioMock = jest.fn();
-const testAudio = new audioMock();
-console.log(audioMock.mock.instances);
+//Test #32.5
+test("should play audio", async () => {
+  const history = createMemoryHistory();
+  const playAudio = jest.fn();
+  window.HTMLMediaElement.prototype.play = playAudio;
+  render(
+    <Router location={history.location} navigator={history}>
+      <Audio />
+    </Router>
+  );
 
-const mockFn = jest.fn();
-mockFn();
+  await waitFor(() => screen.findByText("Toggle for audio"));
 
-//Test
-describe("Test audio functionality", () => {
-  it("Plays sound ", () => {
-    expect(mockFn).toHaveBeenCalled();
-  });
+  fireEvent.click(screen.getByTitle("Toggle audio"));
+
+  expect(playAudio).toHaveBeenCalled();
 });

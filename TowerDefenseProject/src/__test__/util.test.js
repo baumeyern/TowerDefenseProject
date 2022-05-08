@@ -1,25 +1,27 @@
-import { shallow, configure, mount } from "enzyme";
-import React from "react";
-import Tower from "../components/objects/TowerLogic";
-import fireImage from "../assets/images/circle.png";
+import { collision, convertToRoman, numerals } from "../components/utils/utils";
 
-//jest.mock("../components/assets/images/Type1.png", () => "Type1.png");
+test("should return true if boxes are colliding", () => {
+  const box1 = { x: 0, y: 10, width: 7, height: 7 };
+  const box2 = { x: 6, y: 15, width: 7, height: 7 };
 
-// describe("fire IMG", () => {
-//   it("renders an img", () => {
-//     const fireImg = shallow(fireImage);
-
-//     expect(fireImg.find("img").not.toBe(null));
-//   });
-// });
-//const test1 = Tower.Towerfunc(50, 50, 1);
-const Towerfunc = require("../components/objects/TowerLogic");
-jest.mock("../components/objects/tower", () => () => {
-  const MockName = "tower-mock";
-  return <MockName />;
+  expect(collision(box1, box2)).toBe(true);
 });
-describe("Tower 1", () => {
-  test("Towers prop ", () => {
-    expect(Towerfunc(50, 50, 1).toBe(!null));
-  });
+
+test("should return false if boxes are not colliding", () => {
+  const box1 = { x: 0, y: 10, width: 7, height: 7 };
+  const box2 = { x: 8, y: 15, width: 7, height: 7 };
+
+  expect(collision(box1, box2)).toBe(false);
+});
+
+test("should convert number to simple roman numberal", () => {
+  for (const [romanNumeral, n] of Object.entries(numerals)) {
+    expect(convertToRoman(n)).toBe(romanNumeral);
+  }
+});
+
+test("should convert number to complex roman numberal", () => {
+  expect(convertToRoman(8)).toBe("VIII");
+  expect(convertToRoman(12)).toBe("XII");
+  expect(convertToRoman(70)).toBe("LXX");
 });
