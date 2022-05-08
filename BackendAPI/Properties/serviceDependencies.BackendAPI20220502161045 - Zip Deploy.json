@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "apis1": {
+      "apiEndpoint": "https://backendapiapitowerdefense.azure-api.net/",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/BackendAPIapitowerdefense/apis/BackendAPI",
+      "type": "apis.azure"
+    }
+  }
+}

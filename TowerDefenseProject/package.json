@@ -1,0 +1,100 @@
+{
+  "name": "towerdefenseproject",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@fontsource/roboto": "^4.5.3",
+    "@mui/icons-material": "^5.4.2",
+    "@mui/material": "^5.4.2",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.3",
+    "@testing-library/user-event": "^13.5.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
+    "axios": "^0.27.2",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "bootstrap": "^5.1.3",
+    "canvas": "^2.9.1",
+    "enzyme": "^3.11.0",
+    "eslint": "^8.9.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "fomantic-ui-css": "^2.8.8",
+    "http-proxy-middleware": "^2.0.3",
+    "jest": "^28.0.3",
+    "jest-editor-support": "^30.0.2",
+    "jest-environment-jsdom": "^28.1.0",
+    "prettier": "^2.5.1",
+    "react": "^17.0.2",
+    "react-bootstrap": "^2.1.2",
+    "react-dom": "^17.0.2",
+    "react-router": "^6.2.1",
+    "react-router-dom": "^6.2.1",
+    "react-scripts": "5.0.0",
+    "react-test-renderer": "^18.1.0",
+    "semantic-ui-react": "^2.1.1",
+    "use-sound": "^4.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "set HTTPS=true&&react-scripts start",
+    "build": "react-scripts build",
+    "test": "jest",
+    "eject": "react-scripts eject",
+    "prestart": "node aspnetcore-https && node aspnetcore-react",
+    "lint": "eslint src"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react",
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-modules-commonjs",
+      "@babel/plugin-transform-react-jsx"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(js|jsx)$": "babel-jest",
+      ".+\\.(css|scss|png|jpg|svg)$": "jest-transform-stub"
+    },
+    "moduleNameMapper": {
+      "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "jest-transform-stub",
+      ".+\\.(css|styl|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "testEnvironmentOptions": {
+      "resources": "usable"
+    },
+    "testEnvironment": "jest-environment-jsdom-global"
+  },
+  "devDependencies": {
+    "jest-environment-jsdom-global": "^3.1.1",
+    "jest-transform-stub": "^2.0.0",
+    "jsdom": "^19.0.0",
+    "jsdom-global": "3.0.2"
+  }
+}
