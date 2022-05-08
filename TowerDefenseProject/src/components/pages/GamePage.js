@@ -122,9 +122,6 @@ const GamePage = () => {
         }
         //Post score and name to database when game ends (Requirement 6.0.9)
         else if (gameState === 'end') {
-            if (username === null || username.length === 0) {
-                username = 'Anonymous';
-            }
             postScore(username, values.score.toString());
 
             finalScore = values.score;

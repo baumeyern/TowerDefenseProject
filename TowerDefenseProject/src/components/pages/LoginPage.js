@@ -26,6 +26,9 @@ const LoginPage = () => {
     const handleSubmit = e => {
         e.preventDefault();
         username = name;
+        if (username === '' || username === null) {
+            username = 'Anonymous';
+        }
         navigate('/game');
     }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
-
+console.log('aNd NiCk');
 /**
  * Home Page displays buttons linking to the Login Page and the Scores Page (Requirement 1.3.0)
  */
@@ -18,6 +18,9 @@ const HomePage = () => (
             <Link to='/scores'>
                 <Button variant="outline-light">Highscores</Button>
             </Link>
+        </div>
+        <div className="container">
+            <p className='names'> A Game By Alec, Stephen, Will, & Nice guy </p>
         </div>
     </div>
 );
